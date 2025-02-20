@@ -34,22 +34,19 @@ export default function Blog() {
   const bgColor = useColorModeValue('white', 'gray.800')
   const borderColor = useColorModeValue('gray.200', 'gray.700')
   const titleColor = useColorModeValue('gray.900', 'white')
-  const textColor = useColorModeValue('gray.600', 'gray.300')
+  const textColor = useColorModeValue('gray.800', 'gray.100')
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await fetch('/api/medium-feed')
-        const data = await response.json()
+    fetch('/api/medium-feed')
+      .then(res => res.json())
+      .then(data => {
         setPosts(data.posts)
-      } catch (error) {
-        console.error('Error fetching blog posts:', error)
-      } finally {
         setIsLoading(false)
-      }
-    }
-
-    fetchPosts()
+      })
+      .catch(error => {
+        console.error('Error fetching posts:', error)
+        setIsLoading(false)
+      })
   }, [])
 
   const extractThumbnail = (content: string): string | undefined => {
@@ -58,9 +55,11 @@ export default function Blog() {
   }
 
   return (
-    <Container maxW="container.lg" pt={{ base: 20, md: 28 }} pb={20}>
-      <VStack spacing={8} align="start">
-        <Heading size="2xl">Blog Posts</Heading>
+    <Container maxW="container.lg" pt={20} pb={20}>
+      <VStack spacing={8} alignItems="start">
+        <Heading as="h1" size="2xl">
+          Blog
+        </Heading>
         
         {isLoading ? (
           <Text>Loading posts...</Text>

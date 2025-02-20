@@ -32,7 +32,7 @@ export default function Home() {
           letterSpacing="tight"
           lineHeight="1.2"
         >
-          Hi, i'm Robert
+          Hi, I&apos;m Robert
         </Heading>
         <Text
           fontSize={{ base: 'lg', md: 'xl' }}
