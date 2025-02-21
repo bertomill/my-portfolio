@@ -16,7 +16,7 @@ import { FaBlog } from 'react-icons/fa'
 import NavLink from './NavLink'
 import ThemeToggle from './ThemeToggle'
 
-export default function Navbar() {
+const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const bg = useColorModeValue('rgba(255, 255, 255, 0.8)', 'rgba(0, 0, 0, 0.8)')
 
@@ -42,4 +42,6 @@ export default function Navbar() {
       </Flex>
     </Box>
   )
-} 
+}
+
+export default Navbar 
