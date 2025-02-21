@@ -1,15 +1,9 @@
-import { extendTheme, type ThemeConfig } from '@chakra-ui/react'
-
-const config: ThemeConfig = {
-  initialColorMode: 'dark',
-  useSystemColorMode: false,
-}
+import { extendTheme } from '@chakra-ui/react'
 
 export const theme = extendTheme({
-  config,
-  fonts: {
-    heading: 'SF Pro Display, -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
-    body: 'SF Pro Text, -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
+  config: {
+    initialColorMode: 'dark',
+    useSystemColorMode: false,
   },
   styles: {
     global: {
@@ -18,6 +12,13 @@ export const theme = extendTheme({
         color: 'white',
       },
     },
+  },
+  colors: {
+    // Your custom colors here
+  },
+  fonts: {
+    heading: 'SF Pro Display, -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
+    body: 'SF Pro Text, -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
   },
   components: {
     Heading: {

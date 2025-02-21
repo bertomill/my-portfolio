@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
-import { Providers } from "./providers";
+import { Inter } from "next/font/google";
+import { Providers } from "@/components/providers";
+import Navbar from "@/components/Navbar";
 import "./globals.css";
-import Navbar from '@/components/Navbar'
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Robert Mill - Portfolio",
-  description: "Software developer portfolio for Robert Mill",
+  description: "Application developer passionate about crafting intuitive user experiences.",
 };
 
 export default function RootLayout({
@@ -14,14 +17,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" data-theme="dark">
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
       </head>
-      <body>
+      <body className={`${inter.className} min-h-full flex flex-col`} suppressHydrationWarning>
         <Providers>
           <Navbar />
-          <main>
+          <main className="flex-1">
             {children}
           </main>
         </Providers>

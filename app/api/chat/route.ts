@@ -7,9 +7,10 @@ export async function POST(req: Request) {
   try {
     console.log('Starting chat process...')
     
-    // Initialize Pinecone with your API key
+    // Initialize Pinecone with required environment
     const pc = new Pinecone({
-      apiKey: 'pcsk_5Binbm_Cbo4Yrj86hGMk4Q2g425U9JyVrmRnBK1x2DEBHZWbbthKRPD6329nR9MpqA3pKZ'
+      apiKey: 'pcsk_5Binbm_Cbo4Yrj86hGMk4Q2g425U9JyVrmRnBK1x2DEBHZWbbthKRPD6329nR9MpqA3pKZ',
+      environment: 'gcp-starter'  // Added required environment
     })
 
     const index = pc.Index('bertomill')
@@ -55,15 +56,14 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ response })
 
-  } catch (error: any) {
+  } catch (error: unknown) { // Fixed any type
     console.error('Error details:', {
-      name: error.name,
-      message: error.message,
-      cause: error.cause,
-      stack: error.stack
+      name: error instanceof Error ? error.name : 'Unknown',
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
     })
     return NextResponse.json(
-      { error: 'Failed to process your request', details: error.message },
+      { error: 'Failed to process your request', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }
