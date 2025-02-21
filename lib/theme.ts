@@ -1,8 +1,8 @@
-import { extendTheme } from '@chakra-ui/theme-utils'
+import { extendTheme, type ThemeConfig } from '@chakra-ui/react'
 
-const config = {
+const config: ThemeConfig = {
   initialColorMode: 'dark',
-  useSystemColorMode: true,
+  useSystemColorMode: false,
 }
 
 const theme = extendTheme({
@@ -12,12 +12,12 @@ const theme = extendTheme({
     body: 'SF Pro Text, -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
   },
   styles: {
-    global: (props: any) => ({
+    global: {
       body: {
-        bg: props.colorMode === 'dark' ? '#000' : '#fff',
-        color: props.colorMode === 'dark' ? '#fff' : '#000',
+        bg: 'black',
+        color: 'white',
       },
-    }),
+    },
   },
   components: {
     Heading: {
@@ -27,24 +27,21 @@ const theme = extendTheme({
     },
     Button: {
       baseStyle: {
-        fontWeight: '500',
-        borderRadius: 'full',
+        _hover: {
+          transform: 'translateY(-2px)',
+          boxShadow: 'lg',
+        },
+        transition: 'all 0.2s',
       },
-      variants: {
-        solid: (props: any) => ({
-          bg: props.colorMode === 'dark' ? 'whiteAlpha.900' : 'blackAlpha.900',
-          color: props.colorMode === 'dark' ? 'black' : 'white',
-          _hover: {
-            bg: props.colorMode === 'dark' ? 'whiteAlpha.800' : 'blackAlpha.800',
-          },
-        }),
-        outline: (props: any) => ({
-          borderColor: props.colorMode === 'dark' ? 'whiteAlpha.900' : 'blackAlpha.900',
-          color: props.colorMode === 'dark' ? 'white' : 'black',
-        }),
+    },
+    Link: {
+      baseStyle: {
+        _hover: {
+          textDecoration: 'none',
+        },
       },
     },
   },
 })
 
-export { theme } 
+export default theme 

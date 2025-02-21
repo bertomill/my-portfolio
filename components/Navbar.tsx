@@ -5,7 +5,6 @@ import {
   Flex,
   HStack,
   IconButton,
-  useColorMode,
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
