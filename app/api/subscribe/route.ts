@@ -16,44 +16,50 @@ type MailchimpError = {
   };
 };
 
-// Check for required environment variables
-if (!process.env.MAILCHIMP_API_KEY) {
-  throw new Error('MAILCHIMP_API_KEY is required')
-}
-
-if (!process.env.MAILCHIMP_API_SERVER) {
-  throw new Error('MAILCHIMP_API_SERVER is required')
-}
-
-if (!process.env.MAILCHIMP_AUDIENCE_ID) {
-  throw new Error('MAILCHIMP_AUDIENCE_ID is required')
-}
-
-mailchimp.setConfig({
-  apiKey: process.env.MAILCHIMP_API_KEY as string,
-  server: process.env.MAILCHIMP_API_SERVER as string,
-})
-
 export async function POST(request: Request) {
+  // Check for required environment variables
+  if (!process.env.MAILCHIMP_API_KEY) {
+    return NextResponse.json(
+      { error: 'Mailchimp API key is not configured' },
+      { status: 500 }
+    )
+  }
+
+  if (!process.env.MAILCHIMP_API_SERVER) {
+    return NextResponse.json(
+      { error: 'Mailchimp API server is not configured' },
+      { status: 500 }
+    )
+  }
+
+  if (!process.env.MAILCHIMP_AUDIENCE_ID) {
+    return NextResponse.json(
+      { error: 'Mailchimp audience ID is not configured' },
+      { status: 500 }
+    )
+  }
+
+  // Configure Mailchimp only when the route is called
+  mailchimp.setConfig({
+    apiKey: process.env.MAILCHIMP_API_KEY as string,
+    server: process.env.MAILCHIMP_API_SERVER as string,
+  })
+
   try {
-    // Log the incoming request
     const { email } = await request.json()
-    console.log('Attempting to subscribe:', email)
 
     // Test connection
     const ping = await mailchimp.ping.get()
     console.log('Mailchimp connection:', ping.health_status)
 
     // Add member to list
-    const response = await mailchimp.lists.addListMember(
+    await mailchimp.lists.addListMember(
       process.env.MAILCHIMP_AUDIENCE_ID as string,
       {
         email_address: email,
         status: 'subscribed',
       }
     )
-
-    console.log('Successfully added contact:', response.id)
 
     return NextResponse.json({
       success: true,
