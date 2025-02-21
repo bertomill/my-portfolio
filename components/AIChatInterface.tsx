@@ -49,9 +49,13 @@ export default function AIChatInterface() {
             key={index}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`p-4 rounded-lg ${
-              message.role === 'user' ? 'bg-blue-100 ml-auto' : 'bg-gray-100'
-            } max-w-[80%]`}
+            style={{ 
+              padding: '1rem',
+              borderRadius: '0.5rem',
+              backgroundColor: message.role === 'user' ? '#EBF8FF' : '#F7FAFC',
+              marginLeft: message.role === 'user' ? 'auto' : '0',
+              maxWidth: '80%'
+            }}
           >
             {message.content}
           </motion.div>
