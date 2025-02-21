@@ -30,9 +30,11 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/mailchimp__mailchimp_marketing": "^3.0.21",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/xml2js": "^0.4.14",
     "eslint": "^9",
     "eslint-config-next": "15.1.7",
     "postcss": "^8",
