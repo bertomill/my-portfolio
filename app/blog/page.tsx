@@ -5,7 +5,6 @@ import {
   VStack,
   Heading,
   Text,
-  useColorModeValue,
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 
