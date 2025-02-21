@@ -83,13 +83,13 @@ export default function NewsletterSubscribe() {
     <Box
       as="form"
       onSubmit={handleSubmit}
-      p={8}
+      p={{ base: 6, md: 8 }}
       borderRadius="xl"
       bg={bgColor}
       backdropFilter="blur(10px)"
-      maxW="container.md"
+      maxW={{ base: "95%", md: "container.md" }}
       mx="auto"
-      mt={16}
+      mt={{ base: 8, md: 16 }}
       position="relative"
       boxShadow={borderGlow}
       _before={{
@@ -111,10 +111,10 @@ export default function NewsletterSubscribe() {
         boxShadow: '0 0 20px rgba(255, 255, 255, 0.15)',
       }}
     >
-      <VStack spacing={6} align="stretch">
+      <VStack spacing={{ base: 4, md: 6 }} align="stretch">
         <Heading 
           as="h3" 
-          size="lg" 
+          size={{ base: "md", md: "lg" }}
           textAlign="center" 
           color="white"
           bgGradient="linear(to-r, gray.100, white, gray.100)"
@@ -127,13 +127,18 @@ export default function NewsletterSubscribe() {
           Stay Updated
         </Heading>
         
-        <Text textAlign="center" color={textColor}>
+        <Text 
+          textAlign="center" 
+          color={textColor}
+          fontSize={{ base: "sm", md: "md" }}
+        >
           Subscribe to get notified about new projects and tech insights.
         </Text>
 
         <Box 
           display="flex" 
-          gap={4}
+          flexDirection={{ base: "column", sm: "row" }}
+          gap={{ base: 2, md: 4 }}
           position="relative"
           _before={{
             content: '""',
@@ -153,7 +158,7 @@ export default function NewsletterSubscribe() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your@email.com"
-            size="lg"
+            size={{ base: "md", md: "lg" }}
             required
             flex={1}
             bg={inputBg}
@@ -171,9 +176,10 @@ export default function NewsletterSubscribe() {
           />
           <Button
             type="submit"
-            size="lg"
+            size={{ base: "md", md: "lg" }}
             bg="white"
             color="black"
+            width={{ base: "full", sm: "auto" }}
             _hover={{ 
               bg: 'gray.100',
               transform: 'translateY(-1px)',
@@ -184,7 +190,7 @@ export default function NewsletterSubscribe() {
             }}
             isLoading={isLoading}
             loadingText="Subscribing..."
-            px={8}
+            px={{ base: 6, md: 8 }}
             transition="all 0.2s"
           >
             Subscribe
@@ -192,7 +198,7 @@ export default function NewsletterSubscribe() {
         </Box>
 
         <Text 
-          fontSize="sm" 
+          fontSize={{ base: "xs", md: "sm" }}
           color="gray.400" 
           textAlign="center"
           opacity={0.8}
