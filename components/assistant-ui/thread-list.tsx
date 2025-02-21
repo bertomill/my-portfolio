@@ -57,7 +57,7 @@ const ThreadListItemArchive: FC = () => {
       <TooltipIconButton
         className="hover:text-primary text-foreground ml-auto mr-3 size-4 p-0"
         variant="ghost"
-        tooltip="Archive thread"
+        label="Archive thread"
       >
         <ArchiveIcon />
       </TooltipIconButton>

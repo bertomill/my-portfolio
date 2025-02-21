@@ -15,6 +15,7 @@ export type TooltipIconButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   label: string;
   side?: "top" | "right" | "bottom" | "left";
   sideOffset?: number;
+  variant?: "ghost" | "outline" | "default";
 };
 
 export function TooltipIconButton({
@@ -23,6 +24,7 @@ export function TooltipIconButton({
   side = "top",
   sideOffset = 4,
   className,
+  variant = "ghost",
   ...props
 }: TooltipIconButtonProps) {
   return (
@@ -30,7 +32,7 @@ export function TooltipIconButton({
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            variant="ghost"
+            variant={variant}
             className={cn(
               "h-9 w-9 p-0",
               className
