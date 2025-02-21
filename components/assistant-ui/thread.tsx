@@ -60,7 +60,7 @@ const ThreadScrollToBottom: FC = () => {
   return (
     <ThreadPrimitive.ScrollToBottom asChild>
       <TooltipIconButton
-        tooltip="Scroll to bottom"
+        label="Scroll to bottom"
         variant="outline"
         className="absolute -top-8 rounded-full disabled:invisible"
       >
