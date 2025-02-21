@@ -1,5 +1,6 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import {
   Box,
   Button,
@@ -10,8 +11,13 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react'
 import Link from 'next/link'
-import NewsletterSubscribe from '@/components/NewsletterSubscribe'
-import Lottie from 'lottie-react'
+
+// Dynamically import components that need browser APIs
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false })
+const NewsletterSubscribe = dynamic(() => import('@/components/NewsletterSubscribe'), { ssr: false })
+const AIChatInterface = dynamic(() => import('@/components/AIChatInterface'), { ssr: false })
+
+// Import animation data
 import drawSmileAnimation from '@/public/animations/DrawSmile.json'
 
 export default function Home() {
@@ -143,6 +149,11 @@ export default function Home() {
 
         {/* Add Newsletter Component */}
         <NewsletterSubscribe />
+
+        {/* Add the chat interface */}
+        <Box w="full" maxW="container.md" mt={8}>
+          <AIChatInterface />
+        </Box>
       </VStack>
     </Container>
   )
