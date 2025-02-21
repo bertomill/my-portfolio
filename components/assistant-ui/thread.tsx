@@ -135,7 +135,7 @@ const ComposerAction: FC = () => {
       <ThreadPrimitive.If running={false}>
         <ComposerPrimitive.Send asChild>
           <TooltipIconButton
-            tooltip="Send"
+            label="Send"
             variant="default"
             className="my-2.5 size-8 p-2 transition-opacity ease-in"
           >
