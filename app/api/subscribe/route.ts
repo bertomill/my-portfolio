@@ -8,6 +8,14 @@ console.log('Initializing Mailchimp with:', {
   hasApiKey: !!process.env.MAILCHIMP_API_KEY
 })
 
+type MailchimpError = {
+  response: {
+    body: {
+      detail: string;
+    };
+  };
+};
+
 mailchimp.setConfig({
   apiKey: process.env.MAILCHIMP_API_KEY,
   server: process.env.MAILCHIMP_API_SERVER,
@@ -39,13 +47,18 @@ export async function POST(request: Request) {
       message: 'Thank you for subscribing!'
     })
 
-  } catch (error: any) {
-    console.error('Subscription error:', error?.response?.body || error)
+  } catch (error: unknown) {
+    const mailchimpError = error as MailchimpError
+    if (mailchimpError.response?.body?.detail) {
+      return NextResponse.json(
+        { error: mailchimpError.response.body.detail },
+        { status: 400 }
+      )
+    }
+
     return NextResponse.json(
-      { 
-        error: error?.response?.body?.detail || 'Failed to subscribe. Please try again.' 
-      },
-      { status: error?.response?.body ? 400 : 500 }
+      { error: 'Failed to subscribe. Please try again.' },
+      { status: 500 }
     )
   }
 } 

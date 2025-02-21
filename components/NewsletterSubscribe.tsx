@@ -20,6 +20,14 @@ const gradientShift = keyframes`
   100% { background-position: 0% 50%; }
 `
 
+type SubscribeError = {
+  response?: {
+    body?: {
+      detail?: string;
+    };
+  };
+};
+
 export default function NewsletterSubscribe() {
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -49,17 +57,18 @@ export default function NewsletterSubscribe() {
 
       toast({
         title: 'Subscribed!',
-        description: data.message || "Thanks for subscribing to the newsletter!",
+        description: data.message || "Thanks for subscribing!",
         status: 'success',
         duration: 5000,
         isClosable: true,
         position: 'bottom-right',
       })
       setEmail('')
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const subscribeError = error as SubscribeError
       toast({
         title: 'Error',
-        description: error.message || "Couldn't subscribe. Please try again.",
+        description: subscribeError.response?.body?.detail || "Couldn't subscribe. Please try again.",
         status: 'error',
         duration: 5000,
         isClosable: true,
