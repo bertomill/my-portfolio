@@ -181,7 +181,7 @@ const UserActionBar: FC = () => {
       className="flex flex-col items-end col-start-1 row-start-2 mr-3 mt-2.5"
     >
       <ActionBarPrimitive.Edit asChild>
-        <TooltipIconButton tooltip="Edit">
+        <TooltipIconButton label="Edit">
           <PencilIcon />
         </TooltipIconButton>
       </ActionBarPrimitive.Edit>
