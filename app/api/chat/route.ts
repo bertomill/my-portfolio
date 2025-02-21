@@ -1,35 +1,69 @@
 import { NextResponse } from 'next/server'
-import { PineconeClient } from '@pinecone-database/pinecone'
-
-const pinecone = new PineconeClient()
+import { Pinecone } from '@pinecone-database/pinecone'
+import { HuggingFaceInferenceEmbeddings } from '@langchain/community/embeddings/hf'
+import { HuggingFaceInference } from '@langchain/community/llms/hf'
 
 export async function POST(req: Request) {
   try {
-    const { message } = await req.json()
-
-    // Initialize Pinecone
-    await pinecone.init({
-      environment: process.env.PINECONE_ENVIRONMENT!,
-      apiKey: process.env.PINECONE_API_KEY!
+    console.log('Starting chat process...')
+    
+    // Initialize Pinecone with your API key
+    const pc = new Pinecone({
+      apiKey: 'pcsk_5Binbm_Cbo4Yrj86hGMk4Q2g425U9JyVrmRnBK1x2DEBHZWbbthKRPD6329nR9MpqA3pKZ'
     })
 
-    const index = pinecone.Index('your-index-name')
+    const index = pc.Index('bertomill')
+    console.log('Connected to Pinecone index')
 
-    // Query Pinecone (you'll need to implement the actual query logic)
+    // Initialize embeddings
+    const embeddings = new HuggingFaceInferenceEmbeddings({
+      apiKey: process.env.HUGGINGFACE_API_KEY,
+      model: "sentence-transformers/all-mpnet-base-v2",
+    })
+    console.log('Initialized embeddings')
+
+    // Get message from request
+    const { message } = await req.json()
+    console.log('Received message:', message)
+
+    // Create embeddings for the query
+    const queryEmbedding = await embeddings.embedQuery(message)
+    console.log('Created query embedding')
+
+    // Query the index with correct format
     const queryResponse = await index.query({
-      vector: [], // Add your embedding logic here
-      topK: 3,
+      vector: queryEmbedding,
+      topK: 1,
       includeMetadata: true
     })
+    console.log('Query response:', queryResponse)
 
-    // Process the response and generate a reply
-    // Add your LLM integration here
+    // Extract context from the response
+    const context = queryResponse.matches?.[0]?.metadata?.text || ''
+    console.log('Context:', context)
 
-    return NextResponse.json({ response: "I'm still being implemented!" })
-  } catch (error) {
-    console.error('Error:', error)
+    // Generate response using HuggingFace
+    console.log('Generating response...')
+    const model = new HuggingFaceInference({
+      apiKey: process.env.HUGGINGFACE_API_KEY,
+      model: "mistralai/Mistral-7B-Instruct-v0.2",
+    })
+
+    const prompt = `Based on this context: "${context}", answer this question: "${message}"`
+    const response = await model.call(prompt)
+    console.log('Generated response:', response)
+
+    return NextResponse.json({ response })
+
+  } catch (error: any) {
+    console.error('Error details:', {
+      name: error.name,
+      message: error.message,
+      cause: error.cause,
+      stack: error.stack
+    })
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to process your request', details: error.message },
       { status: 500 }
     )
   }
