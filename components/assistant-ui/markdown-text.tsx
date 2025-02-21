@@ -14,7 +14,7 @@ import { CheckIcon, CopyIcon } from "lucide-react";
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
-import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
+import { TooltipIconButton } from "./tooltip-icon-button";
 import { cn } from "@/lib/utils";
 
 const MarkdownTextImpl = () => {
@@ -27,7 +27,41 @@ const MarkdownTextImpl = () => {
   );
 };
 
-export const MarkdownText = memo(MarkdownTextImpl);
+interface MarkdownTextProps {
+  content: string;
+  language?: string;
+}
+
+export const MarkdownText: FC<MarkdownTextProps> = ({ content, language }) => {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const onCopy = () => {
+    navigator.clipboard.writeText(content);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  if (language) {
+    return (
+      <div className="relative rounded-lg bg-zinc-950">
+        <div className="flex items-center justify-between gap-4 rounded-t-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white">
+          <span className="lowercase [&>span]:text-xs">{language}</span>
+          <TooltipIconButton label="Copy" onClick={onCopy}>
+            {!isCopied && <CopyIcon />}
+            {isCopied && <CheckIcon />}
+          </TooltipIconButton>
+        </div>
+        <pre className="overflow-x-auto p-4">
+          <code>{content}</code>
+        </pre>
+      </div>
+    );
+  }
+
+  return <span className="whitespace-pre-wrap">{content}</span>;
+};
+
+MarkdownText.displayName = "MarkdownText";
 
 const CodeHeader: FC<CodeHeaderProps> = ({ language, code }) => {
   const { isCopied, copyToClipboard } = useCopyToClipboard();
