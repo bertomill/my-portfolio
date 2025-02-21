@@ -15,6 +15,7 @@ import {
   PencilIcon,
   RefreshCwIcon,
   SendHorizontalIcon,
+  XIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -146,11 +147,11 @@ const ComposerAction: FC = () => {
       <ThreadPrimitive.If running>
         <ComposerPrimitive.Cancel asChild>
           <TooltipIconButton
-            tooltip="Cancel"
+            label="Cancel"
             variant="default"
             className="my-2.5 size-8 p-2 transition-opacity ease-in"
           >
-            <CircleStopIcon />
+            <XIcon />
           </TooltipIconButton>
         </ComposerPrimitive.Cancel>
       </ThreadPrimitive.If>
