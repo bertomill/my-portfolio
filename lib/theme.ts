@@ -5,7 +5,7 @@ const config: ThemeConfig = {
   useSystemColorMode: false,
 }
 
-const theme = extendTheme({
+export const theme = extendTheme({
   config,
   fonts: {
     heading: 'SF Pro Display, -apple-system, BlinkMacSystemFont, system-ui, sans-serif',

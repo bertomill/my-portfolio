@@ -21,7 +21,6 @@ interface BlogPost {
 export default function Blog() {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const textColor = useColorModeValue('gray.800', 'gray.100')
 
   useEffect(() => {
     fetch('/api/medium-feed')
