@@ -1,44 +1,51 @@
 "use client";
 
 import { forwardRef } from "react";
-
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button, ButtonProps } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ButtonHTMLAttributes } from "react";
 
-export type TooltipIconButtonProps = ButtonProps & {
-  tooltip: string;
-  side?: "top" | "bottom" | "left" | "right";
+export type TooltipIconButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  label: string;
+  side?: "top" | "right" | "bottom" | "left";
+  sideOffset?: number;
 };
 
-export const TooltipIconButton = forwardRef<
-  HTMLButtonElement,
-  TooltipIconButtonProps
->(({ children, tooltip, side = "bottom", className, ...rest }, ref) => {
+export function TooltipIconButton({
+  label,
+  children,
+  side = "top",
+  sideOffset = 4,
+  className,
+  ...props
+}: TooltipIconButtonProps) {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
             variant="ghost"
-            size="icon"
-            {...rest}
-            className={cn("size-6 p-1", className)}
-            ref={ref}
+            className={cn(
+              "h-9 w-9 p-0",
+              className
+            )}
+            {...props}
           >
             {children}
-            <span className="sr-only">{tooltip}</span>
           </Button>
         </TooltipTrigger>
-        <TooltipContent side={side}>{tooltip}</TooltipContent>
+        <TooltipContent side={side} sideOffset={sideOffset}>
+          <p>{label}</p>
+        </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
-});
+}
 
 TooltipIconButton.displayName = "TooltipIconButton";
