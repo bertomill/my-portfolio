@@ -3,7 +3,7 @@
 import { IconButton, useColorMode } from '@chakra-ui/react'
 import { SunIcon, MoonIcon } from '@chakra-ui/icons'
 
-export default function ThemeToggle() {
+const ThemeToggle = () => {
   const { colorMode, toggleColorMode } = useColorMode()
 
   return (
@@ -15,4 +15,6 @@ export default function ThemeToggle() {
       size="md"
     />
   )
-} 
+}
+
+export default ThemeToggle 
