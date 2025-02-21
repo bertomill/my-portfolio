@@ -16,9 +16,22 @@ type MailchimpError = {
   };
 };
 
+// Check for required environment variables
+if (!process.env.MAILCHIMP_API_KEY) {
+  throw new Error('MAILCHIMP_API_KEY is required')
+}
+
+if (!process.env.MAILCHIMP_API_SERVER) {
+  throw new Error('MAILCHIMP_API_SERVER is required')
+}
+
+if (!process.env.MAILCHIMP_AUDIENCE_ID) {
+  throw new Error('MAILCHIMP_AUDIENCE_ID is required')
+}
+
 mailchimp.setConfig({
-  apiKey: process.env.MAILCHIMP_API_KEY,
-  server: process.env.MAILCHIMP_API_SERVER,
+  apiKey: process.env.MAILCHIMP_API_KEY as string,
+  server: process.env.MAILCHIMP_API_SERVER as string,
 })
 
 export async function POST(request: Request) {
@@ -33,7 +46,7 @@ export async function POST(request: Request) {
 
     // Add member to list
     const response = await mailchimp.lists.addListMember(
-      process.env.MAILCHIMP_AUDIENCE_ID!,
+      process.env.MAILCHIMP_AUDIENCE_ID as string,
       {
         email_address: email,
         status: 'subscribed',
