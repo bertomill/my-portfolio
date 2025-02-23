@@ -15,30 +15,33 @@ interface TimelineItemProps {
 }
 
 const TimelineItem = ({ title, company, date, description }: TimelineItemProps) => {
-  const bgColor = useColorModeValue('white', 'gray.800')
-  const borderColor = useColorModeValue('gray.200', 'gray.700')
-  const textColor = useColorModeValue('gray.800', 'gray.100')
+  const bg = useColorModeValue('rgba(0, 0, 0, 0.2)', 'rgba(0, 0, 0, 0.2)')
+  const textColor = useColorModeValue('gray.100', 'gray.100')
+  const dateColor = useColorModeValue('gray.400', 'gray.400')
 
   return (
     <Box
       w="full"
-      p={6}
-      bg={bgColor}
-      borderRadius="xl"
-      borderWidth="1px"
-      borderColor={borderColor}
+      bg={bg}
+      p={4}
+      borderRadius="lg"
+      transition="all 0.2s"
+      _hover={{
+        transform: 'translateY(-2px)',
+        bg: 'rgba(255, 255, 255, 0.05)'
+      }}
     >
-      <VStack align="start" spacing={2}>
-        <Text fontWeight="bold" fontSize="lg" color={textColor}>
+      <VStack align="stretch" spacing={2}>
+        <Text fontSize="xl" fontWeight="bold" color={textColor}>
           {title}
         </Text>
-        <Text color={textColor}>
+        <Text fontSize="md" color={textColor}>
           {company}
         </Text>
-        <Text fontSize="sm" color="gray.500">
+        <Text fontSize="sm" color={dateColor} fontFamily="mono">
           {date}
         </Text>
-        <Text color={textColor}>
+        <Text fontSize="md" color={textColor} mt={2}>
           {description}
         </Text>
       </VStack>

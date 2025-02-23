@@ -50,7 +50,7 @@ export default function Home() {
               mt={{ base: 6, sm: 8, md: 10, lg: 12 }}
               lineHeight={{ base: "tall", md: "taller" }}
             >
-              I am an application developer passionate about crafting intuitive user experiences to
+              I am a technology consultant and ML application developer based in Toronto, passionate about crafting intuitive user experiences to
               help people and businesses solve problems.
             </Text>
 
