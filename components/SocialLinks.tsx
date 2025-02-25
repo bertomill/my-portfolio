@@ -44,7 +44,7 @@ const SocialLink = ({ href, label, icon }: SocialLinkProps) => {
 export default function SocialLinks() {
   const socialLinks = [
     {
-      href: "https://linkedin.com/in/robertmill",
+      href: "https://www.linkedin.com/in/bertomill/",
       label: "LinkedIn",
       icon: FaLinkedin,
     },
@@ -54,17 +54,17 @@ export default function SocialLinks() {
       icon: FaGithub,
     },
     {
-      href: "https://youtube.com/@robertmill",
+      href: "https://www.youtube.com/@BertoVMill",
       label: "YouTube",
       icon: FaYoutube,
     },
     {
-      href: "https://instagram.com/robertmill",
+      href: "https://www.instagram.com/bertomill/?hl=en",
       label: "Instagram",
       icon: FaInstagram,
     },
     {
-      href: "https://twitter.com/robertmill",
+      href: "https://x.com/mill_berto",
       label: "X (Twitter)",
       icon: FaTwitter,
     },
