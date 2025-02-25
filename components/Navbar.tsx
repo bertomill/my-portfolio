@@ -2,17 +2,19 @@
 
 import {
   Box,
-  Button,
   Container,
   Flex,
   IconButton,
   Stack,
   useDisclosure,
   VStack,
+  HStack,
+  Divider,
 } from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import Link from 'next/link'
 import ThemeToggle from './ThemeToggle'
+import SocialLinks from './SocialLinks'
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure()
@@ -43,6 +45,16 @@ export default function Navbar() {
             aria-label="Toggle Navigation"
           />
 
+          {/* Social Links - Desktop Only */}
+          <HStack 
+            spacing={4} 
+            display={{ base: 'none', md: 'flex' }}
+            ml="auto"
+            mr={4}
+          >
+            <SocialLinks />
+          </HStack>
+
           {/* Theme Toggle */}
           <ThemeToggle />
         </Flex>
@@ -59,6 +71,13 @@ export default function Navbar() {
             <Link href="/about" onClick={onToggle}>About</Link>
             <Link href="/projects" onClick={onToggle}>Projects</Link>
             <Link href="/blog" onClick={onToggle}>Blog</Link>
+            
+            <Divider my={2} />
+            
+            {/* Social Links - Mobile */}
+            <Box pt={2} pb={1}>
+              <SocialLinks />
+            </Box>
           </VStack>
         )}
       </Container>
