@@ -13,6 +13,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 const MotionBox = motion(Box)
 
@@ -86,8 +87,12 @@ export default function Projects() {
                   color="blue.500" 
                   fontWeight="medium"
                   _hover={{ textDecoration: 'underline' }}
+                  display="flex"
+                  alignItems="center"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  Visit Project →
+                  Visit Project <ExternalLinkIcon mx="2px" />
                 </Link>
               </VStack>
             </HStack>
