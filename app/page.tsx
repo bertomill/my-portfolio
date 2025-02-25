@@ -9,7 +9,6 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import Link from 'next/link'
-import AIChatInterface from '@/components/AIChatInterface'
 import NewsletterSubscribe from '@/components/NewsletterSubscribe'
 
 export default function Home() {
@@ -87,10 +86,6 @@ export default function Home() {
             <NewsletterSubscribe />
           </Box>
 
-          {/* Chat interface */}
-          <Box w="full" maxW="container.md" px={{ base: 0, sm: 4 }}>
-            <AIChatInterface />
-          </Box>
         </VStack>
       </Container>
     </Box>
