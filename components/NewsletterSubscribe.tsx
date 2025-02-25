@@ -8,10 +8,10 @@ import {
   Text,
   VStack,
   useToast,
-  keyframes,
   useColorModeValue,
   Icon,
 } from '@chakra-ui/react'
+import { keyframes } from '@emotion/react'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { BellIcon } from '@chakra-ui/icons'
