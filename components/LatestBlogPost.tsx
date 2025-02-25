@@ -10,14 +10,18 @@ import {
   VStack,
   useColorModeValue,
   Skeleton,
+  LinkBox,
+  LinkOverlay,
 } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import type { BlogPost } from '@/lib/getBlogPosts'
+import NextLink from 'next/link'
 
 const MotionBox = motion(Box)
+const MotionLinkBox = motion(LinkBox)
 
 export default function LatestBlogPost() {
   const [post, setPost] = useState<BlogPost | null>(null)
@@ -81,7 +85,8 @@ export default function LatestBlogPost() {
           </VStack>
         </Box>
       ) : post ? (
-        <Box
+        <MotionLinkBox
+          as="article"
           p={{ base: 4, md: 5 }}
           borderRadius="xl"
           position="relative"
@@ -91,6 +96,7 @@ export default function LatestBlogPost() {
           }}
           transition="all 0.2s"
           role="group"
+          whileHover={{ scale: 1.01 }}
         >
           <Box
             position="absolute"
@@ -100,6 +106,7 @@ export default function LatestBlogPost() {
             bg="linear-gradient(45deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%)"
             transition="opacity 0.2s"
             _groupHover={{ opacity: 1 }}
+            pointerEvents="none"
           />
 
           <VStack align="stretch" spacing={{ base: 2, md: 3 }}>
@@ -144,23 +151,32 @@ export default function LatestBlogPost() {
               </HStack>
             )}
             
-            <Link 
-              href={post.link} 
-              isExternal 
-              color="blue.500" 
-              fontWeight="medium"
-              _hover={{ textDecoration: 'underline' }}
-              display="flex"
-              alignItems="center"
-              target="_blank"
-              rel="noopener noreferrer"
-              fontSize={{ base: "sm", md: "md" }}
+            <Box 
+              position="relative" 
+              zIndex={2}
               mt={1}
             >
-              Read Article <ExternalLinkIcon mx="2px" />
-            </Link>
+              <LinkOverlay
+                as={NextLink}
+                href={post.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                passHref
+              >
+                <Link
+                  color="blue.500" 
+                  fontWeight="medium"
+                  _hover={{ textDecoration: 'underline' }}
+                  display="flex"
+                  alignItems="center"
+                  fontSize={{ base: "sm", md: "md" }}
+                >
+                  Read Article <ExternalLinkIcon mx="2px" />
+                </Link>
+              </LinkOverlay>
+            </Box>
           </VStack>
-        </Box>
+        </MotionLinkBox>
       ) : (
         <Box 
           p={{ base: 4, md: 5 }} 

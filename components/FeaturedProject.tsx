@@ -10,11 +10,15 @@ import {
   Tag,
   useColorModeValue,
   VStack,
+  LinkBox,
+  LinkOverlay,
 } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { motion } from 'framer-motion'
+import NextLink from 'next/link'
 
 const MotionBox = motion(Box)
+const MotionLinkBox = motion(LinkBox)
 
 export default function FeaturedProject() {
   const hoverBg = useColorModeValue('rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0.05)')
@@ -35,7 +39,8 @@ export default function FeaturedProject() {
         Latest Project
       </Heading>
       
-      <Box
+      <MotionLinkBox
+        as="article"
         p={{ base: 4, md: 5 }}
         borderRadius="xl"
         position="relative"
@@ -44,6 +49,7 @@ export default function FeaturedProject() {
           transform: 'translateY(-2px)',
         }}
         transition="all 0.2s"
+        whileHover={{ scale: 1.01 }}
       >
         <Box
           position="absolute"
@@ -53,6 +59,7 @@ export default function FeaturedProject() {
           bg="linear-gradient(45deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%)"
           transition="opacity 0.2s"
           _groupHover={{ opacity: 1 }}
+          pointerEvents="none"
         />
 
         <HStack spacing={5} align="start">
@@ -72,23 +79,33 @@ export default function FeaturedProject() {
               <Tag size="sm">Newsletter</Tag>
               <Tag size="sm">AI</Tag>
             </HStack>
-            <Link 
-              href="https://letterpipe.vercel.app/" 
-              isExternal 
-              color="blue.500" 
-              fontWeight="medium"
-              _hover={{ textDecoration: 'underline' }}
-              display="flex"
-              alignItems="center"
-              target="_blank"
-              rel="noopener noreferrer"
-              fontSize={{ base: "sm", md: "md" }}
+            <Box 
+              position="relative" 
+              zIndex={2}
+              mt={1}
             >
-              View Project <ExternalLinkIcon mx="2px" />
-            </Link>
+              <LinkOverlay
+                as={NextLink}
+                href="https://letterpipe.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                passHref
+              >
+                <Link
+                  color="blue.500" 
+                  fontWeight="medium"
+                  _hover={{ textDecoration: 'underline' }}
+                  display="flex"
+                  alignItems="center"
+                  fontSize={{ base: "sm", md: "md" }}
+                >
+                  View Project <ExternalLinkIcon mx="2px" />
+                </Link>
+              </LinkOverlay>
+            </Box>
           </VStack>
         </HStack>
-      </Box>
+      </MotionLinkBox>
     </MotionBox>
   )
 } 
