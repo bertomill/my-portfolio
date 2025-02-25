@@ -7,11 +7,17 @@ import {
   Heading,
   Text,
   VStack,
+  SimpleGrid,
+  useColorModeValue,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import NewsletterSubscribe from '@/components/NewsletterSubscribe'
+import FeaturedProject from '@/components/FeaturedProject'
+import LatestBlogPost from '@/components/LatestBlogPost'
 
 export default function Home() {
+  const sectionBg = useColorModeValue('rgba(255, 255, 255, 0.03)', 'rgba(255, 255, 255, 0.03)')
+
   return (
     <Box w="full" display="flex" justifyContent="center">
       <Container 
@@ -46,18 +52,46 @@ export default function Home() {
             <Text 
               fontSize={{ base: "md", sm: "lg", md: "xl" }}
               maxW={{ base: "100%", sm: "90%", md: "container.md" }}
-              mt={{ base: 6, sm: 8, md: 10, lg: 12 }}
               lineHeight={{ base: "tall", md: "taller" }}
             >
               I am a technology consultant and ML application developer based in Toronto, passionate about crafting intuitive user experiences to
               help people and businesses solve problems.
             </Text>
 
+            {/* Featured Work Section */}
+            <Box 
+              w="full" 
+              mt={{ base: 8, md: 12 }}
+              p={{ base: 5, md: 6 }}
+              borderRadius="xl"
+              bg={sectionBg}
+            >
+              <VStack spacing={8}>
+                <Heading 
+                  as="h2" 
+                  size={{ base: "md", md: "lg" }}
+                  mb={{ base: 2, md: 3 }}
+                >
+                  Featured Work
+                </Heading>
+                
+                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 6, md: 8 }} w="full">
+                  <Box>
+                    <FeaturedProject />
+                  </Box>
+                  
+                  <Box>
+                    <LatestBlogPost />
+                  </Box>
+                </SimpleGrid>
+              </VStack>
+            </Box>
+
             <Box 
               display="flex" 
               flexDirection={{ base: 'column', sm: 'row' }}
               gap={{ base: 2, sm: 3, md: 4 }} 
-              mt={{ base: 4, sm: 6, md: 8 }}
+              mt={{ base: 8, sm: 10, md: 12 }}
               width={{ base: 'full', sm: 'auto' }}
             >
               <Button
