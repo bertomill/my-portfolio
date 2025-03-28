@@ -5,12 +5,12 @@ import {
   Heading,
   Box,
   Text,
-  Link,
   Image,
   HStack,
   Tag,
   Container,
   useColorModeValue,
+  Button,
 } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
@@ -64,14 +64,14 @@ export default function Projects() {
 
             <HStack spacing={6} align="start">
               <Image 
-                src="/letterpipe-logo.svg" 
-                alt="LetterPipe Logo" 
+                src="/letter-forge-logo.svg" 
+                alt="Letter Forge Logo" 
                 boxSize={{ base: "80px", md: "100px" }}
                 objectFit="cover"
                 borderRadius="md"
               />
               <VStack align="start" spacing={3}>
-                <Heading size={{ base: "md", md: "lg" }}>LetterPipe</Heading>
+                <Heading size={{ base: "md", md: "lg" }}>Letter Forge</Heading>
                 <Text>
                   Streamline your newsletter creation process. Save articles, YouTube videos, and notes in one place. 
                   Write better newsletters with AI assistance.
@@ -81,19 +81,144 @@ export default function Projects() {
                   <Tag size={{ base: "sm", md: "md" }}>AI</Tag>
                   <Tag size={{ base: "sm", md: "md" }}>Content Creation</Tag>
                 </HStack>
-                <Link 
-                  href="https://letterpipe.vercel.app/" 
-                  isExternal 
-                  color="blue.500" 
-                  fontWeight="medium"
-                  _hover={{ textDecoration: 'underline' }}
-                  display="flex"
-                  alignItems="center"
+                <Button 
+                  as="a"
+                  href="https://letterpipe.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
+                  size="sm"
+                  variant="link"
+                  colorScheme="blue"
+                  fontWeight="medium"
+                  rightIcon={<ExternalLinkIcon />}
+                  _hover={{ textDecoration: 'underline' }}
                 >
-                  Visit Project <ExternalLinkIcon mx="2px" />
-                </Link>
+                  Visit Project
+                </Button>
+              </VStack>
+            </HStack>
+          </Box>
+        </MotionBox>
+
+        <MotionBox
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Box
+            p={{ base: 4, md: 6 }}
+            borderRadius="xl"
+            position="relative"
+            _hover={{
+              bg: hoverBg,
+              transform: 'translateY(-2px)',
+            }}
+            transition="all 0.2s"
+          >
+            <Box
+              position="absolute"
+              inset={0}
+              borderRadius="xl"
+              opacity={0}
+              bg="linear-gradient(45deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%)"
+              transition="opacity 0.2s"
+              _groupHover={{ opacity: 1 }}
+            />
+
+            <HStack spacing={6} align="start">
+              <Image 
+                src="/marble-logo.svg" 
+                alt="Marble Logo" 
+                boxSize={{ base: "80px", md: "100px" }}
+                objectFit="cover"
+                borderRadius="md"
+              />
+              <VStack align="start" spacing={3}>
+                <Heading size={{ base: "md", md: "lg" }}>Marble</Heading>
+                <Text>
+                  A modern development platform for building better applications faster.
+                </Text>
+                <HStack spacing={2} flexWrap="wrap" gap={2}>
+                  <Tag size={{ base: "sm", md: "md" }}>Development</Tag>
+                  <Tag size={{ base: "sm", md: "md" }}>Platform</Tag>
+                  <Tag size={{ base: "sm", md: "md" }}>Tooling</Tag>
+                </HStack>
+                <Button 
+                  as="a"
+                  href="https://www.marble.dev/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  size="sm"
+                  variant="link"
+                  colorScheme="blue"
+                  fontWeight="medium"
+                  rightIcon={<ExternalLinkIcon />}
+                  _hover={{ textDecoration: 'underline' }}
+                >
+                  Visit Project
+                </Button>
+              </VStack>
+            </HStack>
+          </Box>
+        </MotionBox>
+
+        <MotionBox
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Box
+            p={{ base: 4, md: 6 }}
+            borderRadius="xl"
+            position="relative"
+            _hover={{
+              bg: hoverBg,
+              transform: 'translateY(-2px)',
+            }}
+            transition="all 0.2s"
+          >
+            <Box
+              position="absolute"
+              inset={0}
+              borderRadius="xl"
+              opacity={0}
+              bg="linear-gradient(45deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%)"
+              transition="opacity 0.2s"
+              _groupHover={{ opacity: 1 }}
+            />
+
+            <HStack spacing={6} align="start">
+              <Image 
+                src="/marketstep-logo.svg" 
+                alt="MarketStep Logo" 
+                boxSize={{ base: "80px", md: "100px" }}
+                objectFit="cover"
+                borderRadius="md"
+              />
+              <VStack align="start" spacing={3}>
+                <Heading size={{ base: "md", md: "lg" }}>MarketStep</Heading>
+                <Text>
+                  A comprehensive platform for digital marketing analytics and strategy.
+                </Text>
+                <HStack spacing={2} flexWrap="wrap" gap={2}>
+                  <Tag size={{ base: "sm", md: "md" }}>Marketing</Tag>
+                  <Tag size={{ base: "sm", md: "md" }}>Analytics</Tag>
+                  <Tag size={{ base: "sm", md: "md" }}>Strategy</Tag>
+                </HStack>
+                <Button 
+                  as="a"
+                  href="https://marketstep.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  size="sm"
+                  variant="link"
+                  colorScheme="blue"
+                  fontWeight="medium"
+                  rightIcon={<ExternalLinkIcon />}
+                  _hover={{ textDecoration: 'underline' }}
+                >
+                  Visit Project
+                </Button>
               </VStack>
             </HStack>
           </Box>

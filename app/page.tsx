@@ -46,7 +46,7 @@ export default function Home() {
               size={{ base: "lg", sm: "xl", md: "2xl" }}
               mb={{ base: 2, sm: 3, md: 4, lg: 6 }}
             >
-              Hi, I&apos;m Robert
+              Hi, I&apos;m Robert 👋
             </Heading>
 
             <Text 
