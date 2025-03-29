@@ -112,9 +112,9 @@ export default function NewsletterSubscribe() {
       onSubmit={handleSubmit}
       p={6}
       borderRadius="lg"
-      bg="hsl(0 0% 7%)"
+      bg="white"
       border="1px solid"
-      borderColor="whiteAlpha.200"
+      borderColor="gray.200"
       position="relative"
       _after={{
         content: '""',
@@ -139,7 +139,7 @@ export default function NewsletterSubscribe() {
         animation: `${glow} 4s infinite`,
         zIndex: -1,
       }}
-      boxShadow="0 4px 20px rgba(0, 0, 0, 0.2)"
+      boxShadow="0 4px 20px rgba(0, 0, 0, 0.1)"
       transform="translateZ(0)"
       overflow="hidden"
       onMouseEnter={() => setIsHovered(true)}
@@ -158,7 +158,7 @@ export default function NewsletterSubscribe() {
         <Box position="relative" textAlign="center">
           <MotionIcon
             as={BellIcon}
-            color="blue.300"
+            color="blue.500"
             boxSize={5}
             mr={2}
             display="inline-block"
@@ -175,7 +175,7 @@ export default function NewsletterSubscribe() {
             as="h3" 
             size="md" 
             textAlign="center" 
-            color="white"
+            color="black"
             display="inline-block"
             verticalAlign="middle"
             bgGradient={`linear(to-r, ${gradientStart}, ${gradientEnd})`}
@@ -185,7 +185,7 @@ export default function NewsletterSubscribe() {
           </Heading>
         </Box>
         
-        <Text fontSize="sm" color="gray.300" textAlign="center">
+        <Text fontSize="sm" color="gray.700" textAlign="center">
           Subscribe to get notified about new projects and tech insights.
         </Text>
 
@@ -210,10 +210,10 @@ export default function NewsletterSubscribe() {
             placeholder="your@email.com"
             size="md"
             required
-            bg="hsl(0 0% 9%)"
+            bg="white"
             border="1px solid"
-            borderColor="whiteAlpha.200"
-            _hover={{ borderColor: borderColor, bg: 'hsl(0 0% 11%)' }}
+            borderColor="gray.300"
+            _hover={{ borderColor: borderColor, bg: 'gray.50' }}
             _focus={{ borderColor: borderColor, boxShadow: `0 0 0 1px ${borderColor}` }}
             disabled={isLoading}
           />
