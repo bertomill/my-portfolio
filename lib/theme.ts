@@ -1,4 +1,4 @@
-import { extendTheme } from '@chakra-ui/react'
+import { extendTheme, ThemeOverride } from '@chakra-ui/react'
 
 export const theme = extendTheme({
   config: {
@@ -6,7 +6,7 @@ export const theme = extendTheme({
     useSystemColorMode: false,
   },
   styles: {
-    global: (props) => ({
+    global: (props: Record<string, any>) => ({
       body: {
         bg: 'white',
         color: 'black',
