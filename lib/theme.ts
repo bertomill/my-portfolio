@@ -2,19 +2,35 @@ import { extendTheme } from '@chakra-ui/react'
 
 export const theme = extendTheme({
   config: {
-    initialColorMode: 'dark',
+    initialColorMode: 'light',
     useSystemColorMode: false,
   },
   styles: {
     global: {
       body: {
-        bg: 'black',
-        color: 'white',
+        bg: 'white',
+        color: 'black',
+      },
+      // Ensure all text elements have black text in light mode
+      'p, h1, h2, h3, h4, h5, h6, span, div': {
+        color: 'black',
       },
     },
   },
   colors: {
     // Your custom colors here
+    gray: {
+      50: '#F7FAFC',
+      100: '#EDF2F7',
+      200: '#E2E8F0',
+      300: '#CBD5E0',
+      400: '#A0AEC0',
+      500: '#718096',
+      600: '#4A5568',
+      700: '#2D3748',
+      800: '#1A202C',
+      900: '#171923',
+    },
   },
   fonts: {
     heading: 'SF Pro Display, -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
@@ -24,6 +40,12 @@ export const theme = extendTheme({
     Heading: {
       baseStyle: {
         fontWeight: '600',
+        color: 'black',
+      },
+    },
+    Text: {
+      baseStyle: {
+        color: 'black',
       },
     },
     Button: {
