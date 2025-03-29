@@ -38,10 +38,11 @@ interface ProjectCardProps {
   logoSrc: string;
   logoAlt: string;
   projectUrl: string;
+  date: string;
 }
 
 // Project Card component
-function ProjectCard({ title, description, tags, logoSrc, logoAlt, projectUrl }: ProjectCardProps) {
+function ProjectCard({ title, description, tags, logoSrc, logoAlt, projectUrl, date }: ProjectCardProps) {
   const hoverBg = useColorModeValue('rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0.05)')
   const tagBg = useColorModeValue('gray.200', 'whiteAlpha.200')
   const tagColor = useColorModeValue('black', 'white')
@@ -105,6 +106,9 @@ function ProjectCard({ title, description, tags, logoSrc, logoAlt, projectUrl }:
                 </ChakraLink>
               </NextLink>
             </Box>
+            <Text fontSize="sm" color="gray.500" fontWeight="medium">
+              {date}
+            </Text>
           </VStack>
         </HStack>
       </Box>
@@ -304,28 +308,31 @@ export default function Home() {
   // Projects data
   const projects: ProjectCardProps[] = [
     {
-      title: "Letter Forge",
-      description: "Streamline your newsletter creation process with AI assistance.",
-      tags: ["Newsletter", "AI"],
-      logoSrc: "/letter-forge-logo.svg",
-      logoAlt: "Letter Forge Logo",
-      projectUrl: "https://letterpipe.vercel.app/"
-    },
-    {
       title: "Marble",
       description: "A modern development platform for building better applications faster.",
       tags: ["Development", "Platform"],
       logoSrc: "/marble-logo.svg",
       logoAlt: "Marble Logo",
-      projectUrl: "https://www.marble.dev/"
+      projectUrl: "https://www.marble.dev/",
+      date: "March 2025"
     },
     {
       title: "MarketStep",
       description: "A comprehensive platform for digital marketing analytics and strategy.",
-      tags: ["Marketing", "Analytics"],
-      logoSrc: "/marketstep-logo.svg",
+      tags: ["Finance", "Analytics"],
+      logoSrc: "/finance-icon.svg",
       logoAlt: "MarketStep Logo",
-      projectUrl: "https://marketstep.vercel.app/"
+      projectUrl: "https://marketstep.vercel.app/",
+      date: "February 2025"
+    },
+    {
+      title: "Letter Forge",
+      description: "Streamline your newsletter creation process with AI assistance.",
+      tags: ["Newsletter", "AI"],
+      logoSrc: "/letter-forge-logo.svg",
+      logoAlt: "Letter Forge Logo",
+      projectUrl: "https://letterpipe.vercel.app/",
+      date: "December 2024"
     }
   ]
 
