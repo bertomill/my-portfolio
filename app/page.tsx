@@ -494,6 +494,115 @@ export default function Home() {
               </VStack>
             </Box>
 
+            {/* Education Section */}
+            <Box 
+              w="full" 
+              mt={{ base: 8, md: 12 }}
+              p={{ base: 5, md: 6 }}
+              borderRadius="xl"
+              bg={lightSectionBg}
+              boxShadow="sm"
+            >
+              <VStack spacing={6}>
+                <Heading 
+                  as="h2" 
+                  size={{ base: "md", md: "lg" }}
+                  mb={{ base: 1, md: 2 }}
+                  color="black"
+                >
+                  Education
+                </Heading>
+                
+                <Box w="full">
+                  <VStack spacing={4} align="stretch">
+                    <MotionBox
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.1 }}
+                      w="full"
+                    >
+                      <Box
+                        p={4}
+                        borderRadius="lg"
+                        bg="white"
+                        borderWidth="1px"
+                        borderColor="gray.200"
+                        boxShadow="sm"
+                      >
+                        <VStack align="stretch" spacing={1}>
+                          <Text fontSize="lg" fontWeight="bold" color="black">
+                            Ivey Business School
+                          </Text>
+                          <Text fontSize="md" fontWeight="medium" color="black">
+                            Masters of Science, Digital Management (MSc)
+                          </Text>
+                          <Text fontSize="sm" color="black" fontFamily="mono">
+                            2022 - 2023
+                          </Text>
+                        </VStack>
+                      </Box>
+                    </MotionBox>
+
+                    <MotionBox
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.2 }}
+                      w="full"
+                    >
+                      <Box
+                        p={4}
+                        borderRadius="lg"
+                        bg="white"
+                        borderWidth="1px"
+                        borderColor="gray.200"
+                        boxShadow="sm"
+                      >
+                        <VStack align="stretch" spacing={1}>
+                          <Text fontSize="lg" fontWeight="bold" color="black">
+                            Ivey Business School
+                          </Text>
+                          <Text fontSize="md" fontWeight="medium" color="black">
+                            Graduate Diploma in Business and Sustainability (GDip)
+                          </Text>
+                          <Text fontSize="sm" color="black" fontFamily="mono">
+                            2023
+                          </Text>
+                        </VStack>
+                      </Box>
+                    </MotionBox>
+
+                    <MotionBox
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.3 }}
+                      w="full"
+                    >
+                      <Box
+                        p={4}
+                        borderRadius="lg"
+                        bg="white"
+                        borderWidth="1px"
+                        borderColor="gray.200"
+                        boxShadow="sm"
+                      >
+                        <VStack align="stretch" spacing={1}>
+                          <Text fontSize="lg" fontWeight="bold" color="black">
+                            Western University
+                          </Text>
+                          <Text fontSize="md" fontWeight="medium" color="black">
+                            Bachelors of Arts, Management and Legal Studies (BA)
+                          </Text>
+                          <Text fontSize="sm" color="black" fontFamily="mono">
+                            2017 - 2021
+                          </Text>
+                        </VStack>
+                      </Box>
+                    </MotionBox>
+                  </VStack>
+                </Box>
+              </VStack>
+            </Box>
+
             <Box 
               display="flex" 
               flexDirection={{ base: 'column', sm: 'row' }}
