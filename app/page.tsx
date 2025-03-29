@@ -407,12 +407,12 @@ export default function Home() {
                       src="/headshot.png"
                       alt="Robert Mill"
                       position="absolute"
-                      top="-15%"
+                      top="0"
                       left="0"
                       width="100%"
-                      height="130%"
+                      height="100%"
                       objectFit="cover"
-                      objectPosition="center top"
+                      objectPosition="center"
                     />
                   </Box>
                 </MotionBox>

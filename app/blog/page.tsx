@@ -25,7 +25,7 @@ export default function Blog() {
   const [isLoading, setIsLoading] = useState(true)
   const hoverBg = useColorModeValue('gray.50', 'rgba(255, 255, 255, 0.05)')
   const cardBg = useColorModeValue('white', 'transparent')
-  const dateFontColor = useColorModeValue('gray.700', 'gray.400')
+  const dateFontColor = useColorModeValue('black', 'gray.400')
   const tagBg = useColorModeValue('gray.200', 'whiteAlpha.200')
   const borderColor = useColorModeValue('gray.200', 'transparent')
 
@@ -69,7 +69,7 @@ export default function Blog() {
           textAlign="center"
           color="black"
         >
-          Blog
+          Blog Posts
         </Heading>
 
         <VStack spacing={{ base: 3, md: 4 }} align="stretch">
@@ -117,6 +117,7 @@ export default function Blog() {
                   }}
                   transition="all 0.2s"
                   role="group"
+                  color="black"
                 >
                   <Box
                     position="absolute"
