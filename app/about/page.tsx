@@ -16,9 +16,9 @@ import TimelineItem from '@/components/TimelineItem'
 const MotionBox = motion(Box)
 
 export default function About() {
-  const textColor = useColorModeValue('gray.100', 'gray.100')
-  const sectionBg = useColorModeValue('rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0.05)')
-  const tagBg = useColorModeValue('whiteAlpha.200', 'whiteAlpha.200')
+  const textColor = useColorModeValue('black', 'gray.100')
+  const sectionBg = useColorModeValue('gray.50', 'rgba(255, 255, 255, 0.05)')
+  const tagBg = useColorModeValue('gray.200', 'whiteAlpha.200')
 
   const techStack = {
     'Frontend': ['TypeScript', 'Next.js'],
@@ -42,6 +42,7 @@ export default function About() {
           size={{ base: "xl", md: "2xl" }}
           mb={{ base: 6, md: 8 }} 
           textAlign="center"
+          color="black"
         >
           About Me
         </Heading>
@@ -53,13 +54,20 @@ export default function About() {
           p={{ base: 4, md: 6 }}
           borderRadius="xl"
           bg={sectionBg}
+          boxShadow="sm"
         >
           <VStack spacing={4} align="stretch">
-            <Text fontSize={{ base: "md", md: "lg" }} color={textColor}>
-              I believe that AI can empower people and businesses to create 10X more value in one-tenth of the time, and I&apos;m on a mission to build applications that help make this happen.
+            <Text fontSize={{ base: "md", md: "lg" }} color={textColor} fontWeight="medium">
+              Experienced AI application developer who is passionate about building impactful products in fast-paced, innovative environments. My experience includes building applications for large enterprises such as CIBC and SickKids Hospital, as well as contributing to the growth of various startups.
             </Text>
-            <Text fontSize={{ base: "md", md: "lg" }} color={textColor}>
-              I&apos;m a Toronto-based technology consultant and application developer, combining my business education with technical expertise to deliver impactful solutions.
+            <Text fontSize={{ base: "md", md: "lg" }} color={textColor} fontWeight="medium">
+              With a background in digital management, I specialize in leveraging design thinking and user journey mapping to craft impactful strategies and products. I stay at the forefront of emerging technologies, ensuring my solutions are innovative, intuitive, and customer-focused.
+            </Text>
+            <Text fontSize={{ base: "md", md: "lg" }} color={textColor} fontWeight="medium">
+              Beyond work, I enjoy building businesses and creating enduring brands that resonate with people. Movement has always been a key part of my life, whether it&apos;s running, lifting weights, or playing sports with friends.
+            </Text>
+            <Text fontSize={{ base: "md", md: "lg" }} color={textColor} fontWeight="medium">
+              I&apos;m passionate about designing products people love, and I&apos;m driven by opportunities to create meaningful, lasting impact through my work.
             </Text>
           </VStack>
         </MotionBox>
@@ -69,7 +77,7 @@ export default function About() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          <Heading as="h2" size={{ base: "lg", md: "xl" }} mb={4}>
+          <Heading as="h2" size={{ base: "lg", md: "xl" }} mb={4} color="black">
             Technology Stack
           </Heading>
           <SimpleGrid 
@@ -78,6 +86,7 @@ export default function About() {
             p={{ base: 4, md: 6 }}
             bg={sectionBg}
             borderRadius="xl"
+            boxShadow="sm"
           >
             {Object.entries(techStack).map(([category, technologies]) => (
               <Box key={category}>
@@ -89,9 +98,10 @@ export default function About() {
                     <Tag 
                       key={tech} 
                       bg={tagBg}
-                      color="white"
+                      color="black"
                       size={{ base: "sm", md: "md" }}
                       borderRadius="full"
+                      fontWeight="medium"
                     >
                       {tech}
                     </Tag>
@@ -107,7 +117,7 @@ export default function About() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.2 }}
         >
-          <Heading as="h2" size={{ base: "lg", md: "xl" }} mb={4}>
+          <Heading as="h2" size={{ base: "lg", md: "xl" }} mb={4} color="black">
             Career Experience
           </Heading>
           <VStack 
@@ -115,6 +125,7 @@ export default function About() {
             p={{ base: 4, md: 6 }}
             bg={sectionBg}
             borderRadius="xl"
+            boxShadow="sm"
           >
             <TimelineItem 
               title="Technology Consultant"
@@ -142,7 +153,7 @@ export default function About() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.3 }}
         >
-          <Heading as="h2" size={{ base: "lg", md: "xl" }} mb={4}>
+          <Heading as="h2" size={{ base: "lg", md: "xl" }} mb={4} color="black">
             Education
           </Heading>
           <VStack 
@@ -150,6 +161,7 @@ export default function About() {
             p={{ base: 4, md: 6 }}
             bg={sectionBg}
             borderRadius="xl"
+            boxShadow="sm"
           >
             <TimelineItem 
               title="Master of Digital Management"
@@ -173,13 +185,13 @@ export default function About() {
           p={{ base: 4, md: 6 }}
           bg={sectionBg}
           borderRadius="xl"
+          boxShadow="sm"
         >
-          <Heading as="h2" size={{ base: "lg", md: "xl" }} mb={4}>
+          <Heading as="h2" size={{ base: "lg", md: "xl" }} mb={4} color="black">
             Beyond Work
           </Heading>
-          <Text fontSize={{ base: "md", md: "lg" }} color={textColor}>
-            Outside of technology, I&apos;m an active sports enthusiast, enjoying squash, football, running, yoga, golf, and biking. 
-            I believe in maintaining a balanced lifestyle that combines professional growth with physical activity and continuous learning.
+          <Text fontSize={{ base: "md", md: "lg" }} color={textColor} fontWeight="medium">
+            Outside of technology, I enjoy building businesses and creating enduring brands that resonate with people. Movement has always been a key part of my life, whether it&apos;s running, lifting weights, or playing sports with friends.
           </Text>
         </MotionBox>
       </VStack>

@@ -8,8 +8,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Robert Mill - Application Developer",
-  description: "Portfolio and blog of Robert Mill, an application developer passionate about crafting intuitive user experiences.",
+  title: "Berto Mill - Application Developer",
+  description: "Portfolio and blog of Berto Mill, an application developer passionate about crafting intuitive user experiences.",
   icons: {
     icon: '/favicon.svg',
   },

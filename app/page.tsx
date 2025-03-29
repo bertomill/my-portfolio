@@ -371,7 +371,7 @@ export default function Home() {
                   size={{ base: "lg", sm: "xl", md: "2xl" }}
                   mb={{ base: 2, sm: 3 }}
                 >
-                  Hi, I&apos;m Robert 👋
+                  Hi, I&apos;m Berto 👋
                 </Heading>
 
                 <Text 
@@ -405,7 +405,7 @@ export default function Home() {
                   >
                     <Image
                       src="/headshot.png"
-                      alt="Robert Mill"
+                      alt="Berto Mill"
                       position="absolute"
                       top="0"
                       left="0"
