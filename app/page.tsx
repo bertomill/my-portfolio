@@ -116,7 +116,7 @@ function BlogPostCard({ post }: { post: BlogPost }) {
   const hoverBg = useColorModeValue('white', 'rgba(255, 255, 255, 0.05)')
   const bgColor = useColorModeValue('gray.50', 'transparent')
   const borderColor = useColorModeValue('gray.200', 'transparent')
-  const dateFontColor = useColorModeValue('gray.600', 'gray.400')
+  const dateFontColor = useColorModeValue('black', 'gray.400')
   const titleColor = useColorModeValue('black', 'white')
   const blogTagBg = useColorModeValue('gray.200', 'whiteAlpha.200')
   const blogTagColor = useColorModeValue('black', 'white')
@@ -276,7 +276,7 @@ function BlogPosts() {
             width="full"
             textAlign="center"
           >
-            <Text color="gray.700" fontWeight="medium">No blog posts found. Check back soon!</Text>
+            <Text color="black" fontWeight="medium">No blog posts found. Check back soon!</Text>
           </Box>
         )}
         
@@ -376,7 +376,7 @@ export default function Home() {
                 <Text 
                   fontSize={{ base: "md", sm: "lg", md: "xl" }}
                   lineHeight={{ base: "tall", md: "taller" }}
-                  color="gray.900"
+                  color="black"
                   fontWeight="medium"
                 >
                   I am a technology consultant and ML application developer based in Toronto, passionate about crafting intuitive user experiences to
@@ -486,7 +486,7 @@ export default function Home() {
                         style={{ borderRadius: '0.75rem' }}
                       />
                     </AspectRatio>
-                    <Text mt={3} fontSize="sm" textAlign="left" color="gray.700" fontWeight="medium">
+                    <Text mt={3} fontSize="sm" textAlign="left" color="black" fontWeight="medium">
                       My latest tech presentation discussing innovative approaches to app development
                     </Text>
                   </MotionBox>
