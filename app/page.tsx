@@ -17,6 +17,7 @@ import {
   Skeleton,
   LinkBox,
   LinkOverlay,
+  Flex,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
@@ -529,26 +530,28 @@ export default function Home() {
                         borderColor="gray.200"
                         boxShadow="sm"
                       >
-                        <HStack align="start" spacing={4}>
-                          <Image 
-                            src="/ivey_logo.png" 
-                            alt="Ivey Business School Logo" 
-                            boxSize={{ base: "50px", md: "60px" }}
-                            objectFit="contain"
-                            borderRadius="md"
-                          />
-                          <VStack align="stretch" spacing={1}>
-                            <Text fontSize="lg" fontWeight="bold" color="black">
-                              Ivey Business School
-                            </Text>
-                            <Text fontSize="md" fontWeight="medium" color="black">
-                              Masters of Science, Digital Management (MSc)
-                            </Text>
-                            <Text fontSize="sm" color="black" fontFamily="mono">
-                              2022 - 2023
-                            </Text>
-                          </VStack>
-                        </HStack>
+                        <Flex justify="space-between" align="center">
+                          <HStack align="start" spacing={4}>
+                            <Image 
+                              src="/ivey_logo.png" 
+                              alt="Ivey Business School Logo" 
+                              boxSize={{ base: "50px", md: "60px" }}
+                              objectFit="contain"
+                              borderRadius="md"
+                            />
+                            <VStack align="start" spacing={1}>
+                              <Text fontSize="lg" fontWeight="bold" color="black">
+                                Ivey Business School
+                              </Text>
+                              <Text fontSize="md" fontWeight="medium" color="black">
+                                Masters of Science, Digital Management (MSc)
+                              </Text>
+                            </VStack>
+                          </HStack>
+                          <Text fontSize="sm" color="black" fontFamily="mono" textAlign="right">
+                            2022 - 2023
+                          </Text>
+                        </Flex>
                       </Box>
                     </MotionBox>
 
@@ -566,26 +569,28 @@ export default function Home() {
                         borderColor="gray.200"
                         boxShadow="sm"
                       >
-                        <HStack align="start" spacing={4}>
-                          <Image 
-                            src="/ivey_logo.png" 
-                            alt="Ivey Business School Logo" 
-                            boxSize={{ base: "50px", md: "60px" }}
-                            objectFit="contain"
-                            borderRadius="md"
-                          />
-                          <VStack align="stretch" spacing={1}>
-                            <Text fontSize="lg" fontWeight="bold" color="black">
-                              Ivey Business School
-                            </Text>
-                            <Text fontSize="md" fontWeight="medium" color="black">
-                              Graduate Diploma in Business and Sustainability (GDip)
-                            </Text>
-                            <Text fontSize="sm" color="black" fontFamily="mono">
-                              2023
-                            </Text>
-                          </VStack>
-                        </HStack>
+                        <Flex justify="space-between" align="center">
+                          <HStack align="start" spacing={4}>
+                            <Image 
+                              src="/ivey_logo.png" 
+                              alt="Ivey Business School Logo" 
+                              boxSize={{ base: "50px", md: "60px" }}
+                              objectFit="contain"
+                              borderRadius="md"
+                            />
+                            <VStack align="start" spacing={1}>
+                              <Text fontSize="lg" fontWeight="bold" color="black">
+                                Ivey Business School
+                              </Text>
+                              <Text fontSize="md" fontWeight="medium" color="black">
+                                Graduate Diploma in Business and Sustainability (GDip)
+                              </Text>
+                            </VStack>
+                          </HStack>
+                          <Text fontSize="sm" color="black" fontFamily="mono" textAlign="right">
+                            2023
+                          </Text>
+                        </Flex>
                       </Box>
                     </MotionBox>
 
@@ -603,26 +608,28 @@ export default function Home() {
                         borderColor="gray.200"
                         boxShadow="sm"
                       >
-                        <HStack align="start" spacing={4}>
-                          <Image 
-                            src="/western_logo.png" 
-                            alt="Western University Logo" 
-                            boxSize={{ base: "50px", md: "60px" }}
-                            objectFit="contain"
-                            borderRadius="md"
-                          />
-                          <VStack align="stretch" spacing={1}>
-                            <Text fontSize="lg" fontWeight="bold" color="black">
-                              Western University
-                            </Text>
-                            <Text fontSize="md" fontWeight="medium" color="black">
-                              Bachelors of Arts, Management and Legal Studies (BA)
-                            </Text>
-                            <Text fontSize="sm" color="black" fontFamily="mono">
-                              2017 - 2021
-                            </Text>
-                          </VStack>
-                        </HStack>
+                        <Flex justify="space-between" align="center">
+                          <HStack align="start" spacing={4}>
+                            <Image 
+                              src="/western_logo.png" 
+                              alt="Western University Logo" 
+                              boxSize={{ base: "50px", md: "60px" }}
+                              objectFit="contain"
+                              borderRadius="md"
+                            />
+                            <VStack align="start" spacing={1}>
+                              <Text fontSize="lg" fontWeight="bold" color="black">
+                                Western University
+                              </Text>
+                              <Text fontSize="md" fontWeight="medium" color="black">
+                                Bachelors of Arts, Management and Legal Studies (BA)
+                              </Text>
+                            </VStack>
+                          </HStack>
+                          <Text fontSize="sm" color="black" fontFamily="mono" textAlign="right">
+                            2017 - 2021
+                          </Text>
+                        </Flex>
                       </Box>
                     </MotionBox>
                   </VStack>
