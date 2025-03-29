@@ -13,7 +13,6 @@ import {
 } from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import Link from 'next/link'
-import ThemeToggle from './ThemeToggle'
 import SocialLinks from './SocialLinks'
 
 export default function Navbar() {
@@ -50,13 +49,9 @@ export default function Navbar() {
             spacing={4} 
             display={{ base: 'none', md: 'flex' }}
             ml="auto"
-            mr={4}
           >
             <SocialLinks />
           </HStack>
-
-          {/* Theme Toggle */}
-          <ThemeToggle />
         </Flex>
 
         {/* Mobile Navigation */}

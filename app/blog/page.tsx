@@ -23,9 +23,11 @@ const MotionLink = motion(Link)
 export default function Blog() {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const hoverBg = useColorModeValue('rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0.05)')
-  const dateFontColor = useColorModeValue('gray.400', 'gray.400')
-  const tagBg = useColorModeValue('whiteAlpha.200', 'whiteAlpha.200')
+  const hoverBg = useColorModeValue('gray.50', 'rgba(255, 255, 255, 0.05)')
+  const cardBg = useColorModeValue('white', 'transparent')
+  const dateFontColor = useColorModeValue('gray.700', 'gray.400')
+  const tagBg = useColorModeValue('gray.200', 'whiteAlpha.200')
+  const borderColor = useColorModeValue('gray.200', 'transparent')
 
   useEffect(() => {
     async function fetchPosts() {
@@ -65,6 +67,7 @@ export default function Blog() {
           size={{ base: "xl", md: "2xl" }}
           mb={{ base: 6, md: 8 }} 
           textAlign="center"
+          color="black"
         >
           Blog
         </Heading>
@@ -78,6 +81,7 @@ export default function Blog() {
                 p={{ base: 4, md: 6 }} 
                 borderRadius="xl" 
                 bg={hoverBg}
+                boxShadow="sm"
               >
                 <VStack align="stretch" spacing={3}>
                   <Skeleton height="20px" width="100px" />
@@ -102,9 +106,14 @@ export default function Blog() {
                   p={{ base: 4, md: 6 }}
                   borderRadius="xl"
                   position="relative"
+                  bg={cardBg}
+                  borderWidth="1px"
+                  borderColor={borderColor}
+                  boxShadow="sm"
                   _hover={{
                     bg: hoverBg,
                     transform: 'translateY(-2px)',
+                    boxShadow: 'md'
                   }}
                   transition="all 0.2s"
                   role="group"
@@ -124,6 +133,7 @@ export default function Blog() {
                       fontSize={{ base: "xs", md: "sm" }}
                       color={dateFontColor}
                       fontFamily="mono"
+                      fontWeight="medium"
                     >
                       {formatDate(post.pubDate)}
                     </Text>
@@ -131,10 +141,9 @@ export default function Blog() {
                     <Text
                       fontSize={{ base: "lg", md: "xl" }}
                       fontWeight="semibold"
-                      color="white"
+                      color="black"
                       _groupHover={{ 
-                        bgGradient: "linear(to-r, gray.100, white)",
-                        bgClip: "text"
+                        color: "blue.600"
                       }}
                       transition="all 0.2s"
                     >
@@ -153,7 +162,8 @@ export default function Blog() {
                             key={category}
                             size={{ base: "sm", md: "md" }}
                             bg={tagBg}
-                            color="white"
+                            color="black"
+                            fontWeight="medium"
                           >
                             {category}
                           </Tag>
