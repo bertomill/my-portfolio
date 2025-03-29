@@ -6,12 +6,12 @@
 
 @layer base {
   :root {
-    --background: 0 0% 5%; /* Very dark grey */
-    --foreground: 0 0% 98%;
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 98%;
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
+    --background: 0 0% 100%; /* Light background (changed from 98% to 100%) */
+    --foreground: 0 0% 5%; /* Dark text */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 5%;
+    --border: 0 0% 85%;
+    --input: 0 0% 85%;
     --ring: 0 0% 50%;
     --grainy-texture: url('data:image/png;base64,...'); /* Add a base64 encoded grainy texture */
 
@@ -19,9 +19,9 @@
 
     --popover-foreground: 0 0% 3.9%;
 
-    --primary: 0 0% 9%;
+    --primary: 0 0% 98%;
 
-    --primary-foreground: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
 
     --secondary: 0 0% 96.1%;
 
@@ -51,49 +51,6 @@
 
     --radius: 0.5rem
   }
-  .dark {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 98%;
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 0 0% 50%;
-
-    --popover: 0 0% 3.9%;
-
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-
-    --primary-foreground: 0 0% 9%;
-
-    --secondary: 0 0% 14.9%;
-
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 0 0% 14.9%;
-
-    --muted-foreground: 0 0% 63.9%;
-
-    --accent: 0 0% 14.9%;
-
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-
-    --destructive-foreground: 0 0% 98%;
-
-    --chart-1: 220 70% 50%;
-
-    --chart-2: 160 60% 45%;
-
-    --chart-3: 30 80% 55%;
-
-    --chart-4: 280 65% 60%;
-
-    --chart-5: 340 75% 55%
-  }
 }
 
 
@@ -106,6 +63,8 @@
   html, body {
     @apply h-full w-full m-0 p-0;
     overflow-x: hidden;
+    background-color: white !important; /* Force white background */
+    color: black !important; /* Force black text */
   }
   body {
     @apply bg-background text-foreground;

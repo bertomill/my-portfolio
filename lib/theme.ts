@@ -6,16 +6,16 @@ export const theme = extendTheme({
     useSystemColorMode: false,
   },
   styles: {
-    global: {
+    global: (props) => ({
       body: {
         bg: 'white',
         color: 'black',
       },
-      // Ensure all text elements have black text in light mode
+      // Ensure all text elements have black text
       'p, h1, h2, h3, h4, h5, h6, span, div': {
         color: 'black',
       },
-    },
+    }),
   },
   colors: {
     // Your custom colors here

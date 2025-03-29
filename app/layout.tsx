@@ -21,14 +21,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-theme="light" className="light" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+        <meta name="color-scheme" content="light" />
       </head>
-      <body className={`${inter.className} min-h-full flex flex-col`} suppressHydrationWarning>
+      <body className={`${inter.className} min-h-full flex flex-col bg-white text-black`} suppressHydrationWarning>
         <Providers>
           <Navbar />
-          <main className="flex-1">
+          <main className="flex-1 bg-white">
             {children}
           </main>
           <Footer />
