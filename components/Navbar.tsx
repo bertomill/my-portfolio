@@ -32,6 +32,7 @@ export default function Navbar() {
             <Link href="/">Home</Link>
             <Link href="/about">About</Link>
             <Link href="/projects">Projects</Link>
+            <Link href="/speaking">Speaking</Link>
             <Link href="/blog">Blog</Link>
           </Stack>
 
@@ -65,6 +66,7 @@ export default function Navbar() {
             <Link href="/" onClick={onToggle}>Home</Link>
             <Link href="/about" onClick={onToggle}>About</Link>
             <Link href="/projects" onClick={onToggle}>Projects</Link>
+            <Link href="/speaking" onClick={onToggle}>Speaking</Link>
             <Link href="/blog" onClick={onToggle}>Blog</Link>
             
             <Divider my={2} />

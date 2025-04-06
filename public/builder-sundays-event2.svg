@@ -1,0 +1,6 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#38b2ac" opacity="0.2"/>
+  <rect x="10" y="10" width="380" height="280" stroke="#38b2ac" stroke-width="2" fill="none" rx="8" ry="8"/>
+  <text x="200" y="150" font-family="Arial" font-size="24" text-anchor="middle" fill="#38b2ac">Shopify Builder Sundays</text>
+  <text x="200" y="180" font-family="Arial" font-size="18" text-anchor="middle" fill="#38b2ac">Event Photo 2</text>
+</svg> 
