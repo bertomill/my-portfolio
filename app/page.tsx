@@ -23,8 +23,8 @@ import Link from 'next/link'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
 import NewsletterSubscribe from '@/components/NewsletterSubscribe'
-import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useEffect, useState, useRef } from 'react'
 import { format } from 'date-fns'
 import type { BlogPost } from '@/lib/getBlogPosts'
 
@@ -304,6 +304,26 @@ function BlogPosts() {
 export default function Home() {
   const sectionBg = useColorModeValue('rgba(255, 255, 255, 0.03)', 'rgba(255, 255, 255, 0.03)')
   const lightSectionBg = useColorModeValue('gray.50', 'rgba(255, 255, 255, 0.03)')
+  const [showVideo, setShowVideo] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  // Toggle between image and video
+  const toggleMedia = () => {
+    setShowVideo(prev => {
+      const newState = !prev
+      // Play video when switching to video mode
+      if (newState && videoRef.current) {
+        videoRef.current.currentTime = 0
+        videoRef.current.play().catch(e => console.error("Video play failed:", e))
+      }
+      return newState
+    })
+  }
+
+  // Handler for when video ends
+  const handleVideoEnded = () => {
+    setShowVideo(false)
+  }
 
   // Projects data
   const projects: ProjectCardProps[] = [
@@ -396,6 +416,7 @@ export default function Home() {
                 flex="1"
                 maxW={{ base: "200px", md: "300px" }}
                 minW={{ base: "200px", md: "300px" }}
+                position="relative"
               >
                 <MotionBox
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -410,19 +431,97 @@ export default function Home() {
                     width="100%"
                     paddingBottom="110%"
                   >
-                    <Image
-                      src="/headshot.png"
-                      alt="Berto Mill"
-                      position="absolute"
-                      top="0"
-                      left="0"
-                      width="100%"
-                      height="100%"
-                      objectFit="cover"
-                      objectPosition="center"
-                    />
+                    <AnimatePresence mode="wait">
+                      {showVideo ? (
+                        <motion.div
+                          key="video"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            height: "100%"
+                          }}
+                        >
+                          <video
+                            ref={videoRef}
+                            src="/ai_conf_video.mp4"
+                            onEnded={handleVideoEnded}
+                            autoPlay
+                            muted
+                            playsInline
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              objectPosition: "center"
+                            }}
+                          />
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="image"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            height: "100%"
+                          }}
+                        >
+                          <Image
+                            src="/headshot.png"
+                            alt="Berto Mill"
+                            position="absolute"
+                            top="0"
+                            left="0"
+                            width="100%"
+                            height="100%"
+                            objectFit="cover"
+                            objectPosition="center"
+                          />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </Box>
                 </MotionBox>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  bgColor={showVideo ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.8)"}
+                  color={showVideo ? "white" : "black"}
+                  fontWeight="medium"
+                  borderRadius="full"
+                  leftIcon={showVideo ? undefined : <Text as="span" fontSize="xs">▶</Text>}
+                  onClick={toggleMedia}
+                  position="absolute"
+                  bottom="5"
+                  right="5"
+                  zIndex="1"
+                  boxShadow="md"
+                  backdropFilter="blur(8px)"
+                  _hover={{
+                    bgColor: showVideo ? "rgba(0, 0, 0, 0.6)" : "rgba(255, 255, 255, 0.9)",
+                    transform: "scale(1.05)"
+                  }}
+                  _active={{
+                    transform: "scale(0.95)"
+                  }}
+                  transition="all 0.2s"
+                >
+                  {showVideo ? "Return" : "AI Video"}
+                </Button>
               </Box>
             </Box>
 
