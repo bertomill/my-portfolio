@@ -39,13 +39,15 @@ interface ProjectCardProps {
   logoAlt: string;
   projectUrl: string;
   date: string;
+  imageSrc?: string; // Optional image source for project screenshots
 }
 
 // Project Card component
-function ProjectCard({ title, description, tags, logoSrc, logoAlt, projectUrl, date }: ProjectCardProps) {
+function ProjectCard({ title, description, tags, logoSrc, logoAlt, projectUrl, date, imageSrc }: ProjectCardProps) {
   const hoverBg = useColorModeValue('rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0.05)')
   const tagBg = useColorModeValue('gray.200', 'whiteAlpha.200')
   const tagColor = useColorModeValue('black', 'white')
+  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200')
   
   return (
     <MotionBox
@@ -65,16 +67,51 @@ function ProjectCard({ title, description, tags, logoSrc, logoAlt, projectUrl, d
         }}
         transition="all 0.2s"
         height="100%"
+        borderWidth="1px"
+        borderColor={borderColor}
       >
-        <HStack spacing={4} align="start">
-          <Image 
-            src={logoSrc} 
-            alt={logoAlt} 
-            boxSize={{ base: "60px", md: "70px" }}
-            objectFit="cover"
-            borderRadius="md"
-          />
-          <VStack align="start" spacing={2}>
+        <VStack align="start" spacing={3}>
+          {/* Project Image (if available) */}
+          {imageSrc && (
+            <NextLink href={projectUrl} passHref target="_blank" rel="noopener noreferrer">
+              <Box 
+                width="100%" 
+                borderRadius="lg" 
+                overflow="hidden" 
+                mb={2}
+                position="relative"
+                transition="all 0.2s"
+                _hover={{
+                  transform: 'scale(1.02)',
+                  boxShadow: 'md'
+                }}
+                borderWidth="1px"
+                borderColor={borderColor}
+              >
+                <Image 
+                  src={imageSrc} 
+                  alt={`${title} screenshot`} 
+                  width="100%"
+                  height="auto"
+                  objectFit="cover"
+                />
+                <Box
+                  position="absolute"
+                  top="0"
+                  left="0"
+                  right="0"
+                  bottom="0"
+                  bg="blackAlpha.200"
+                  opacity="0"
+                  transition="opacity 0.2s"
+                  _groupHover={{ opacity: 1 }}
+                  borderRadius="lg"
+                />
+              </Box>
+            </NextLink>
+          )}
+          
+          <VStack align="start" spacing={2} width="100%">
             <Heading size="sm" color="black">{title}</Heading>
             <Text fontSize="sm" noOfLines={2} color="gray.800" fontWeight="medium">
               {description}
@@ -110,7 +147,7 @@ function ProjectCard({ title, description, tags, logoSrc, logoAlt, projectUrl, d
               {date}
             </Text>
           </VStack>
-        </HStack>
+        </VStack>
       </Box>
     </MotionBox>
   )
@@ -328,13 +365,34 @@ export default function Home() {
   // Projects data
   const projects: ProjectCardProps[] = [
     {
+      title: "Daygo.live",
+      description: "Journal your thoughts and intentions by leveraging community templates and AI to build your perfect journal prompt.",
+      tags: ["Journalling", "Community"],
+      logoSrc: "/favicon.svg",
+      logoAlt: "Daygo.live Logo",
+      projectUrl: "https://www.daygo.live",
+      date: "May 2025",
+      imageSrc: "/daygo.png"
+    },
+    {
+      title: "Tesla Booking",
+      description: "An application that allows customers to book a Tesla for a specific time and date, operating out of Toronto, Ontario.",
+      tags: ["Booking", "Automotive"],
+      logoSrc: "/favicon.svg",
+      logoAlt: "Tesla Booking Logo",
+      projectUrl: "#",
+      date: "April 2025",
+      imageSrc: "/tesla-booking.png"
+    },
+    {
       title: "Marble",
       description: "A modern development platform for building better applications faster.",
       tags: ["Development", "Platform"],
       logoSrc: "/marble-logo.svg",
       logoAlt: "Marble Logo",
       projectUrl: "https://www.marble.dev/",
-      date: "March 2025"
+      date: "March 2025",
+      imageSrc: "/marble-dev.png"
     },
     {
       title: "MarketStep",
@@ -343,7 +401,8 @@ export default function Home() {
       logoSrc: "/finance-icon.svg",
       logoAlt: "MarketStep Logo",
       projectUrl: "https://marketstep.vercel.app/",
-      date: "February 2025"
+      date: "February 2025",
+      imageSrc: "/marketstep.png"
     },
     {
       title: "Letter Forge",
@@ -352,7 +411,8 @@ export default function Home() {
       logoSrc: "/letter-forge-logo.svg",
       logoAlt: "Letter Forge Logo",
       projectUrl: "https://letterpipe.vercel.app/",
-      date: "December 2024"
+      date: "December 2024",
+      imageSrc: "/letterforge.png"
     }
   ]
 
@@ -539,7 +599,7 @@ export default function Home() {
                   size={{ base: "md", md: "lg" }}
                   mb={{ base: 1, md: 2 }}
                 >
-                  Featured Projects
+                  Featured AI applications
                 </Heading>
                 
                 <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }} w="full">
