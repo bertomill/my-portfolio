@@ -27,23 +27,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState, useRef } from 'react'
 import { format } from 'date-fns'
 import type { BlogPost } from '@/lib/getBlogPosts'
+import { Project } from '@/lib/schema'
 
 const MotionBox = motion(Box)
 
-// Project Card interface
-interface ProjectCardProps {
-  title: string;
-  description: string;
-  tags: string[];
-  logoSrc: string;
-  logoAlt: string;
-  projectUrl: string;
-  date: string;
-  imageSrc?: string; // Optional image source for project screenshots
-}
-
-// Project Card component
-function ProjectCard({ title, description, tags, logoSrc, logoAlt, projectUrl, date, imageSrc }: ProjectCardProps) {
+// Project Card component - now uses Project type from database
+function ProjectCard(project: Project) {
+  const { title, description, tags, projectUrl, date, imageSrc } = project
   const hoverBg = useColorModeValue('rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0.05)')
   const tagBg = useColorModeValue('gray.200', 'whiteAlpha.200')
   const tagColor = useColorModeValue('black', 'white')
@@ -342,7 +332,29 @@ export default function Home() {
   const sectionBg = useColorModeValue('rgba(255, 255, 255, 0.03)', 'rgba(255, 255, 255, 0.03)')
   const lightSectionBg = useColorModeValue('gray.50', 'rgba(255, 255, 255, 0.03)')
   const [showVideo, setShowVideo] = useState(false)
+  const [projects, setProjects] = useState<Project[]>([])
+  const [projectsLoading, setProjectsLoading] = useState(true)
   const videoRef = useRef<HTMLVideoElement>(null)
+
+  // Fetch featured projects
+  useEffect(() => {
+    async function fetchFeaturedProjects() {
+      try {
+        setProjectsLoading(true)
+        const response = await fetch('/api/projects?featured=true')
+        if (response.ok) {
+          const data = await response.json()
+          setProjects(data)
+        }
+      } catch (error) {
+        console.error('Error fetching projects:', error)
+      } finally {
+        setProjectsLoading(false)
+      }
+    }
+
+    fetchFeaturedProjects()
+  }, [])
 
   // Toggle between image and video
   const toggleMedia = () => {
@@ -361,60 +373,6 @@ export default function Home() {
   const handleVideoEnded = () => {
     setShowVideo(false)
   }
-
-  // Projects data
-  const projects: ProjectCardProps[] = [
-    {
-      title: "Daygo.live",
-      description: "Journal your thoughts and intentions by leveraging community templates and AI to build your perfect journal prompt.",
-      tags: ["Journalling", "Community"],
-      logoSrc: "/favicon.svg",
-      logoAlt: "Daygo.live Logo",
-      projectUrl: "https://www.daygo.live",
-      date: "May 2025",
-      imageSrc: "/daygo.png"
-    },
-    {
-      title: "Tesla Booking",
-      description: "An application that allows customers to book a Tesla for a specific time and date, operating out of Toronto, Ontario.",
-      tags: ["Booking", "Automotive"],
-      logoSrc: "/favicon.svg",
-      logoAlt: "Tesla Booking Logo",
-      projectUrl: "#",
-      date: "April 2025",
-      imageSrc: "/tesla-booking.png"
-    },
-    {
-      title: "Marble",
-      description: "A modern development platform for building better applications faster.",
-      tags: ["Development", "Platform"],
-      logoSrc: "/marble-logo.svg",
-      logoAlt: "Marble Logo",
-      projectUrl: "https://www.marble.dev/",
-      date: "March 2025",
-      imageSrc: "/marble-dev.png"
-    },
-    {
-      title: "MarketStep",
-      description: "A comprehensive platform for digital marketing analytics and strategy.",
-      tags: ["Finance", "Analytics"],
-      logoSrc: "/finance-icon.svg",
-      logoAlt: "MarketStep Logo",
-      projectUrl: "https://marketstep.vercel.app/",
-      date: "February 2025",
-      imageSrc: "/marketstep.png"
-    },
-    {
-      title: "Letter Forge",
-      description: "Streamline your newsletter creation process with AI assistance.",
-      tags: ["Newsletter", "AI"],
-      logoSrc: "/letter-forge-logo.svg",
-      logoAlt: "Letter Forge Logo",
-      projectUrl: "https://letterpipe.vercel.app/",
-      date: "December 2024",
-      imageSrc: "/letterforge.png"
-    }
-  ]
 
   return (
     <Box w="full" display="flex" justifyContent="center">
@@ -602,13 +560,45 @@ export default function Home() {
                   Featured AI applications
                 </Heading>
                 
-                <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }} w="full">
-                  {projects.map((project, index) => (
-                    <Box key={index}>
-                      <ProjectCard {...project} />
-                    </Box>
-                  ))}
-                </SimpleGrid>
+                {projectsLoading ? (
+                  <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }} w="full">
+                    {[...Array(3)].map((_, index) => (
+                      <Box 
+                        key={index}
+                        p={4} 
+                        borderRadius="xl" 
+                        bg="gray.50"
+                        boxShadow="sm"
+                        borderWidth="1px"
+                        borderColor="gray.200"
+                      >
+                        <VStack align="stretch" spacing={3}>
+                          <Skeleton height="20px" width="100px" />
+                          <Skeleton height="24px" width="100%" />
+                          <Skeleton height="20px" width="200px" />
+                        </VStack>
+                      </Box>
+                    ))}
+                  </SimpleGrid>
+                ) : projects.length > 0 ? (
+                  <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }} w="full">
+                    {projects.map((project, index) => (
+                      <Box key={index}>
+                        <ProjectCard {...project} />
+                      </Box>
+                    ))}
+                  </SimpleGrid>
+                ) : (
+                  <Box 
+                    p={4} 
+                    borderRadius="xl" 
+                    bg="gray.50"
+                    width="full"
+                    textAlign="center"
+                  >
+                    <Text color="black" fontWeight="medium">No projects found. Check back soon!</Text>
+                  </Box>
+                )}
               </VStack>
             </Box>
 
