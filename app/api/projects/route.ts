@@ -10,13 +10,20 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const featured = searchParams.get('featured')
 
-    let query = db.select().from(projects)
-
+    let result
+    
     if (featured === 'true') {
-      query = query.where(eq(projects.featured, true))
+      result = await db
+        .select()
+        .from(projects)
+        .where(eq(projects.featured, true))
+        .orderBy(desc(projects.sortOrder))
+    } else {
+      result = await db
+        .select()
+        .from(projects)
+        .orderBy(desc(projects.sortOrder))
     }
-
-    const result = await query.orderBy(desc(projects.sortOrder))
     
     return NextResponse.json(result)
   } catch (error) {
