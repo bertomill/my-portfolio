@@ -637,7 +637,7 @@ export default function Home() {
                   >
                     <AspectRatio ratio={16/9} w="full" borderRadius="xl" overflow="hidden" boxShadow="md">
                       <iframe 
-                        src="https://www.youtube.com/embed/VPN4P6zAquo?start=40" 
+                        src="https://www.youtube.com/embed/ZkLOBKFFJ2Y" 
                         title="Featured YouTube video" 
                         allowFullScreen
                         style={{ borderRadius: '0.75rem' }}
