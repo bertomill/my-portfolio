@@ -11,7 +11,6 @@ import {
   Container,
   useColorModeValue,
   Button,
-  SimpleGrid,
   Skeleton,
 } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
@@ -56,7 +55,7 @@ function ProjectCard(project: Project) {
 
         <HStack spacing={6} align="start">
           <Image 
-            src={logoSrc} 
+            src={project.imageSrc || logoSrc} 
             alt={logoAlt} 
             boxSize={{ base: "80px", md: "100px" }}
             objectFit="cover"
