@@ -1,5 +1,6 @@
 'use client'
 
+// Import required Chakra UI components and other dependencies
 import {
   Box,
   Button,
@@ -19,15 +20,18 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 export default function AdminLogin() {
+  // State management for form inputs and UI states
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
+  // Theme-aware color values
   const bgColor = useColorModeValue('white', 'gray.800')
   const borderColor = useColorModeValue('gray.200', 'gray.600')
 
+  // Check authentication status on component mount
   useEffect(() => {
     // Check if already logged in
     getSession().then((session) => {
@@ -37,12 +41,14 @@ export default function AdminLogin() {
     })
   }, [router])
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
 
     try {
+      // Attempt authentication using NextAuth credentials provider
       const result = await signIn('credentials', {
         username,
         password,
@@ -61,6 +67,7 @@ export default function AdminLogin() {
     }
   }
 
+  // Render login form
   return (
     <Container maxW="md" py={20}>
       <Box
@@ -76,6 +83,7 @@ export default function AdminLogin() {
             Admin Login
           </Heading>
 
+          {/* Error message display */}
           {error && (
             <Alert status="error" borderRadius="md">
               <AlertIcon />
@@ -83,6 +91,7 @@ export default function AdminLogin() {
             </Alert>
           )}
 
+          {/* Login form */}
           <Box as="form" onSubmit={handleSubmit} w="full">
             <VStack spacing={4}>
               <FormControl isRequired>

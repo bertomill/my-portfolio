@@ -2,102 +2,327 @@
 @tailwind components;
 @tailwind utilities;
 
+/* CSS Custom Properties - Architectural Minimalist Palette */
+:root {
+  --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --font-playfair: 'Playfair Display', Georgia, serif;
+  
+  /* Minimalist Color Palette - Inspired by architectural design */
+  --cream: #f7f3e9;
+  --warm-beige: #e8dcc0;
+  --soft-tan: #d4c5a9;
+  --warm-gray: #b8a082;
+  --deep-beige: #a08b73;
+  --charcoal: #2d2926;
+  --pure-white: #fefefe;
+}
 
+/* Subtle animated background gradient - Warm architectural tones */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Architectural minimalist background */
+body {
+  background: linear-gradient(-45deg, var(--cream), var(--warm-beige), var(--pure-white), var(--soft-tan));
+  background-size: 400% 400%;
+  animation: gradientShift 25s ease infinite;
+  position: relative;
+  overflow-x: hidden;
+  font-family: var(--font-inter);
+  color: var(--charcoal);
+}
+
+/* Enhanced typography - Architectural style */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-inter);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  color: var(--charcoal);
+  line-height: 1.2;
+}
+
+/* Minimalist glassmorphism */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(45, 41, 38, 0.04);
+}
+
+.glass-dark {
+  background: rgba(45, 41, 38, 0.08);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Architectural card effects */
+.world-class-card {
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(212, 197, 169, 0.2);
+  border-radius: 4px;
+}
+
+.world-class-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.8s ease;
+}
+
+.world-class-card:hover::before {
+  left: 100%;
+}
+
+.world-class-card:hover {
+  transform: translateY(-6px) scale(1.005);
+  box-shadow: 0 25px 50px rgba(45, 41, 38, 0.08);
+  border-color: rgba(160, 139, 115, 0.3);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Very subtle glow */
+.subtle-glow {
+  filter: drop-shadow(0 0 8px rgba(45, 41, 38, 0.05));
+}
+
+/* Minimalist text gradients */
+.gradient-text {
+  background: linear-gradient(135deg, var(--deep-beige) 0%, var(--warm-gray) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-family: var(--font-inter);
+  font-weight: 400;
+}
+
+.gradient-text-hero {
+  background: linear-gradient(135deg, var(--charcoal) 0%, var(--deep-beige) 50%, var(--warm-gray) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-family: var(--font-inter);
+  font-weight: 300;
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+
+/* Architectural button styling */
+.world-class-button {
+  position: relative;
+  background: linear-gradient(135deg, var(--warm-gray) 0%, var(--deep-beige) 100%);
+  border: 1px solid rgba(160, 139, 115, 0.2);
+  border-radius: 2px;
+  color: var(--pure-white);
+  padding: 16px 32px;
+  font-weight: 400;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  font-family: var(--font-inter);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 11px;
+  box-shadow: 0 4px 15px rgba(45, 41, 38, 0.1);
+}
+
+.world-class-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s;
+}
+
+.world-class-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(45, 41, 38, 0.15);
+  background: linear-gradient(135deg, var(--deep-beige) 0%, var(--charcoal) 100%);
+}
+
+.world-class-button:hover::before {
+  left: 100%;
+}
+
+/* Project card enhancements - Architectural style */
+.project-card-enhanced {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(212, 197, 169, 0.15);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.project-card-enhanced::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(232, 220, 192, 0.05), rgba(212, 197, 169, 0.05));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.project-card-enhanced:hover::after {
+  opacity: 1;
+}
+
+.project-card-enhanced:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(45, 41, 38, 0.08);
+  border-color: rgba(160, 139, 115, 0.25);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* Minimalist section dividers */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(160, 139, 115, 0.2), transparent);
+  margin: 8rem 0;
+}
+
+/* Clean navigation */
+.nav-glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(25px);
+  border-bottom: 1px solid rgba(212, 197, 169, 0.15);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom selection */
+::selection {
+  background: rgba(160, 139, 115, 0.2);
+  color: var(--charcoal);
+}
+
+/* Focus states */
+*:focus-visible {
+  outline: 1px solid rgba(160, 139, 115, 0.4);
+  outline-offset: 2px;
+}
+
+/* Loading skeletons */
+.skeleton {
+  background: linear-gradient(90deg, var(--warm-beige) 25%, var(--soft-tan) 50%, var(--warm-beige) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}
+
+/* Typography enhancements */
+.architectural-text {
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--charcoal);
+  letter-spacing: 0.01em;
+}
+
+.architectural-heading {
+  font-weight: 200;
+  letter-spacing: -0.03em;
+  color: var(--charcoal);
+  margin-bottom: 2rem;
+}
+
+/* Minimalist tags */
+.minimal-tag {
+  background: rgba(160, 139, 115, 0.1);
+  color: var(--charcoal);
+  border: 1px solid rgba(160, 139, 115, 0.2);
+  border-radius: 2px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* Light background (changed from 98% to 100%) */
-    --foreground: 0 0% 5%; /* Dark text */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 5%;
-    --border: 0 0% 85%;
-    --input: 0 0% 85%;
-    --ring: 0 0% 50%;
-    --grainy-texture: url('data:image/png;base64,...'); /* Add a base64 encoded grainy texture */
-
+    --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
-
-    --popover-foreground: 0 0% 3.9%;
-
-    --primary: 0 0% 98%;
-
-    --primary-foreground: 0 0% 9%;
-
-    --secondary: 0 0% 96.1%;
-
-    --secondary-foreground: 0 0% 9%;
-
-    --muted: 0 0% 96.1%;
-
-    --muted-foreground: 0 0% 45.1%;
-
-    --accent: 0 0% 96.1%;
-
-    --accent-foreground: 0 0% 9%;
-
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
     --destructive: 0 84.2% 60.2%;
-
-    --destructive-foreground: 0 0% 98%;
-
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
     --chart-1: 12 76% 61%;
-
     --chart-2: 173 58% 39%;
-
     --chart-3: 197 37% 24%;
-
     --chart-4: 43 74% 66%;
-
     --chart-5: 27 87% 67%;
+  }
 
-    --radius: 0.5rem
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
   }
 }
-
-
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
-    box-sizing: border-box;
-  }
-  html, body {
-    @apply h-full w-full m-0 p-0;
-    overflow-x: hidden;
-    background-color: white !important; /* Force white background */
-    color: black !important; /* Force black text */
+    @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
-    background-image: var(--grainy-texture);
-    background-size: cover;
-  }
-  #__next {
-    @apply flex flex-col min-h-full;
-    max-width: 100vw;
-    overflow-x: hidden;
-  }
-  
-  /* Ensure blog content text is black */
-  .chakra-link, .chakra-text, p, h1, h2, h3, h4, h5, h6, span, a, li {
-    color: black !important;
-  }
-  
-  /* Specific overrides for blog posts */
-  [role="group"] .chakra-text, 
-  [role="group"] h1, 
-  [role="group"] h2, 
-  [role="group"] h3, 
-  [role="group"] p, 
-  [role="group"] span {
-    color: black !important;
-  }
-}
-
-/* Add safe area insets support for modern iOS devices */
-@supports(padding: max(0px)) {
-  body {
-    padding-left: min(0vmin, env(safe-area-inset-left));
-    padding-right: min(0vmin, env(safe-area-inset-right));
-    padding-bottom: min(0vmin, env(safe-area-inset-bottom));
   }
 }

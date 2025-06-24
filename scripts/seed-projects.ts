@@ -3,6 +3,30 @@ import { projects } from '../lib/schema'
 
 const projectData = [
   {
+    title: "dollar$sense | City Budget AI Assistant",
+    description: "Award-winning AI-powered application that allows citizens of Toronto to explore and understand the city budget through natural language queries. Winner at City of Windsor hackathon, featured on their official website for innovative civic technology.",
+    tags: ["AI", "Civic Tech", "Natural Language", "Government", "Award Winner"],
+    logoSrc: "/dollarsense-logo.svg",
+    logoAlt: "dollar$sense Logo",
+    projectUrl: "https://dollarsense.vercel.app/",
+    date: "July 2024",
+    imageSrc: "/dollar$ense.png",
+    featured: true,
+    sortOrder: 1
+  },
+  {
+    title: "Adversarial Vulnerabilities in AI Judge Models | Martian x Apart Research Study",
+    description: "Published research examining security vulnerabilities in AI judge models - critical components used to detect problematic behavior in LLM systems. Conducted 3,339 evaluations across 10 adversarial techniques, discovering a 33.7% overall success rate in manipulating judge evaluations, with 'Sentiment Flooding' proving most effective at 62%.",
+    tags: ["AI Safety", "Security", "Research", "LLM", "Interpretability", "Apart Research"],
+    logoSrc: "/martinan.png",
+    logoAlt: "Martian x Apart Research Study",
+    projectUrl: "https://apartresearch.com/project/adversarial-vulnerabilities-in-ai-judge-models-martian-x-apart-research-study-erjl",
+    date: "June 2, 2025",
+    imageSrc: "/martinan.png",
+    featured: true,
+    sortOrder: 2
+  },
+  {
     title: "Daygo.live",
     description: "Journal your thoughts and intentions by leveraging community templates and AI to build your perfect journal prompt.",
     tags: ["Journalling", "Community"],
@@ -12,7 +36,7 @@ const projectData = [
     date: "May 2025",
     imageSrc: "/daygo.png",
     featured: true,
-    sortOrder: 1
+    sortOrder: 3
   },
   {
     title: "Tesla Booking",
@@ -24,7 +48,7 @@ const projectData = [
     date: "April 2025",
     imageSrc: "/tesla-booking.png",
     featured: true,
-    sortOrder: 2
+    sortOrder: 4
   },
   {
     title: "Marble",
@@ -36,7 +60,7 @@ const projectData = [
     date: "March 2025",
     imageSrc: "/marble-dev.png",
     featured: true,
-    sortOrder: 3
+    sortOrder: 5
   },
   {
     title: "MarketStep",
@@ -48,7 +72,7 @@ const projectData = [
     date: "February 2025",
     imageSrc: "/marketstep.png",
     featured: true,
-    sortOrder: 4
+    sortOrder: 6
   },
   {
     title: "Letter Forge",
@@ -60,7 +84,7 @@ const projectData = [
     date: "December 2024",
     imageSrc: "/letterforge.png",
     featured: true,
-    sortOrder: 5
+    sortOrder: 7
   }
 ]
 
