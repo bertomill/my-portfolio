@@ -198,6 +198,21 @@ function BlogPostCard({ post }: { post: BlogPost }) {
       }}
       transition="all 0.2s"
     >
+      {/* Blog Post Image */}
+      {post.imageUrl && (
+        <Box position="relative" overflow="hidden">
+          <AspectRatio ratio={16/9}>
+            <Image
+              src={post.imageUrl}
+              alt={`Cover image for ${post.title}`}
+              objectFit="cover"
+              transition="transform 0.3s ease"
+              _hover={{ transform: 'scale(1.05)' }}
+            />
+          </AspectRatio>
+        </Box>
+      )}
+      
       <Box p={4}>
         <VStack align="start" spacing={2}>
           <Text 
@@ -422,147 +437,333 @@ export default function Home() {
                 alignItems="center"
                 justifyContent="center"
                 w="full"
-                mb={{ base: 8, md: 12 }}
-                gap={{ base: 6, md: 10 }}
+                mb={{ base: 4, md: 6 }}
+                gap={{ base: 8, md: 12 }}
+                position="relative"
               >
+                {/* Enhanced Hero Content */}
                 <VStack 
                   flex="1" 
                   alignItems={{ base: "center", md: "flex-start" }}
                   textAlign={{ base: "center", md: "left" }}
-                  spacing={6}
-                >
-                  <Heading 
-                    as="h1" 
-                    className="gradient-text-hero"
-                    mb={{ base: 3, sm: 4 }}
-                    fontWeight="300"
-                    letterSpacing="-0.03em"
-                  >
-                    Hi, I&apos;m Robert 👋
-                  </Heading>
-
-                  <Text 
-                    fontSize={{ base: "lg", sm: "xl", md: "2xl" }}
-                    lineHeight={{ base: "tall", md: "taller" }}
-                    className="architectural-text"
-                    maxW="600px"
-                  >
-                    I am a technology consultant and ML application developer based in Toronto, passionate about crafting intuitive user experiences to
-                    help people and businesses solve problems.
-                  </Text>
-                </VStack>
-                
-                <Box 
-                  flex="1"
-                  maxW={{ base: "250px", md: "350px" }}
-                  minW={{ base: "250px", md: "350px" }}
+                  spacing={8}
                   position="relative"
+                  zIndex={2}
                 >
+                  {/* Animated Badge */}
                   <MotionBox
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
                   >
                     <Box
-                      position="relative"
-                      borderRadius="6px"
-                      overflow="hidden" 
-                      boxShadow="0 20px 60px rgba(45, 41, 38, 0.1)"
-                      width="100%"
-                      paddingBottom="110%"
-                      className="glass-effect subtle-glow"
-                      border="1px solid rgba(212, 197, 169, 0.2)"
+                      px={4}
+                      py={2}
+                      borderRadius="full"
+                      className="glass-effect"
+                      border="1px solid rgba(212, 197, 169, 0.3)"
+                      mb={4}
                     >
-                      <AnimatePresence mode="wait">
-                        {showVideo ? (
-                          <motion.div
-                            key="video"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.4 }}
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                              width: "100%",
-                              height: "100%"
-                            }}
-                          >
-                            <video
-                              ref={videoRef}
-                              src="/ai_conf_video.mp4"
-                              onEnded={handleVideoEnded}
-                              autoPlay
-                              muted
-                              playsInline
-                              style={{
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
-                                objectPosition: "center"
-                              }}
-                            />
-                          </motion.div>
-                        ) : (
-                          <motion.div
-                            key="image"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.4 }}
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                              width: "100%",
-                              height: "100%"
-                            }}
-                          >
-                            <Image
-                              src="/headshot.png"
-                              alt="Robert Mill"
-                              position="absolute"
-                              top="0"
-                              left="0"
-                              width="100%"
-                              height="100%"
-                              objectFit="cover"
-                              objectPosition="center"
-                            />
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                      <Text
+                        fontSize="sm"
+                        fontWeight="500"
+                        color="var(--warm-gray)"
+                        letterSpacing="0.5px"
+                        textTransform="uppercase"
+                      >
+                        ✨ Available for Projects
+                      </Text>
                     </Box>
                   </MotionBox>
-                  <Button
-                    size="sm"
-                    className="world-class-button"
-                    leftIcon={showVideo ? undefined : <Text as="span" fontSize="xs">▶</Text>}
-                    onClick={toggleMedia}
-                    position="absolute"
-                    bottom="6"
-                    right="6"
-                    zIndex="1"
-                    fontSize="10px"
-                    letterSpacing="0.5px"
-                    textTransform="uppercase"
+
+                  {/* Main Heading with Enhanced Animation */}
+                  <MotionBox
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
                   >
-                    {showVideo ? "Return" : "AI Video"}
-                  </Button>
-                </Box>
+                    <Heading 
+                      as="h1" 
+                      className="gradient-text-hero"
+                      fontSize={{ base: "3xl", sm: "4xl", md: "5xl", lg: "6xl" }}
+                      fontWeight="300"
+                      letterSpacing="-0.04em"
+                      lineHeight={{ base: "1.2", md: "1.1" }}
+                      mb={6}
+                      position="relative"
+                    >
+                      Hi, I&apos;m{" "}
+                      <Box as="span" position="relative" display="inline-block">
+                        <Text as="span" className="gradient-text-hero">
+                          Berto
+                        </Text>
+                        <MotionBox
+                          initial={{ rotate: 0 }}
+                          animate={{ rotate: [0, 15, -15, 0] }}
+                          transition={{ 
+                            duration: 2,
+                            repeat: Infinity,
+                            repeatDelay: 3,
+                            ease: "easeInOut"
+                          }}
+                          display="inline-block"
+                          ml={2}
+                        >
+                          👋
+                        </MotionBox>
+                      </Box>
+                    </Heading>
+                  </MotionBox>
+
+                  {/* Enhanced Description */}
+                  <MotionBox
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.5 }}
+                  >
+                    <VStack spacing={4} align={{ base: "center", md: "flex-start" }}>
+                      <Text 
+                        fontSize={{ base: "xl", sm: "2xl", md: "3xl" }}
+                        lineHeight={{ base: "1.6", md: "1.5" }}
+                        className="architectural-text"
+                        maxW="650px"
+                        fontWeight="300"
+                        color="var(--charcoal)"
+                      >
+                        Technology consultant & ML application developer
+                      </Text>
+                      <Text 
+                        fontSize={{ base: "lg", md: "xl" }}
+                        lineHeight="1.7"
+                        className="architectural-text"
+                        maxW="600px"
+                        fontWeight="300"
+                        color="var(--warm-gray)"
+                        opacity="0.9"
+                      >
+                        Based in Toronto, passionate about crafting intuitive user experiences to help people and businesses solve problems.
+                      </Text>
+                    </VStack>
+                  </MotionBox>
+
+                  {/* Enhanced CTA Buttons */}
+                  <MotionBox
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.7 }}
+                  >
+                    <HStack spacing={4} flexWrap="wrap" justify={{ base: "center", md: "flex-start" }}>
+                      <Button
+                        as={Link}
+                        href="/projects"
+                        size="lg"
+                        className="world-class-button"
+                        px={8}
+                        py={6}
+                        fontSize="md"
+                        fontWeight="500"
+                        letterSpacing="0.3px"
+                        _hover={{
+                          transform: "translateY(-2px) scale(1.02)",
+                          boxShadow: "0 20px 40px rgba(45, 41, 38, 0.15)"
+                        }}
+                        transition="all 0.4s cubic-bezier(0.23, 1, 0.320, 1)"
+                      >
+                        View My Work
+                      </Button>
+                      <Button
+                        as={Link}
+                        href="/about"
+                        variant="outline"
+                        size="lg"
+                        px={8}
+                        py={6}
+                        fontSize="md"
+                        fontWeight="400"
+                        letterSpacing="0.3px"
+                        borderColor="rgba(212, 197, 169, 0.3)"
+                        color="var(--warm-gray)"
+                        _hover={{
+                          transform: "translateY(-2px)",
+                          borderColor: "var(--deep-beige)",
+                          color: "var(--deep-beige)",
+                          bg: "rgba(212, 197, 169, 0.05)"
+                        }}
+                        transition="all 0.4s cubic-bezier(0.23, 1, 0.320, 1)"
+                      >
+                        Learn More
+                      </Button>
+                    </HStack>
+                  </MotionBox>
+                </VStack>
+                
+                {/* Enhanced Image Container */}
+                <MotionBox
+                  flex="1"
+                  maxW={{ base: "300px", md: "400px" }}
+                  minW={{ base: "300px", md: "400px" }}
+                  position="relative"
+                  initial={{ opacity: 0, scale: 0.9, x: 50 }}
+                  animate={{ opacity: 1, scale: 1, x: 0 }}
+                  transition={{ duration: 1, delay: 0.4 }}
+                >
+                  <Box
+                    position="relative"
+                    borderRadius="12px"
+                    overflow="hidden" 
+                    boxShadow="0 25px 80px rgba(45, 41, 38, 0.15)"
+                    width="100%"
+                    paddingBottom="110%"
+                    className="glass-effect subtle-glow"
+                    border="1px solid rgba(212, 197, 169, 0.25)"
+                    _before={{
+                      content: '""',
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      background: "linear-gradient(135deg, rgba(232, 220, 192, 0.1), rgba(212, 197, 169, 0.05))",
+                      borderRadius: "12px",
+                      zIndex: 1,
+                      pointerEvents: "none"
+                    }}
+                  >
+                    {/* Floating Decorative Elements */}
+                    <Box
+                      position="absolute"
+                      top="-10px"
+                      right="-10px"
+                      width="20px"
+                      height="20px"
+                      borderRadius="full"
+                      bg="linear-gradient(135deg, var(--warm-gray), var(--deep-beige))"
+                      opacity="0.6"
+                      className="floating"
+                      zIndex={3}
+                    />
+                    <Box
+                      position="absolute"
+                      bottom="-15px"
+                      left="-15px"
+                      width="30px"
+                      height="30px"
+                      borderRadius="full"
+                      bg="linear-gradient(135deg, var(--deep-beige), var(--warm-gray))"
+                      opacity="0.4"
+                      className="floating"
+                      style={{ animationDelay: "1s" }}
+                      zIndex={3}
+                    />
+
+                    <AnimatePresence mode="wait">
+                      {showVideo ? (
+                        <motion.div
+                          key="video"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.4 }}
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            height: "100%",
+                            zIndex: 2
+                          }}
+                        >
+                          <video
+                            ref={videoRef}
+                            src="/ai_conf_video.mp4"
+                            onEnded={handleVideoEnded}
+                            autoPlay
+                            muted
+                            playsInline
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              objectPosition: "center",
+                              borderRadius: "12px"
+                            }}
+                          />
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="image"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.4 }}
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            height: "100%",
+                            zIndex: 2
+                          }}
+                        >
+                          <Image
+                            src="/headshot.png"
+                            alt="Robert Mill"
+                            position="absolute"
+                            top="0"
+                            left="0"
+                            width="100%"
+                            height="100%"
+                            objectFit="cover"
+                            objectPosition="center"
+                            borderRadius="12px"
+                          />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </Box>
+                  
+                  {/* Enhanced Video Button */}
+                  <MotionBox
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.6, delay: 1 }}
+                  >
+                    <Button
+                      size="md"
+                      className="world-class-button"
+                      leftIcon={showVideo ? undefined : <Text as="span" fontSize="sm">▶</Text>}
+                      onClick={toggleMedia}
+                      position="absolute"
+                      bottom="8"
+                      right="8"
+                      zIndex="4"
+                      fontSize="xs"
+                      letterSpacing="0.5px"
+                      textTransform="uppercase"
+                      px={4}
+                      py={2}
+                      borderRadius="full"
+                      _hover={{
+                        transform: "scale(1.05)",
+                        boxShadow: "0 10px 25px rgba(45, 41, 38, 0.2)"
+                      }}
+                    >
+                      {showVideo ? "Photo" : "AI Video"}
+                    </Button>
+                  </MotionBox>
+                </MotionBox>
               </Box>
 
-              {/* Section Divider */}
-              <Box className="section-divider" />
+              {/* Section Divider - reduced */}
+              <Box className="section-divider" opacity="0.6" />
 
               {/* Featured Work Section */}
               <Box 
                 w="full" 
-                mt={{ base: 10, md: 16 }}
+                mt={{ base: 6, md: 8 }}
                 p={{ base: 8, md: 12 }}
                 borderRadius="8px"
                 className="glass-effect"

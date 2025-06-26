@@ -8,6 +8,7 @@ export interface BlogPost {
   creator: string;
   content: string;
   guid: string;
+  imageUrl?: string;
 }
 
 interface RSSItem {
@@ -40,17 +41,29 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
     const result = await parseStringPromise(xmlData) as RSSFeed
     const items = result.rss.channel[0].item
 
-    return items.map((item: RSSItem) => ({
-      title: item.title[0].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1'),
-      link: item.link[0],
-      pubDate: item.pubDate[0],
-      categories: item.category?.map(cat => 
-        cat.replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1')
-      ) || [],
-      creator: item['dc:creator']?.[0].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1') || '',
-      content: item['content:encoded']?.[0].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1') || '',
-      guid: item.guid[0]._
-    }))
+    // Helper function to extract first image URL from content
+    const extractImageUrl = (content: string): string | undefined => {
+      const imgRegex = /<img[^>]+src="([^"]+)"/i
+      const match = content.match(imgRegex)
+      return match ? match[1] : undefined
+    }
+
+    return items.map((item: RSSItem) => {
+      const content = item['content:encoded']?.[0].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1') || ''
+      
+      return {
+        title: item.title[0].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1'),
+        link: item.link[0],
+        pubDate: item.pubDate[0],
+        categories: item.category?.map(cat => 
+          cat.replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1')
+        ) || [],
+        creator: item['dc:creator']?.[0].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1') || '',
+        content,
+        guid: item.guid[0]._,
+        imageUrl: extractImageUrl(content)
+      }
+    })
   } catch (error) {
     console.error('Error fetching blog posts:', error)
     return []
