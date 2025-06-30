@@ -711,7 +711,7 @@ export default function Home() {
                     mb={{ base: 2, sm: 3 }}
                     className="architectural-heading"
                   >
-                    Hi, I&apos;m Robert 👋
+                    Hi, I&apos;m Berto 👋
                   </Heading>
 
                   <Text 
@@ -794,7 +794,7 @@ export default function Home() {
                           >
                             <Image
                               src="/headshot.png"
-                              alt="Robert Mill"
+                              alt="Berto Mill"
                               position="absolute"
                               top="0"
                               left="0"

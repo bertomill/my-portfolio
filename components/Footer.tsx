@@ -23,7 +23,7 @@ export default function Footer() {
           <Divider width="60%" opacity={0.2} />
           
           <Text fontSize="sm" color={textColor} textAlign="center">
-            © {year} Robert Mill. All rights reserved.
+            © {year} Berto Mill. All rights reserved.
           </Text>
         </VStack>
       </Container>
