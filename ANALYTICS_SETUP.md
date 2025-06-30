@@ -10,7 +10,7 @@ This project includes comprehensive website analytics using Google Analytics 4 (
 2. Sign in with your Google account
 3. Click "Start measuring"
 4. Create a new account or use existing one
-5. Create a new property for your website
+5. Create a new property specifically for your portfolio website
 
 ### 2. Get Your Measurement ID
 
@@ -24,10 +24,23 @@ This project includes comprehensive website analytics using Google Analytics 4 (
 Add this to your `.env.local` file:
 
 ```env
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-BFVVJJB12Q
 ```
 
-Replace `G-XXXXXXXXXX` with your actual Measurement ID.
+Replace `G-BFVVJJB12Q` with your actual Measurement ID from step 2.
+
+### 4. For Production Deployment
+
+Add the same environment variable to your hosting platform:
+
+**For Vercel:**
+1. Go to your project dashboard
+2. Go to **Settings** → **Environment Variables**  
+3. Add: `NEXT_PUBLIC_GA_MEASUREMENT_ID` = `Your-Measurement-ID`
+
+**For Netlify:**
+1. Go to **Site settings** → **Environment variables**
+2. Add: `NEXT_PUBLIC_GA_MEASUREMENT_ID` = `Your-Measurement-ID`
 
 ## 📈 What Analytics Are Tracked
 
@@ -107,7 +120,7 @@ analytics.error('Error message', 'Page Name')
 - **Do Not Track** respect - Analytics disabled if user has DNT enabled
 - **Server-side rendering** safe - Only loads on client-side
 - **Error handling** - Graceful degradation if analytics fails
-- **Development mode** - Debug logging in development
+- **Development mode** - Test mode in development environment
 
 ### GDPR/Privacy Considerations:
 - Analytics only load if user hasn't set "Do Not Track"
@@ -143,7 +156,7 @@ analytics.error('Error message', 'Page Name')
 
 ### Debug Mode
 
-In development, analytics runs in debug mode with console logging. Check browser console for analytics events.
+In development, analytics runs in test mode. Check browser console for analytics events.
 
 ## 🔧 Advanced Configuration
 
