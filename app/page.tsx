@@ -361,6 +361,199 @@ function BlogPosts() {
   )
 }
 
+// YouTube Video interface and component
+interface YouTubeVideo {
+  title: string;
+  link: string;
+  videoId: string;
+  publishedDate: string;
+  thumbnailUrl: string;
+  channelTitle: string;
+}
+
+function YouTubeVideoCard({ video }: { video: YouTubeVideo }) {
+  const hoverBg = useColorModeValue('white', 'rgba(255, 255, 255, 0.05)')
+  const bgColor = useColorModeValue('gray.50', 'transparent')
+  const borderColor = useColorModeValue('gray.200', 'transparent')
+  const dateFontColor = useColorModeValue('black', 'gray.400')
+  const titleColor = useColorModeValue('black', 'white')
+
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString)
+      return format(date, 'MMMM d, yyyy')
+    } catch (error) {
+      console.error('Error formatting date:', error)
+      return dateString
+    }
+  }
+
+  const getEmbedUrl = (videoId: string) => {
+    return `https://www.youtube.com/embed/${videoId}`
+  }
+  
+  return (
+    <LinkBox 
+      as={Box}
+      borderWidth="1px"
+      borderColor={borderColor}
+      borderRadius="xl"
+      overflow="hidden"
+      bg={bgColor}
+      height="100%"
+      boxShadow="sm"
+      _hover={{
+        transform: 'translateY(-2px)',
+        boxShadow: 'md',
+        bg: hoverBg
+      }}
+      transition="all 0.2s"
+    >
+      <AspectRatio ratio={16/9}>
+        <iframe 
+          src={getEmbedUrl(video.videoId)}
+          title={video.title}
+          allowFullScreen
+          style={{ borderRadius: '0.75rem 0.75rem 0 0' }}
+        />
+      </AspectRatio>
+      <Box p={4}>
+        <VStack align="start" spacing={2}>
+          <Text 
+            fontSize={{ base: "xs", md: "sm" }}
+            color={dateFontColor}
+            fontWeight="medium"
+            fontFamily="mono"
+          >
+            {formatDate(video.publishedDate)}
+          </Text>
+          
+          <Heading
+            as="h3"
+            fontSize={{ base: "md", md: "lg" }}
+            fontWeight="semibold"
+            color={titleColor}
+            noOfLines={2}
+            _groupHover={{ color: "blue.600" }}
+          >
+            <LinkOverlay
+              as={NextLink}
+              href={video.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              isExternal
+            >
+              {video.title}
+            </LinkOverlay>
+          </Heading>
+        </VStack>
+      </Box>
+    </LinkBox>
+  )
+}
+
+// YouTube Videos section component
+function YouTubeVideos() {
+  const [videos, setVideos] = useState<YouTubeVideo[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const sectionBg = useColorModeValue('gray.50', 'rgba(255, 255, 255, 0.03)')
+  const borderColor = useColorModeValue('gray.200', 'transparent')
+
+  useEffect(() => {
+    async function fetchVideos() {
+      try {
+        const response = await fetch('/api/youtube')
+        const data = await response.json()
+        setVideos(data.slice(0, 3)) // Get the latest 3 videos
+      } catch (error) {
+        console.error('Error fetching YouTube videos:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchVideos()
+  }, [])
+
+  return (
+    <Box 
+      w="full" 
+      p={{ base: 5, md: 6 }}
+      borderRadius="xl"
+      bg={sectionBg}
+      borderWidth="1px"
+      borderColor={borderColor}
+      boxShadow="sm"
+    >
+      <VStack spacing={6}>
+        <Heading 
+          as="h2" 
+          size={{ base: "md", md: "lg" }}
+          mb={{ base: 1, md: 2 }}
+          color="black"
+        >
+          Latest Videos
+        </Heading>
+        
+        {isLoading ? (
+          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }} w="full">
+            {[...Array(3)].map((_, index) => (
+              <Box 
+                key={index}
+                borderRadius="xl" 
+                bg="gray.50"
+                boxShadow="sm"
+                borderWidth="1px"
+                borderColor="gray.200"
+                overflow="hidden"
+              >
+                <AspectRatio ratio={16/9}>
+                  <Skeleton width="100%" height="100%" />
+                </AspectRatio>
+                <Box p={4}>
+                  <VStack align="stretch" spacing={3}>
+                    <Skeleton height="20px" width="100px" />
+                    <Skeleton height="24px" width="100%" />
+                  </VStack>
+                </Box>
+              </Box>
+            ))}
+          </SimpleGrid>
+        ) : videos.length > 0 ? (
+          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }} w="full">
+            {videos.map((video) => (
+              <YouTubeVideoCard key={video.videoId} video={video} />
+            ))}
+          </SimpleGrid>
+        ) : (
+          <Box 
+            p={4} 
+            borderRadius="xl" 
+            bg="gray.50"
+            width="full"
+            textAlign="center"
+          >
+            <Text color="black" fontWeight="medium">No videos found. Check back soon!</Text>
+          </Box>
+        )}
+        
+        <Box alignSelf="center">
+          <Button
+            as={Link}
+            href="https://www.youtube.com/@BertoVMill"
+            variant="outline"
+            size={{ base: "md", md: "md" }}
+            rightIcon={<ExternalLinkIcon />}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View All Videos
+          </Button>
+        </Box>
+      </VStack>
+    </Box>
+  )
+}
+
 export default function Home() {
   const lightSectionBg = useColorModeValue('gray.50', 'rgba(255, 255, 255, 0.03)')
   const [showVideo, setShowVideo] = useState(false)
@@ -1051,6 +1244,17 @@ export default function Home() {
                 </Button>
               </Box>
             </Box>
+
+            {/* Latest Videos Section */}
+            <MotionBox
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              w="full"
+              className="world-class-card"
+            >
+              <YouTubeVideos />
+            </MotionBox>
 
           </VStack>
         </Container>
