@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 import { FaLinkedin, FaGithub, FaYoutube, FaInstagram, FaTwitter } from 'react-icons/fa'
+import { analytics } from '@/lib/analytics'
 
 const MotionLink = motion(Link)
 
@@ -18,24 +19,32 @@ interface SocialLinkProps {
   icon: React.ElementType;
 }
 
-const SocialLink = ({ href, label, icon }: SocialLinkProps) => {
-  const hoverColor = useColorModeValue('blue.500', 'blue.300')
-  
+function SocialLink({ href, label, icon }: SocialLinkProps) {
+  const handleClick = () => {
+    analytics.socialClick(label)
+    analytics.externalLinkClick(href, `Social Media: ${label}`)
+  }
+
   return (
-    <Tooltip label={label} hasArrow placement="top">
+    <Tooltip label={label} hasArrow>
       <MotionLink
         href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        display="inline-flex"
-        alignItems="center"
-        justifyContent="center"
-        transition="all 0.3s"
-        _hover={{ color: hoverColor, transform: 'translateY(-2px)' }}
-        whileHover={{ scale: 1.1 }}
+        isExternal
+        whileHover={{ scale: 1.2 }}
         whileTap={{ scale: 0.95 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        onClick={handleClick}
       >
-        <Icon as={icon} boxSize={{ base: 5, md: 6 }} />
+        <Icon 
+          as={icon} 
+          boxSize={{ base: 5, md: 6 }} 
+          color={useColorModeValue('gray.600', 'gray.400')}
+          _hover={{ 
+            color: useColorModeValue('blue.500', 'blue.300'),
+            transform: 'translateY(-2px)'
+          }}
+          transition="all 0.2s"
+        />
       </MotionLink>
     </Tooltip>
   )

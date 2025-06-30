@@ -15,6 +15,7 @@ import { keyframes } from '@emotion/react'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { BellIcon } from '@chakra-ui/icons'
+import { analytics } from '@/lib/analytics'
 
 const MotionBox = motion(Box)
 const MotionIcon = motion(Icon)
@@ -65,6 +66,9 @@ export default function NewsletterSubscribe() {
     e.preventDefault()
     setIsLoading(true)
 
+    // Track newsletter subscription attempt
+    analytics.newsletterSubscribe()
+
     try {
       const response = await fetch('/api/subscribe', {
         method: 'POST',
@@ -75,6 +79,9 @@ export default function NewsletterSubscribe() {
       const data = await response.json()
       if (!response.ok) throw new Error(data.error)
 
+      // Track successful subscription
+      analytics.newsletterSubscribe(email)
+
       toast({
         title: 'Subscribed!',
         description: "Thanks for subscribing!",
@@ -84,6 +91,9 @@ export default function NewsletterSubscribe() {
       })
       setEmail('')
     } catch (error) {
+      // Track subscription error
+      analytics.error(`Newsletter subscription failed: ${error}`, 'Newsletter Component')
+      
       toast({
         title: 'Error',
         description: "Couldn't subscribe. Please try again.",
