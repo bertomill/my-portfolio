@@ -24,6 +24,7 @@ import {
 import { motion } from 'framer-motion'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { useState } from 'react'
+import { analytics, trackEvent } from '@/lib/analytics'
 
 const MotionBox = motion(Box)
 const MotionHeading = motion(Heading)
@@ -43,6 +44,11 @@ export default function Speaking() {
   const handleImageClick = (imageSrc: string) => {
     setSelectedImage(imageSrc)
     onOpen()
+    trackEvent('click', 'Speaking Image', imageSrc)
+  }
+
+  const handleEventLinkClick = (eventName: string, linkUrl: string) => {
+    analytics.externalLinkClick(linkUrl, `Speaking Event: ${eventName}`)
   }
 
   return (
@@ -101,10 +107,154 @@ export default function Speaking() {
             Speaking Engagements
           </MotionHeading>
 
+          {/* Vibe Code Space Talk */}
           <MotionBox
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <Box
+              p={{ base: 5, md: 8 }}
+              borderRadius="2xl"
+              position="relative"
+              _hover={{
+                bg: hoverBg,
+                transform: 'translateY(-4px)',
+              }}
+              transition="all 0.3s"
+              borderWidth="1px"
+              borderColor="transparent"
+              bgGradient="linear(to-br, rgba(255,255,255,0.03), rgba(255,255,255,0.01))"
+              boxShadow="xl"
+              backdropFilter="blur(8px)"
+            >
+              {/* Decorative elements */}
+              <Box
+                position="absolute"
+                top="-2px"
+                left="10%"
+                right="10%"
+                height="2px"
+                bgGradient={`linear(to-r, transparent, ${accentColor}, transparent)`}
+              />
+
+              <VStack spacing={8} align="start">
+                <VStack align="start" spacing={4} w="full">
+                  <Flex width="full" justifyContent="space-between" alignItems="flex-start">
+                    <MotionHeading 
+                      size={{ base: "lg", md: "xl" }}
+                      bgGradient={`linear(to-r, ${accentColor}, blue.600)`}
+                      bgClip="text"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: 0.3 }}
+                    >
+                      AI Research Agent Demo
+                    </MotionHeading>
+                    
+                    <Badge 
+                      px={3} 
+                      py={1} 
+                      colorScheme="green" 
+                      borderRadius="full" 
+                      fontWeight="medium"
+                      textTransform="none"
+                      fontSize="sm"
+                    >
+                      Community Demo
+                    </Badge>
+                  </Flex>
+
+                  <MotionText
+                    fontSize={{ base: "md", md: "lg" }}
+                    lineHeight="tall"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 0.4 }}
+                  >
+                    Presented a financial analysis helper built with Google&apos;s Agent Development Kit (ADK), demonstrating how orchestrated AI agents can streamline financial research and analysis in a vibrant community of AI innovators.
+                  </MotionText>
+
+                  <Flex 
+                    wrap="wrap" 
+                    justify="space-between" 
+                    align="center" 
+                    width="full"
+                    gap={4}
+                  >
+                    <Text fontSize="sm" color="gray.500" fontWeight="medium">
+                      <Box as="span" fontWeight="bold" color={accentColor}>Vibe Code Space</Box> • January 2025 • Toronto, ON
+                    </Text>
+                    
+                    <HStack spacing={2} flexWrap="wrap" gap={2}>
+                      <Tag size={{ base: "sm", md: "md" }} colorScheme="green" variant="subtle">AI Agents</Tag>
+                      <Tag size={{ base: "sm", md: "md" }} colorScheme="blue" variant="subtle">Financial Tech</Tag>
+                      <Tag size={{ base: "sm", md: "md" }} colorScheme="purple" variant="subtle">Research Tools</Tag>
+                    </HStack>
+                  </Flex>
+
+                  <Divider borderColor="gray.200" opacity={0.2} my={1} />
+
+                  <Button 
+                    as="a"
+                    href="https://github.com/bertomill"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    size="md"
+                    colorScheme="green"
+                    fontWeight="medium"
+                    rightIcon={<ExternalLinkIcon />}
+                    _hover={{ transform: 'translateY(-2px)', boxShadow: 'sm' }}
+                    transition="all 0.2s"
+                    variant="ghost"
+                    onClick={() => handleEventLinkClick('AI Research Agent Demo', 'https://github.com/bertomill')}
+                  >
+                    View Project
+                  </Button>
+                </VStack>
+                
+                <Box 
+                  position="relative" 
+                  w="full" 
+                  h={{ base: "250px", md: "300px" }}
+                  cursor="pointer"
+                  mt={4}
+                >
+                  <Box
+                    position="relative"
+                    width="100%"
+                    height="100%"
+                    onClick={() => handleImageClick("/vspace_talk.png")}
+                    transition="all 0.3s ease"
+                    _hover={{ transform: 'scale(1.02)' }}
+                    borderRadius="lg"
+                    overflow="hidden"
+                    boxShadow="2xl"
+                    border={`3px solid ${borderColor}`}
+                  >
+                    <Image
+                      src="/vspace_talk.png"
+                      alt="Berto presenting AI research agent at Vibe Code Space"
+                      objectFit="cover"
+                      width="100%"
+                      height="100%"
+                    />
+                    <Box
+                      position="absolute"
+                      inset={0}
+                      bg="linear-gradient(to top, rgba(0,0,0,0.2), transparent 50%)"
+                    />
+                  </Box>
+                </Box>
+              </VStack>
+            </Box>
+          </MotionBox>
+
+          {/* Shopify Builder Sundays Talk */}
+          <MotionBox
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
           >
             <Box
               p={{ base: 5, md: 8 }}
@@ -200,6 +350,7 @@ export default function Speaking() {
                     _hover={{ transform: 'translateY(-2px)', boxShadow: 'sm' }}
                     transition="all 0.2s"
                     variant="ghost"
+                    onClick={() => handleEventLinkClick('AI UI Designer Marble', 'https://builder-sundays.myshopify.com/')}
                   >
                     Event Details
                   </Button>
