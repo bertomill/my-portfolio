@@ -31,6 +31,32 @@ import { analytics } from '@/lib/analytics'
 
 const MotionBox = motion(Box)
 
+// Watercolor Divide component to separate sections
+function WatercolorDivide() {
+  return (
+    <Box
+      width="100%"
+      height={{ base: "60px", md: "80px" }}
+      my={{ base: 8, md: 12 }}
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      position="relative"
+    >
+      <Image
+        src="/watercolor-divide.png"
+        alt="Watercolor section divider"
+        width="100%"
+        height="100%"
+        objectFit="contain"
+        objectPosition="center"
+        opacity={0.7}
+        filter="hue-rotate(10deg) saturate(0.8)"
+      />
+    </Box>
+  )
+}
+
 // Project Card component - now with architectural styling
 function ProjectCard(project: Project) {
   const { title, description, tags, projectUrl, date, imageSrc } = project
@@ -837,6 +863,9 @@ export default function Home() {
                 </Box>
               </Box>
 
+              {/* Watercolor Divider */}
+              <WatercolorDivide />
+
               {/* Featured Work Section */}
               <MotionBox
                 initial={{ opacity: 0, y: 30 }}
@@ -904,6 +933,9 @@ export default function Home() {
                 </Box>
               </MotionBox>
 
+              {/* Watercolor Divider */}
+              <WatercolorDivide />
+
               {/* Blog Posts Section */}
               <MotionBox
                 initial={{ opacity: 0, y: 30 }}
@@ -916,6 +948,9 @@ export default function Home() {
                 <BlogPosts />
               </MotionBox>
 
+              {/* Watercolor Divider */}
+              <WatercolorDivide />
+
               {/* Latest Videos Section */}
               <MotionBox
                 initial={{ opacity: 0, y: 30 }}
@@ -926,6 +961,9 @@ export default function Home() {
               >
                 <YouTubeVideos />
               </MotionBox>
+
+              {/* Watercolor Divider */}
+              <WatercolorDivide />
 
               <Box 
                 display="flex" 
