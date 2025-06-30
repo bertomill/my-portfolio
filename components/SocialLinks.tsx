@@ -63,7 +63,7 @@ export default function SocialLinks() {
       icon: FaGithub,
     },
     {
-      href: "https://www.youtube.com/@BertoVMill",
+      href: "https://www.youtube.com/@Bertomill1",
       label: "YouTube",
       icon: FaYoutube,
     },

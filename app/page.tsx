@@ -215,6 +215,31 @@ function BlogPostCard({ post }: { post: BlogPost }) {
       }}
       transition="all 0.2s"
     >
+      {/* Blog Post Image */}
+      {post.imageUrl && (
+        <AspectRatio ratio={16/9}>
+          <Image 
+            src={post.imageUrl}
+            alt={post.title}
+            objectFit="cover"
+            width="100%"
+            height="100%"
+            fallback={
+              <Box 
+                width="100%" 
+                height="100%" 
+                bg="gray.100" 
+                display="flex" 
+                alignItems="center" 
+                justifyContent="center"
+              >
+                <Text fontSize="sm" color="gray.500">Image unavailable</Text>
+              </Box>
+            }
+          />
+        </AspectRatio>
+      )}
+      
       <Box p={4}>
         <VStack align="start" spacing={2}>
           <Text 
@@ -497,7 +522,7 @@ function YouTubeVideos() {
 
   const handleViewAllVideosClick = () => {
     analytics.socialClick('YouTube Channel')
-    analytics.externalLinkClick('https://www.youtube.com/@BertoVMill', 'View All Videos Button')
+    analytics.externalLinkClick('https://www.youtube.com/@Bertomill1', 'View All Videos Button')
   }
 
   return (
