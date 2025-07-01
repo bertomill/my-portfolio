@@ -91,43 +91,74 @@ function ProjectCard(project: Project) {
         <VStack align="start" spacing={4}>
           {/* Project Image (if available) */}
           {imageSrc && (
-            <NextLink href={projectUrl} passHref target="_blank" rel="noopener noreferrer">
-              <Box 
-                width="100%" 
-                borderRadius="4px" 
-                overflow="hidden" 
-                mb={3}
-                position="relative"
-                transition="all 0.4s cubic-bezier(0.23, 1, 0.320, 1)"
-                _hover={{
-                  transform: 'scale(1.02)',
-                  boxShadow: '0 12px 30px rgba(45, 41, 38, 0.1)'
-                }}
-                className="subtle-glow"
-                border="1px solid rgba(212, 197, 169, 0.2)"
-                onClick={handleProjectClick}
-              >
-                <Image 
-                  src={imageSrc} 
-                  alt={`${title} screenshot`} 
+            <>
+              {projectUrl && projectUrl !== "#" ? (
+                <ChakraLink 
+                  href={projectUrl} 
+                  isExternal
+                  onClick={() => {
+                    console.log('Project image clicked:', title, projectUrl)
+                    handleProjectClick()
+                  }}
                   width="100%"
-                  height="auto"
-                  objectFit="cover"
-                />
-                <Box
-                  position="absolute"
-                  top="0"
-                  left="0"
-                  right="0"
-                  bottom="0"
-                  bg="linear-gradient(135deg, rgba(232, 220, 192, 0.1), rgba(212, 197, 169, 0.05))"
-                  opacity="0"
-                  transition="opacity 0.3s"
-                  _groupHover={{ opacity: 1 }}
-                  borderRadius="4px"
-                />
-              </Box>
-            </NextLink>
+                >
+                  <Box 
+                    width="100%" 
+                    borderRadius="4px" 
+                    overflow="hidden" 
+                    mb={3}
+                    position="relative"
+                    transition="all 0.4s cubic-bezier(0.23, 1, 0.320, 1)"
+                    _hover={{
+                      transform: 'scale(1.02)',
+                      boxShadow: '0 12px 30px rgba(45, 41, 38, 0.1)'
+                    }}
+                    className="subtle-glow"
+                    border="1px solid rgba(212, 197, 169, 0.2)"
+                    cursor="pointer"
+                  >
+                    <Image 
+                      src={imageSrc} 
+                      alt={`${title} screenshot`} 
+                      width="100%"
+                      height="auto"
+                      objectFit="cover"
+                    />
+                    <Box
+                      position="absolute"
+                      top="0"
+                      left="0"
+                      right="0"
+                      bottom="0"
+                      bg="linear-gradient(135deg, rgba(232, 220, 192, 0.1), rgba(212, 197, 169, 0.05))"
+                      opacity="0"
+                      transition="opacity 0.3s"
+                      _groupHover={{ opacity: 1 }}
+                      borderRadius="4px"
+                    />
+                  </Box>
+                </ChakraLink>
+              ) : (
+                <Box 
+                  width="100%" 
+                  borderRadius="4px" 
+                  overflow="hidden" 
+                  mb={3}
+                  position="relative"
+                  className="subtle-glow"
+                  border="1px solid rgba(212, 197, 169, 0.2)"
+                  opacity={0.8}
+                >
+                  <Image 
+                    src={imageSrc} 
+                    alt={`${title} screenshot`} 
+                    width="100%"
+                    height="auto"
+                    objectFit="cover"
+                  />
+                </Box>
+              )}
+            </>
           )}
           
           <VStack align="start" spacing={3} width="100%">
@@ -164,8 +195,10 @@ function ProjectCard(project: Project) {
               ))}
             </HStack>
             <Box mt={2}>
-              <NextLink href={projectUrl} passHref target="_blank" rel="noopener noreferrer">
+              {projectUrl && projectUrl !== "#" ? (
                 <ChakraLink
+                  href={projectUrl}
+                  isExternal
                   color="var(--warm-gray)"
                   fontWeight="300"
                   fontSize="sm"
@@ -177,11 +210,29 @@ function ProjectCard(project: Project) {
                   }}
                   transition="all 0.3s ease"
                   letterSpacing="0.5px"
-                  onClick={handleProjectClick}
+                  onClick={() => {
+                    console.log('Project clicked:', title, projectUrl)
+                    handleProjectClick()
+                  }}
+                  cursor="pointer"
+                  pointerEvents="auto"
+                  zIndex={10}
                 >
                   View Project <ExternalLinkIcon mx="2px" />
                 </ChakraLink>
-              </NextLink>
+              ) : (
+                <Text
+                  color="var(--warm-gray)"
+                  fontWeight="300"
+                  fontSize="sm"
+                  display="flex"
+                  alignItems="center"
+                  letterSpacing="0.5px"
+                  opacity={0.6}
+                >
+                  Coming Soon
+                </Text>
+              )}
             </Box>
             <Text 
               fontSize="xs" 
