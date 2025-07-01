@@ -22,7 +22,7 @@ import Link from 'next/link'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
 import GeometricBackground from '@/components/GeometricBackground'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useState, useRef } from 'react'
 import { format } from 'date-fns'
 import type { BlogPost } from '@/lib/getBlogPosts'
@@ -30,6 +30,32 @@ import { Project } from '@/lib/schema'
 import { analytics } from '@/lib/analytics'
 
 const MotionBox = motion(Box)
+
+// Custom hook for floating paper effect
+function useFloatingEffect(phase = 0, intensity = 1) {
+  const { scrollY } = useScroll()
+  
+  // Create different movement patterns for each section
+  // Using sine waves with different phases and frequencies for organic movement
+  const x = useTransform(
+    scrollY,
+    (value) => {
+      const baseMovement = Math.sin((value * 0.001) + phase) * intensity
+      const secondaryMovement = Math.sin((value * 0.0015) + phase + 1) * (intensity * 0.6)
+      return baseMovement + secondaryMovement
+    }
+  )
+  
+  const y = useTransform(
+    scrollY,
+    (value) => {
+      const verticalFloat = Math.cos((value * 0.0008) + phase) * (intensity * 0.3)
+      return verticalFloat
+    }
+  )
+  
+  return { x, y }
+}
 
 // Watercolor Divide component to separate sections
 function WatercolorDivide() {
@@ -782,14 +808,36 @@ export default function Home() {
                   alignItems={{ base: "center", md: "flex-start" }}
                   textAlign={{ base: "center", md: "left" }}
                 >
-                  <Heading 
-                    as="h1" 
-                    size={{ base: "lg", sm: "xl", md: "2xl" }}
-                    mb={{ base: 2, sm: 3 }}
-                    className="architectural-heading"
+                  <MotionBox
+                    mb={{ base: 4, sm: 6, md: 8 }}
+                    position="relative"
+                    display="flex"
+                    justifyContent={{ base: "center", md: "flex-start" }}
+                    style={useFloatingEffect(Math.PI / 4, 1.2)} // Gentle floating for the marker title
+                    overflow="hidden"
                   >
-                    Hi, I&apos;m Berto 👋
-                  </Heading>
+                    <Box
+                      position="relative"
+                      maxW={{ base: "140px", sm: "175px", md: "200px", lg: "225px" }}
+                      overflow="hidden"
+                    >
+                      <Image
+                        src="/Berto-Mill-Marker.png"
+                        alt="Berto Mill"
+                        width="100%"
+                        height="auto"
+                        objectFit="cover"
+                        style={{
+                          filter: "contrast(1.1) saturate(0.9)",
+                          mixBlendMode: "multiply",
+                          opacity: 0.85,
+                          transform: "scale(1.4)", // Zoom in to crop whitespace
+                          transformOrigin: "center center"
+                        }}
+                        className="marker-title marker-title-cropped"
+                      />
+                    </Box>
+                  </MotionBox>
 
                   <Text 
                     fontSize={{ base: "md", sm: "lg", md: "xl" }}
@@ -924,6 +972,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 w="full"
                 className="world-class-card"
+                style={useFloatingEffect(0, 2)} // First section, gentle movement
               >
                 <Box 
                   w="full" 
@@ -995,6 +1044,7 @@ export default function Home() {
                 w="full"
                 mt={{ base: 8, md: 12 }}
                 className="world-class-card"
+                style={useFloatingEffect(Math.PI / 3, 1.8)} // Second section, different phase
               >
                 <BlogPosts />
               </MotionBox>
@@ -1009,6 +1059,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.4 }}
                 w="full"
                 className="world-class-card"
+                style={useFloatingEffect(Math.PI / 2, 1.5)} // Third section, another different phase
               >
                 <YouTubeVideos />
               </MotionBox>
