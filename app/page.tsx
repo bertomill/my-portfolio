@@ -843,10 +843,40 @@ export default function Home() {
                     fontSize={{ base: "md", sm: "lg", md: "xl" }}
                     lineHeight={{ base: "tall", md: "taller" }}
                     className="architectural-text"
+                    mb={6}
                   >
                     I am a technology consultant and ML application developer based in Toronto, passionate about crafting intuitive user experiences to
                     help people and businesses solve problems.
                   </Text>
+                  
+                  <Button
+                    size="lg"
+                    bgColor="rgba(160, 139, 115, 0.1)"
+                    color="var(--warm-gray)"
+                    border="1px solid rgba(160, 139, 115, 0.3)"
+                    borderRadius="full"
+                    fontWeight="400"
+                    letterSpacing="0.5px"
+                    px={8}
+                    py={6}
+                    _hover={{
+                      bgColor: "rgba(160, 139, 115, 0.2)",
+                      transform: "translateY(-2px)",
+                      boxShadow: "0 8px 20px rgba(160, 139, 115, 0.15)"
+                    }}
+                    _active={{
+                      transform: "translateY(0px)"
+                    }}
+                    transition="all 0.3s cubic-bezier(0.23, 1, 0.320, 1)"
+                    onClick={() => {
+                      const element = document.getElementById('featured-work');
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                  >
+                    See my work
+                  </Button>
                 </VStack>
                 
                 <Box 
@@ -967,6 +997,7 @@ export default function Home() {
 
               {/* Featured Work Section */}
               <MotionBox
+                id="featured-work"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
