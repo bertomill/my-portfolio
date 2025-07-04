@@ -73,7 +73,7 @@ export default function SocialLinks() {
       icon: FaInstagram,
     },
     {
-      href: "https://x.com/mill_berto",
+      href: "https://x.com/bertomill1",
       label: "X (Twitter)",
       icon: FaTwitter,
     },

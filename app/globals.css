@@ -181,6 +181,7 @@ h1, h2, h3, h4, h5, h6 {
   background: linear-gradient(135deg, rgba(232, 220, 192, 0.05), rgba(212, 197, 169, 0.05));
   opacity: 0;
   transition: opacity 0.4s ease;
+  pointer-events: none;
 }
 
 .project-card-enhanced:hover::after {
