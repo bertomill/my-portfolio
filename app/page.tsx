@@ -21,7 +21,6 @@ import {
 import Link from 'next/link'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
-import GeometricBackground from '@/components/GeometricBackground'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useState, useRef } from 'react'
 import { format } from 'date-fns'
@@ -771,7 +770,6 @@ export default function Home() {
 
   return (
     <>
-      <GeometricBackground />
       <Box w="full" display="flex" justifyContent="center" position="relative" zIndex={1}>
         <Container 
           maxW="container.xl" 

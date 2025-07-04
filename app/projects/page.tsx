@@ -9,7 +9,6 @@ import {
   HStack,
   Tag,
   Container,
-  useColorModeValue,
   Button,
   Skeleton,
 } from '@chakra-ui/react'
@@ -23,9 +22,6 @@ const MotionBox = motion(Box)
 // Project Card component for projects page
 function ProjectCard(project: Project) {
   const { title, description, tags, logoSrc, logoAlt, projectUrl, date } = project
-  const hoverBg = useColorModeValue('rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0.05)')
-  const tagBg = useColorModeValue('gray.200', 'whiteAlpha.200')
-  const tagColor = useColorModeValue('black', 'white')
 
   return (
     <MotionBox
@@ -34,24 +30,15 @@ function ProjectCard(project: Project) {
       transition={{ duration: 0.3 }}
     >
       <Box
-        p={{ base: 4, md: 6 }}
-        borderRadius="xl"
+        p={{ base: 5, md: 6 }}
+        borderRadius="6px"
         position="relative"
+        className="glass-effect"
         _hover={{
-          bg: hoverBg,
           transform: 'translateY(-2px)',
         }}
-        transition="all 0.2s"
+        transition="all 0.3s cubic-bezier(0.23, 1, 0.320, 1)"
       >
-        <Box
-          position="absolute"
-          inset={0}
-          borderRadius="xl"
-          opacity={0}
-          bg="linear-gradient(45deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%)"
-          transition="opacity 0.2s"
-          _groupHover={{ opacity: 1 }}
-        />
 
         <HStack spacing={6} align="start">
           <Image 
@@ -62,9 +49,9 @@ function ProjectCard(project: Project) {
             borderRadius="md"
           />
           <VStack align="start" spacing={3}>
-            <Heading size={{ base: "md", md: "lg" }}>{title}</Heading>
-            <Text>{description}</Text>
-            <Text fontSize="sm" color="gray.500" fontWeight="medium">
+            <Heading size={{ base: "md", md: "lg" }} className="architectural-heading">{title}</Heading>
+            <Text className="architectural-text">{description}</Text>
+            <Text fontSize="sm" className="architectural-text" fontWeight="300" opacity={0.8}>
               {date}
             </Text>
             <HStack spacing={2} flexWrap="wrap" gap={2}>
@@ -72,8 +59,11 @@ function ProjectCard(project: Project) {
                 <Tag 
                   key={index} 
                   size={{ base: "sm", md: "md" }} 
-                  bg={tagBg} 
-                  color={tagColor}
+                  bg="rgba(160, 139, 115, 0.1)"
+                  color="var(--warm-gray)"
+                  borderRadius="full"
+                  fontWeight="300"
+                  border="1px solid rgba(160, 139, 115, 0.2)"
                 >
                   {tag}
                 </Tag>
@@ -86,10 +76,13 @@ function ProjectCard(project: Project) {
               rel="noopener noreferrer"
               size="sm"
               variant="link"
-              colorScheme="blue"
-              fontWeight="medium"
+              color="var(--warm-gray)"
+              fontWeight="300"
               rightIcon={<ExternalLinkIcon />}
-              _hover={{ textDecoration: 'underline' }}
+              _hover={{ 
+                color: "var(--deep-beige)",
+                textDecoration: 'underline' 
+              }}
             >
               Visit Project
             </Button>
@@ -125,17 +118,18 @@ export default function Projects() {
 
   return (
     <Container maxW="container.md" px={{ base: 4, md: 8 }}>
-      <VStack 
-        spacing={8} 
-        alignItems="stretch" 
-        pt={{ base: 16, md: 40 }} 
-        pb={{ base: 16, md: 20 }}
-      >
+        <VStack 
+          spacing={8} 
+          alignItems="stretch" 
+          pt={{ base: 24, md: 32 }} 
+          pb={{ base: 16, md: 20 }}
+        >
         <Heading 
           as="h1" 
           size={{ base: "xl", md: "2xl" }}
           mb={{ base: 6, md: 8 }} 
           textAlign="center"
+          className="architectural-heading"
         >
           Projects
         </Heading>
@@ -145,12 +139,10 @@ export default function Projects() {
             {[...Array(3)].map((_, index) => (
               <Box 
                 key={index}
-                p={{ base: 4, md: 6 }}
-                borderRadius="xl"
+                p={{ base: 5, md: 6 }}
+                borderRadius="6px"
                 w="full"
-                bg="gray.50"
-                borderWidth="1px"
-                borderColor="gray.200"
+                className="glass-effect"
               >
                 <HStack spacing={6} align="start">
                   <Skeleton boxSize={{ base: "80px", md: "100px" }} borderRadius="md" />
@@ -177,11 +169,11 @@ export default function Projects() {
         ) : (
           <Box 
             p={6} 
-            borderRadius="xl" 
-            bg="gray.50"
+            borderRadius="6px" 
+            className="glass-effect"
             textAlign="center"
           >
-            <Text color="black" fontWeight="medium">No projects found. Check back soon!</Text>
+            <Text className="architectural-text">No projects found. Check back soon!</Text>
           </Box>
         )}
       </VStack>

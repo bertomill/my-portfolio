@@ -17,6 +17,25 @@
   --pure-white: #fefefe;
 }
 
+/* Global dotted background for all pages */
+body {
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.12;
+  background: radial-gradient(circle, rgba(45, 41, 38, 0.5) 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: -1;
+}
+
 /* Subtle animated background gradient - Warm architectural tones */
 @keyframes gradientShift {
   0% { background-position: 0% 50%; }
