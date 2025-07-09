@@ -17,6 +17,7 @@ import {
   Skeleton,
   LinkBox,
   LinkOverlay,
+  Select,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
@@ -712,7 +713,50 @@ export default function Home() {
   const [showVideo, setShowVideo] = useState(false)
   const [projects, setProjects] = useState<Project[]>([])
   const [projectsLoading, setProjectsLoading] = useState(true)
+  const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest')
   const videoRef = useRef<HTMLVideoElement>(null)
+
+  // Function to parse date strings into comparable Date objects
+  // This handles formats like "July 2025", "June 2, 2025", "December 2024", etc.
+  const parseProjectDate = (dateString: string): Date => {
+    try {
+      // Handle formats like "June 2, 2025" (with day)
+      if (dateString.includes(',')) {
+        return new Date(dateString)
+      }
+      
+      // Handle formats like "July 2025" (month and year only)
+      const [month, year] = dateString.split(' ')
+      if (month && year) {
+        // Set to first day of the month for consistent comparison
+        return new Date(`${month} 1, ${year}`)
+      }
+      
+      // Fallback: try to parse as-is
+      return new Date(dateString)
+    } catch (error) {
+      // If parsing fails, return a very old date so it appears last
+      console.warn(`Failed to parse date: ${dateString}`)
+      return new Date('1900-01-01')
+    }
+  }
+
+  // Function to sort projects by date
+  const sortProjectsByDate = (projectsToSort: Project[], sortOrder: 'newest' | 'oldest'): Project[] => {
+    return [...projectsToSort].sort((a, b) => {
+      const dateA = parseProjectDate(a.date)
+      const dateB = parseProjectDate(b.date)
+      
+      if (sortOrder === 'newest') {
+        return dateB.getTime() - dateA.getTime() // Newest first
+      } else {
+        return dateA.getTime() - dateB.getTime() // Oldest first
+      }
+    })
+  }
+
+  // Get sorted projects
+  const sortedProjects = sortProjectsByDate(projects, sortBy)
 
   // Fetch featured projects
   useEffect(() => {
@@ -1010,14 +1054,48 @@ export default function Home() {
                   className="glass-effect"
                 >
                   <VStack spacing={6}>
-                    <Heading 
-                      as="h2" 
-                      size={{ base: "md", md: "lg" }}
-                      mb={{ base: 1, md: 2 }}
-                      className="architectural-heading"
+                    <HStack 
+                      w="full" 
+                      justify="space-between" 
+                      align="center"
+                      flexWrap="wrap"
+                      gap={4}
                     >
-                      Featured AI applications
-                    </Heading>
+                      <Heading 
+                        as="h2" 
+                        size={{ base: "md", md: "lg" }}
+                        className="architectural-heading"
+                        flex="1"
+                        minW="fit-content"
+                      >
+                        Featured AI applications
+                      </Heading>
+                      
+                      <Select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest')}
+                        width="auto"
+                        minW="140px"
+                        size="sm"
+                        bg="rgba(232, 220, 192, 0.08)"
+                        border="1px solid rgba(212, 197, 169, 0.3)"
+                        borderRadius="6px"
+                        color="var(--warm-gray)"
+                        fontSize="sm"
+                        title="Sort projects by completion date"
+                        _hover={{
+                          borderColor: "rgba(212, 197, 169, 0.5)",
+                          bg: "rgba(232, 220, 192, 0.12)"
+                        }}
+                        _focus={{
+                          borderColor: "rgba(212, 197, 169, 0.7)",
+                          boxShadow: "0 0 0 1px rgba(212, 197, 169, 0.3)"
+                        }}
+                      >
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                      </Select>
+                    </HStack>
                     
                     {projectsLoading ? (
                       <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }} w="full">
@@ -1038,10 +1116,10 @@ export default function Home() {
                           </Box>
                         ))}
                       </SimpleGrid>
-                    ) : projects.length > 0 ? (
+                    ) : sortedProjects.length > 0 ? (
                       <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }} w="full">
-                        {projects.map((project, index) => (
-                          <Box key={index}>
+                        {sortedProjects.map((project, index) => (
+                          <Box key={project.id || index}>
                             <ProjectCard {...project} />
                           </Box>
                         ))}
