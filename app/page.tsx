@@ -1,5 +1,13 @@
 'use client'
 
+import * as React from "react"
+import { useState, useEffect, useRef } from "react"
+import Link from "next/link"
+import Image from "next/image"
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
+import { format } from "date-fns"
+import { ExternalLink, Play, ArrowRight } from "lucide-react"
+
 import {
   Box,
   Button,
@@ -11,24 +19,23 @@ import {
   useColorModeValue,
   HStack,
   Tag,
-  Image,
-  Link as ChakraLink,
   AspectRatio,
   Skeleton,
   LinkBox,
   LinkOverlay,
   Select,
+  Card,
+  CardBody,
+  CardHeader,
+  CardFooter,
 } from '@chakra-ui/react'
-import Link from 'next/link'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import { useEffect, useState, useRef } from 'react'
-import { format } from 'date-fns'
-import type { BlogPost } from '@/lib/getBlogPosts'
-import { Project } from '@/lib/schema'
-import { analytics } from '@/lib/analytics'
 
+import type { BlogPost } from "@/lib/getBlogPosts"
+import type { Project } from "@/lib/schema"
+import { analytics } from "@/lib/analytics"
+
+const MotionDiv = motion.div
 const MotionBox = motion(Box)
 
 // Custom hook for floating paper effect
@@ -72,20 +79,26 @@ function WatercolorDivide() {
       <Image
         src="/watercolor-divide.png"
         alt="Watercolor section divider"
-        width="100%"
-        height="100%"
-        objectFit="contain"
-        objectPosition="center"
-        opacity={0.7}
-        filter="hue-rotate(10deg) saturate(0.8)"
+        width={800}
+        height={100}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "contain",
+          objectPosition: "center",
+          opacity: 0.7,
+          filter: "hue-rotate(10deg) saturate(0.8)"
+        }}
       />
     </Box>
   )
 }
 
-// Project Card component - now with architectural styling
+// Project Card component
 function ProjectCard(project: Project) {
   const { title, description, tags, projectUrl, date, imageSrc } = project
+  const cardBg = useColorModeValue('white', 'gray.800')
+  const borderColor = useColorModeValue('gray.200', 'gray.700')
   
   const handleProjectClick = () => {
     analytics.projectClick(title, projectUrl)
@@ -97,201 +110,155 @@ function ProjectCard(project: Project) {
   }
 
   return (
-    <MotionBox
+    <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      w="full"
-      className="world-class-card project-card-enhanced"
-      onMouseEnter={handleProjectView}
+      style={{ width: "100%" }}
     >
-      <Box
-        as="article"
-        p={6}
-        borderRadius="6px"
-        position="relative"
-        transition="all 0.6s cubic-bezier(0.23, 1, 0.320, 1)"
-        height="100%"
-        className="glass-effect"
+      <Card 
+        height="100%" 
+        bg={cardBg}
+        borderColor={borderColor}
+        borderWidth="1px"
+        _hover={{ 
+          shadow: "md",
+          transform: "translateY(-2px)"
+        }}
+        transition="all 0.3s"
+        onMouseEnter={handleProjectView}
       >
-        <VStack align="start" spacing={4}>
+        <CardBody p={4}>
           {/* Project Image (if available) */}
           {imageSrc && (
-            <>
+            <Box mb={4}>
               {projectUrl && projectUrl !== "#" ? (
-                <ChakraLink 
-                  href={projectUrl} 
-                  isExternal
+                <Link 
+                  href={projectUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => {
-                    console.log('Project image clicked:', title, projectUrl)
                     handleProjectClick()
                   }}
-                  width="100%"
+                  style={{ display: "block", width: "100%" }}
                 >
+                  <AspectRatio ratio={16/9}>
+                    <Box 
+                      borderRadius="md" 
+                      overflow="hidden"
+                      bg="gray.100"
+                      transition="all 0.3s"
+                      _hover={{ opacity: 0.9 }}
+                    >
+                      <Image 
+                        src={imageSrc} 
+                        alt={`${title} screenshot`}
+                        fill
+                        style={{ objectFit: "cover" }}
+                      />
+                    </Box>
+                  </AspectRatio>
+                </Link>
+              ) : (
+                <AspectRatio ratio={16/9}>
                   <Box 
-                    width="100%" 
-                    borderRadius="4px" 
-                    overflow="hidden" 
-                    mb={3}
-                    position="relative"
-                    transition="all 0.4s cubic-bezier(0.23, 1, 0.320, 1)"
-                    _hover={{
-                      transform: 'scale(1.02)',
-                      boxShadow: '0 12px 30px rgba(45, 41, 38, 0.1)'
-                    }}
-                    className="subtle-glow"
-                    border="1px solid rgba(212, 197, 169, 0.2)"
-                    cursor="pointer"
+                    borderRadius="md" 
+                    overflow="hidden"
+                    bg="gray.100"
+                    opacity={0.8}
                   >
                     <Image 
                       src={imageSrc} 
-                      alt={`${title} screenshot`} 
-                      width="100%"
-                      height="auto"
-                      objectFit="cover"
-                    />
-                    <Box
-                      position="absolute"
-                      top="0"
-                      left="0"
-                      right="0"
-                      bottom="0"
-                      bg="linear-gradient(135deg, rgba(232, 220, 192, 0.1), rgba(212, 197, 169, 0.05))"
-                      opacity="0"
-                      transition="opacity 0.3s"
-                      _groupHover={{ opacity: 1 }}
-                      borderRadius="4px"
+                      alt={`${title} screenshot`}
+                      fill
+                      style={{ objectFit: "cover" }}
                     />
                   </Box>
-                </ChakraLink>
-              ) : (
-                <Box 
-                  width="100%" 
-                  borderRadius="4px" 
-                  overflow="hidden" 
-                  mb={3}
-                  position="relative"
-                  className="subtle-glow"
-                  border="1px solid rgba(212, 197, 169, 0.2)"
-                  opacity={0.8}
-                >
-                  <Image 
-                    src={imageSrc} 
-                    alt={`${title} screenshot`} 
-                    width="100%"
-                    height="auto"
-                    objectFit="cover"
-                  />
-                </Box>
+                </AspectRatio>
               )}
-            </>
+            </Box>
           )}
           
           <VStack align="start" spacing={3} width="100%">
-            <Heading 
-              size="md" 
-              className="architectural-heading"
-              fontWeight="300"
-              color="var(--charcoal)"
-              letterSpacing="-0.02em"
-            >
+            <Heading size="md" fontWeight="medium">
               {title}
             </Heading>
             <Text 
               fontSize="sm" 
               noOfLines={3} 
-              className="architectural-text"
-              fontWeight="300"
-              lineHeight="1.6"
+              color="gray.600"
+              _dark={{ color: "gray.400" }}
             >
               {description}
             </Text>
-            <HStack spacing={2} flexWrap="wrap" gap={1}>
+            
+            <HStack spacing={2} flexWrap="wrap">
               {tags.map((tag: string, index: number) => (
-                <Box
+                <Tag
                   key={index}
-                  className="minimal-tag"
-                  fontSize="10px"
-                  fontWeight="400"
-                  letterSpacing="0.5px"
-                  textTransform="uppercase"
+                  size="sm"
+                  colorScheme="gray"
+                  variant="subtle"
+                  fontSize="xs"
+                  fontWeight="normal"
                 >
                   {tag}
-                </Box>
+                </Tag>
               ))}
             </HStack>
-            <Box mt={2}>
+            
+            <HStack justify="space-between" width="100%" pt={2}>
               {projectUrl && projectUrl !== "#" ? (
-                <ChakraLink
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  as={Link}
                   href={projectUrl}
-                  isExternal
-                  color="var(--warm-gray)"
-                  fontWeight="300"
-                  fontSize="sm"
-                  display="flex"
-                  alignItems="center"
-                  _hover={{ 
-                    color: "var(--deep-beige)",
-                    transform: 'translateX(2px)' 
-                  }}
-                  transition="all 0.3s ease"
-                  letterSpacing="0.5px"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => {
-                    console.log('Project clicked:', title, projectUrl)
                     handleProjectClick()
                   }}
-                  cursor="pointer"
-                  pointerEvents="auto"
-                  zIndex={10}
-                >
-                  View Project <ExternalLinkIcon mx="2px" />
-                </ChakraLink>
-              ) : (
-                <Text
-                  color="var(--warm-gray)"
-                  fontWeight="300"
+                  color="gray.600"
+                  _hover={{ color: "blue.600" }}
                   fontSize="sm"
-                  display="flex"
-                  alignItems="center"
-                  letterSpacing="0.5px"
-                  opacity={0.6}
+                  fontWeight="normal"
+                  p={0}
+                  h="auto"
+                  rightIcon={<ExternalLink size={14} />}
                 >
+                  View Project
+                </Button>
+              ) : (
+                <Text fontSize="sm" color="gray.500">
                   Coming Soon
                 </Text>
               )}
-            </Box>
-            <Text 
-              fontSize="xs" 
-              color="var(--warm-gray)" 
-              fontWeight="300"
-              letterSpacing="0.5px"
-              textTransform="uppercase"
-            >
-              {date}
-            </Text>
+              
+              <Text fontSize="xs" color="gray.500">
+                {date}
+              </Text>
+            </HStack>
           </VStack>
-        </VStack>
-      </Box>
-    </MotionBox>
+        </CardBody>
+      </Card>
+    </motion.div>
   )
 }
 
 // Blog Post Card component
 function BlogPostCard({ post }: { post: BlogPost }) {
-  const hoverBg = useColorModeValue('white', 'rgba(255, 255, 255, 0.05)')
-  const bgColor = useColorModeValue('gray.50', 'transparent')
-  const borderColor = useColorModeValue('gray.200', 'transparent')
-  const dateFontColor = useColorModeValue('black', 'gray.400')
-  const titleColor = useColorModeValue('black', 'white')
-  const blogTagBg = useColorModeValue('gray.200', 'whiteAlpha.200')
-  const blogTagColor = useColorModeValue('black', 'white')
+  const cardBg = useColorModeValue('white', 'gray.800')
+  const borderColor = useColorModeValue('gray.200', 'gray.700')
+  const dateColor = useColorModeValue('gray.600', 'gray.400')
+  const titleColor = useColorModeValue('gray.900', 'white')
 
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString)
       return format(date, 'MMMM d, yyyy')
-    } catch (error) {
-      console.error('Error formatting date:', error)
+    } catch {
+      console.error('Error formatting date')
       return dateString
     }
   }
@@ -303,87 +270,69 @@ function BlogPostCard({ post }: { post: BlogPost }) {
   
   return (
     <LinkBox 
-      as={Box}
-      borderWidth="1px"
-      borderColor={borderColor}
-      borderRadius="xl"
-      overflow="hidden"
-      bg={bgColor}
+      as={Card}
       height="100%"
-      boxShadow="sm"
-      _hover={{
-        transform: 'translateY(-2px)',
-        boxShadow: 'md',
-        bg: hoverBg
+      bg={cardBg}
+      borderColor={borderColor}
+      borderWidth="1px"
+      _hover={{ 
+        shadow: "md",
+        transform: "translateY(-2px)"
       }}
-      transition="all 0.2s"
+      transition="all 0.3s"
     >
       {/* Blog Post Image */}
       {post.imageUrl && (
         <AspectRatio ratio={16/9}>
-          <Image 
-            src={post.imageUrl}
-            alt={post.title}
-            objectFit="cover"
-            width="100%"
-            height="100%"
-            fallback={
-              <Box 
-                width="100%" 
-                height="100%" 
-                bg="gray.100" 
-                display="flex" 
-                alignItems="center" 
-                justifyContent="center"
-              >
-                <Text fontSize="sm" color="gray.500">Image unavailable</Text>
-              </Box>
-            }
-          />
+          <Box bg="gray.100" borderTopRadius="md">
+            <Image 
+              src={post.imageUrl}
+              alt={post.title}
+              fill
+              style={{ objectFit: "cover" }}
+            />
+          </Box>
         </AspectRatio>
       )}
       
-      <Box p={4}>
+      <CardBody p={4}>
         <VStack align="start" spacing={2}>
           <Text 
-            fontSize={{ base: "xs", md: "sm" }}
-            color={dateFontColor}
-            fontWeight="medium"
+            fontSize="xs" 
+            color={dateColor}
             fontFamily="mono"
+            fontWeight="medium"
           >
             {formatDate(post.pubDate)}
           </Text>
           
-          <Heading
-            as="h3"
-            fontSize={{ base: "md", md: "lg" }}
-            fontWeight="semibold"
-            color={titleColor}
-            noOfLines={2}
-            _groupHover={{ color: "blue.600" }}
+          <LinkOverlay
+            as={NextLink}
+            href={post.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleBlogPostClick}
           >
-            <LinkOverlay
-              as={NextLink}
-              href={post.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              isExternal
-              onClick={handleBlogPostClick}
+            <Heading
+              as="h3"
+              fontSize="md"
+              fontWeight="medium"
+              color={titleColor}
+              noOfLines={2}
+              _hover={{ color: "blue.600" }}
             >
               {post.title}
-            </LinkOverlay>
-          </Heading>
+            </Heading>
+          </LinkOverlay>
 
           {post.categories?.length > 0 && (
-            <HStack spacing={2} mt={1} flexWrap="wrap" gap={2}>
+            <HStack spacing={2} pt={1} flexWrap="wrap">
               {post.categories.slice(0, 2).map((category) => (
                 <Tag
                   key={category}
                   size="sm"
-                  bg={blogTagBg}
-                  color={blogTagColor}
-                  fontWeight="medium"
-                  borderRadius="full"
+                  variant="outline"
+                  fontSize="xs"
                 >
                   {category}
                 </Tag>
@@ -391,7 +340,7 @@ function BlogPostCard({ post }: { post: BlogPost }) {
             </HStack>
           )}
         </VStack>
-      </Box>
+      </CardBody>
     </LinkBox>
   )
 }
@@ -400,8 +349,8 @@ function BlogPostCard({ post }: { post: BlogPost }) {
 function BlogPosts() {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const sectionBg = useColorModeValue('white', 'rgba(255, 255, 255, 0.03)')
-  const borderColor = useColorModeValue('gray.200', 'transparent')
+  const cardBg = useColorModeValue('white', 'gray.800')
+  const borderColor = useColorModeValue('gray.200', 'gray.700')
 
   useEffect(() => {
     async function fetchPosts() {
@@ -409,8 +358,8 @@ function BlogPosts() {
         const response = await fetch('/api/posts')
         const data = await response.json()
         setPosts(data.slice(0, 3)) // Get the latest 3 posts
-      } catch (error) {
-        console.error('Error fetching blog posts:', error)
+      } catch {
+        console.error('Error fetching blog posts')
         analytics.error('Failed to fetch blog posts', 'Homepage')
       } finally {
         setIsLoading(false)
@@ -424,77 +373,69 @@ function BlogPosts() {
   }
 
   return (
-    <Box 
-      w="full" 
-      p={{ base: 5, md: 6 }}
-      borderRadius="xl"
-      bg={sectionBg}
-      borderWidth="1px"
-      borderColor={borderColor}
-      boxShadow="sm"
-    >
-      <VStack spacing={6}>
-        <Heading 
-          as="h2" 
-          size={{ base: "md", md: "lg" }}
-          mb={{ base: 1, md: 2 }}
-          color="black"
-        >
+    <Card bg={cardBg} borderColor={borderColor} borderWidth="1px">
+      <CardHeader pb={2}>
+        <Heading size={{ base: "md", md: "lg" }}>
           Blog Posts
         </Heading>
-        
+      </CardHeader>
+      
+      <CardBody pb={2}>
         {isLoading ? (
-          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }} w="full">
+          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }}>
             {[...Array(3)].map((_, index) => (
-              <Box 
-                key={index}
-                p={4} 
-                borderRadius="xl" 
-                bg="gray.50"
-                boxShadow="sm"
-                borderWidth="1px"
-                borderColor="gray.200"
-              >
-                <VStack align="stretch" spacing={3}>
-                  <Skeleton height="20px" width="100px" />
-                  <Skeleton height="24px" width="100%" />
-                  <Skeleton height="20px" width="200px" />
-                </VStack>
-              </Box>
+              <Card key={index} bg={cardBg} borderColor={borderColor}>
+                <AspectRatio ratio={16/9}>
+                  <Skeleton borderTopRadius="md" />
+                </AspectRatio>
+                <CardBody p={4}>
+                  <VStack align="stretch" spacing={3}>
+                    <Skeleton height="16px" width="100px" />
+                    <Skeleton height="20px" width="100%" />
+                    <Skeleton height="20px" width="75%" />
+                    <HStack spacing={2} pt={1}>
+                      <Skeleton height="16px" width="60px" />
+                      <Skeleton height="16px" width="60px" />
+                    </HStack>
+                  </VStack>
+                </CardBody>
+              </Card>
             ))}
           </SimpleGrid>
         ) : posts.length > 0 ? (
-          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }} w="full">
+          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }}>
             {posts.map((post) => (
               <BlogPostCard key={post.guid} post={post} />
             ))}
           </SimpleGrid>
         ) : (
           <Box 
-            p={4} 
-            borderRadius="xl" 
             bg="gray.50"
-            width="full"
+            _dark={{ bg: "gray.700" }}
+            rounded="lg" 
+            p={8} 
             textAlign="center"
           >
-            <Text color="black" fontWeight="medium">No blog posts found. Check back soon!</Text>
+            <Text color="gray.600" _dark={{ color: "gray.400" }}>
+              No blog posts found. Check back soon!
+            </Text>
           </Box>
         )}
-        
-        <Box alignSelf="center">
-          <Button
-            as={Link}
-            href="/blog"
-            variant="outline"
-            size={{ base: "md", md: "md" }}
-            rightIcon={<ExternalLinkIcon />}
-            onClick={handleViewAllArticlesClick}
-          >
-            View All Articles
-          </Button>
-        </Box>
-      </VStack>
-    </Box>
+      </CardBody>
+      
+      <CardFooter justifyContent="center" pt={4}>
+        <Button
+          variant="outline"
+          size="sm"
+          as={Link}
+          href="/blog"
+          onClick={handleViewAllArticlesClick}
+          rightIcon={<ArrowRight size={14} />}
+        >
+          View All Articles
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }
 
@@ -509,18 +450,17 @@ interface YouTubeVideo {
 }
 
 function YouTubeVideoCard({ video }: { video: YouTubeVideo }) {
-  const hoverBg = useColorModeValue('white', 'rgba(255, 255, 255, 0.05)')
-  const bgColor = useColorModeValue('gray.50', 'transparent')
-  const borderColor = useColorModeValue('gray.200', 'transparent')
-  const dateFontColor = useColorModeValue('black', 'gray.400')
-  const titleColor = useColorModeValue('black', 'white')
+  const cardBg = useColorModeValue('white', 'gray.800')
+  const borderColor = useColorModeValue('gray.200', 'gray.700')
+  const dateColor = useColorModeValue('gray.600', 'gray.400')
+  const titleColor = useColorModeValue('gray.900', 'white')
 
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString)
       return format(date, 'MMMM d, yyyy')
-    } catch (error) {
-      console.error('Error formatting date:', error)
+    } catch {
+      console.error('Error formatting date')
       return dateString
     }
   }
@@ -540,62 +480,61 @@ function YouTubeVideoCard({ video }: { video: YouTubeVideo }) {
   
   return (
     <LinkBox 
-      as={Box}
-      borderWidth="1px"
-      borderColor={borderColor}
-      borderRadius="xl"
-      overflow="hidden"
-      bg={bgColor}
+      as={Card}
       height="100%"
-      boxShadow="sm"
-      _hover={{
-        transform: 'translateY(-2px)',
-        boxShadow: 'md',
-        bg: hoverBg
+      bg={cardBg}
+      borderColor={borderColor}
+      borderWidth="1px"
+      _hover={{ 
+        shadow: "md",
+        transform: "translateY(-2px)"
       }}
-      transition="all 0.2s"
+      transition="all 0.3s"
       onMouseEnter={handleVideoView}
     >
       <AspectRatio ratio={16/9}>
-        <iframe 
-          src={getEmbedUrl(video.videoId)}
-          title={video.title}
-          allowFullScreen
-          style={{ borderRadius: '0.75rem 0.75rem 0 0' }}
-        />
+        <Box borderTopRadius="md" overflow="hidden">
+          <iframe 
+            src={getEmbedUrl(video.videoId)}
+            title={video.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            style={{ width: "100%", height: "100%", border: 0 }}
+          />
+        </Box>
       </AspectRatio>
-      <Box p={4}>
+      
+      <CardBody p={4}>
         <VStack align="start" spacing={2}>
           <Text 
-            fontSize={{ base: "xs", md: "sm" }}
-            color={dateFontColor}
-            fontWeight="medium"
+            fontSize="xs" 
+            color={dateColor}
             fontFamily="mono"
+            fontWeight="medium"
           >
             {formatDate(video.publishedDate)}
           </Text>
           
-          <Heading
-            as="h3"
-            fontSize={{ base: "md", md: "lg" }}
-            fontWeight="semibold"
-            color={titleColor}
-            noOfLines={2}
-            _groupHover={{ color: "blue.600" }}
+          <LinkOverlay
+            as={NextLink}
+            href={video.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleVideoClick}
           >
-            <LinkOverlay
-              as={NextLink}
-              href={video.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              isExternal
-              onClick={handleVideoClick}
+            <Heading
+              as="h3"
+              fontSize="md"
+              fontWeight="medium"
+              color={titleColor}
+              noOfLines={2}
+              _hover={{ color: "blue.600" }}
             >
               {video.title}
-            </LinkOverlay>
-          </Heading>
+            </Heading>
+          </LinkOverlay>
         </VStack>
-      </Box>
+      </CardBody>
     </LinkBox>
   )
 }
@@ -604,8 +543,8 @@ function YouTubeVideoCard({ video }: { video: YouTubeVideo }) {
 function YouTubeVideos() {
   const [videos, setVideos] = useState<YouTubeVideo[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const sectionBg = useColorModeValue('gray.50', 'rgba(255, 255, 255, 0.03)')
-  const borderColor = useColorModeValue('gray.200', 'transparent')
+  const cardBg = useColorModeValue('white', 'gray.800')
+  const borderColor = useColorModeValue('gray.200', 'gray.700')
 
   useEffect(() => {
     async function fetchVideos() {
@@ -613,8 +552,8 @@ function YouTubeVideos() {
         const response = await fetch('/api/youtube')
         const data = await response.json()
         setVideos(data.slice(0, 3)) // Get the latest 3 videos
-      } catch (error) {
-        console.error('Error fetching YouTube videos:', error)
+      } catch {
+        console.error('Error fetching YouTube videos')
         analytics.error('Failed to fetch YouTube videos', 'Homepage')
       } finally {
         setIsLoading(false)
@@ -629,83 +568,67 @@ function YouTubeVideos() {
   }
 
   return (
-    <Box 
-      w="full" 
-      p={{ base: 5, md: 6 }}
-      borderRadius="xl"
-      bg={sectionBg}
-      borderWidth="1px"
-      borderColor={borderColor}
-      boxShadow="sm"
-    >
-      <VStack spacing={6}>
-        <Heading 
-          as="h2" 
-          size={{ base: "md", md: "lg" }}
-          mb={{ base: 1, md: 2 }}
-          color="black"
-        >
+    <Card bg={cardBg} borderColor={borderColor} borderWidth="1px">
+      <CardHeader pb={2}>
+        <Heading size={{ base: "md", md: "lg" }}>
           Latest Videos
         </Heading>
-        
+      </CardHeader>
+      
+      <CardBody pb={2}>
         {isLoading ? (
-          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }} w="full">
+          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }}>
             {[...Array(3)].map((_, index) => (
-              <Box 
-                key={index}
-                borderRadius="xl" 
-                bg="gray.50"
-                boxShadow="sm"
-                borderWidth="1px"
-                borderColor="gray.200"
-                overflow="hidden"
-              >
+              <Card key={index} bg={cardBg} borderColor={borderColor}>
                 <AspectRatio ratio={16/9}>
-                  <Skeleton width="100%" height="100%" />
+                  <Skeleton borderTopRadius="md" />
                 </AspectRatio>
-                <Box p={4}>
+                <CardBody p={4}>
                   <VStack align="stretch" spacing={3}>
-                    <Skeleton height="20px" width="100px" />
-                    <Skeleton height="24px" width="100%" />
+                    <Skeleton height="16px" width="100px" />
+                    <Skeleton height="20px" width="100%" />
+                    <Skeleton height="20px" width="75%" />
                   </VStack>
-                </Box>
-              </Box>
+                </CardBody>
+              </Card>
             ))}
           </SimpleGrid>
         ) : videos.length > 0 ? (
-          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }} w="full">
+          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }}>
             {videos.map((video) => (
               <YouTubeVideoCard key={video.videoId} video={video} />
             ))}
           </SimpleGrid>
         ) : (
           <Box 
-            p={4} 
-            borderRadius="xl" 
             bg="gray.50"
-            width="full"
+            _dark={{ bg: "gray.700" }}
+            rounded="lg" 
+            p={8} 
             textAlign="center"
           >
-            <Text color="black" fontWeight="medium">No videos found. Check back soon!</Text>
+            <Text color="gray.600" _dark={{ color: "gray.400" }}>
+              No videos found. Check back soon!
+            </Text>
           </Box>
         )}
-        
-        <Box alignSelf="center">
-          <Button
-            as={Link}
-            href="https://www.youtube.com/@BertoVMill"
-            variant="outline"
-            size={{ base: "md", md: "md" }}
-            rightIcon={<ExternalLinkIcon />}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={handleViewAllVideosClick}
-          >
-            View All Videos
-          </Button>
-        </Box>
-      </VStack>
-    </Box>
+      </CardBody>
+      
+      <CardFooter justifyContent="center" pt={4}>
+        <Button
+          variant="outline"
+          size="sm"
+          as={Link}
+          href="https://www.youtube.com/@BertoVMill"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={handleViewAllVideosClick}
+          rightIcon={<ArrowRight size={14} />}
+        >
+          View All Videos
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }
 
@@ -715,6 +638,11 @@ export default function Home() {
   const [projectsLoading, setProjectsLoading] = useState(true)
   const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest')
   const videoRef = useRef<HTMLVideoElement>(null)
+
+  // Color mode values for the main component
+  const featuredCardBg = useColorModeValue('white', 'gray.800')
+  const featuredBorderColor = useColorModeValue('gray.200', 'gray.700')
+  const skeletonCardBg = useColorModeValue('gray.50', 'gray.700')
 
   // Function to parse date strings into comparable Date objects
   // This handles formats like "July 2025", "June 2, 2025", "December 2024", etc.
@@ -734,7 +662,7 @@ export default function Home() {
       
       // Fallback: try to parse as-is
       return new Date(dateString)
-    } catch (error) {
+    } catch {
       // If parsing fails, return a very old date so it appears last
       console.warn(`Failed to parse date: ${dateString}`)
       return new Date('1900-01-01')
@@ -768,8 +696,8 @@ export default function Home() {
           const data = await response.json()
           setProjects(data)
         }
-      } catch (error) {
-        console.error('Error fetching projects:', error)
+      } catch {
+        console.error('Error fetching projects')
         analytics.error('Failed to fetch featured projects', 'Homepage')
       } finally {
         setProjectsLoading(false)
@@ -813,400 +741,352 @@ export default function Home() {
   }
 
   return (
-    <>
-      <Box w="full" display="flex" justifyContent="center" position="relative" zIndex={1}>
-        <Container 
-          maxW="container.xl" 
-          pt={{ base: 20, sm: 24, md: 28, lg: 32 }}
-          px={{ base: 4, sm: 6, md: 8 }}
-          centerContent
+    <Box w="full" display="flex" justifyContent="center" position="relative" zIndex={1}>
+      <Container 
+        maxW="container.xl" 
+        pt={{ base: 20, sm: 24, md: 28, lg: 32 }}
+        px={{ base: 4, sm: 6, md: 8 }}
+        centerContent
+      >
+        <VStack 
+          spacing={{ base: 6, sm: 8, md: 10, lg: 12 }} 
+          alignItems="center" 
+          textAlign="center"
+          w="full"
+          maxW="container.lg"
         >
-          <VStack 
-            spacing={{ base: 6, sm: 8, md: 10, lg: 12 }} 
-            alignItems="center" 
-            textAlign="center"
-            w="full"
-            maxW="container.lg"
-          >
-            <Box 
-              position="relative" 
-              width="full" 
-              display="flex" 
-              flexDirection="column" 
-              alignItems="center"
+          {/* Hero Section */}
+          <Box w="full">
+            <HStack
+              align="center"
+              justify="center"
+              w="full"
+              spacing={{ base: 4, md: 8 }}
+              flexDirection={{ base: "column", md: "row" }}
             >
-              {/* Hero Section with Image */}
-              <Box
-                display="flex"
-                flexDirection={{ base: "column", md: "row" }}
-                alignItems="center"
-                justifyContent="center"
-                w="full"
-                mb={{ base: 6, md: 10 }}
-                gap={{ base: 4, md: 8 }}
+              <VStack 
+                flex="1" 
+                align={{ base: "center", md: "flex-start" }}
+                textAlign={{ base: "center", md: "left" }}
+                spacing={6}
               >
-                <VStack 
-                  flex="1" 
-                  alignItems={{ base: "center", md: "flex-start" }}
-                  textAlign={{ base: "center", md: "left" }}
+                <MotionDiv
+                  style={useFloatingEffect(Math.PI / 4, 1.2)}
                 >
-                  <MotionBox
-                    mb={{ base: 4, sm: 6, md: 8 }}
+                  <Box
                     position="relative"
-                    display="flex"
-                    justifyContent={{ base: "center", md: "flex-start" }}
-                    style={useFloatingEffect(Math.PI / 4, 1.2)} // Gentle floating for the marker title
+                    maxW={{ base: "140px", sm: "175px", md: "200px", lg: "225px" }}
                     overflow="hidden"
                   >
-                    <Box
-                      position="relative"
-                      maxW={{ base: "140px", sm: "175px", md: "200px", lg: "225px" }}
-                      overflow="hidden"
-                    >
-                      <Image
-                        src="/Berto-Mill-Marker.png"
-                        alt="Berto Mill"
-                        width="100%"
-                        height="auto"
-                        objectFit="cover"
-                        style={{
-                          filter: "contrast(1.1) saturate(0.9)",
-                          mixBlendMode: "multiply",
-                          opacity: 0.85,
-                          transform: "scale(1.4)", // Zoom in to crop whitespace
-                          transformOrigin: "center center"
-                        }}
-                        className="marker-title marker-title-cropped"
-                      />
-                    </Box>
-                  </MotionBox>
+                    <Image
+                      src="/Berto-Mill-Marker.png"
+                      alt="Berto Mill"
+                      width={225}
+                      height={100}
+                      style={{
+                        objectFit: "cover",
+                        filter: "contrast(1.1) saturate(0.9)",
+                        mixBlendMode: "multiply",
+                        opacity: 0.85,
+                        transform: "scale(1.4)",
+                        transformOrigin: "center center"
+                      }}
+                    />
+                  </Box>
+                </MotionDiv>
 
-                  <Text 
-                    fontSize={{ base: "md", sm: "lg", md: "xl" }}
-                    lineHeight={{ base: "tall", md: "taller" }}
-                    className="architectural-text"
-                    mb={6}
-                  >
-                    I am a technology consultant and ML application developer based in Toronto, passionate about crafting intuitive user experiences to
-                    help people and businesses solve problems.
-                  </Text>
-                  
-                  <Button
-                    size="lg"
-                    bgColor="rgba(160, 139, 115, 0.1)"
-                    color="var(--warm-gray)"
-                    border="1px solid rgba(160, 139, 115, 0.3)"
-                    borderRadius="full"
-                    fontWeight="400"
-                    letterSpacing="0.5px"
-                    px={8}
-                    py={6}
-                    _hover={{
-                      bgColor: "rgba(160, 139, 115, 0.2)",
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 8px 20px rgba(160, 139, 115, 0.15)"
-                    }}
-                    _active={{
-                      transform: "translateY(0px)"
-                    }}
-                    transition="all 0.3s cubic-bezier(0.23, 1, 0.320, 1)"
-                    onClick={() => {
-                      const element = document.getElementById('featured-work');
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }}
-                  >
-                    See my work
-                  </Button>
-                </VStack>
+                <Text 
+                  fontSize={{ base: "md", sm: "lg", md: "xl" }}
+                  lineHeight="tall"
+                  color="gray.600"
+                  _dark={{ color: "gray.400" }}
+                >
+                  I am a technology consultant and ML application developer based in Toronto, passionate about crafting intuitive user experiences to
+                  help people and businesses solve problems.
+                </Text>
                 
-                <Box 
-                  flex="1"
-                  maxW={{ base: "200px", md: "300px" }}
-                  minW={{ base: "200px", md: "300px" }}
-                  position="relative"
-                >
-                  <MotionBox
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <Box
-                      position="relative"
-                      borderRadius="xl"
-                      overflow="hidden" 
-                      boxShadow="lg"
-                      width="100%"
-                      paddingBottom="110%"
-                    >
-                      <AnimatePresence mode="wait">
-                        {showVideo ? (
-                          <motion.div
-                            key="video"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                              width: "100%",
-                              height: "100%"
-                            }}
-                          >
-                            <video
-                              ref={videoRef}
-                              src="/ai_conf_video.mp4"
-                              onEnded={handleVideoEnded}
-                              autoPlay
-                              muted
-                              playsInline
-                              style={{
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
-                                objectPosition: "center"
-                              }}
-                            />
-                          </motion.div>
-                        ) : (
-                          <motion.div
-                            key="image"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                              width: "100%",
-                              height: "100%"
-                            }}
-                          >
-                            <Image
-                              src="/headshot.png"
-                              alt="Berto Mill"
-                              position="absolute"
-                              top="0"
-                              left="0"
-                              width="100%"
-                              height="100%"
-                              objectFit="cover"
-                              objectPosition="center"
-                            />
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </Box>
-                  </MotionBox>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    bgColor={showVideo ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.8)"}
-                    color={showVideo ? "white" : "black"}
-                    fontWeight="medium"
-                    borderRadius="full"
-                    leftIcon={showVideo ? undefined : <Text as="span" fontSize="xs">▶</Text>}
-                    onClick={toggleMedia}
-                    position="absolute"
-                    bottom="5"
-                    right="5"
-                    zIndex="1"
-                    boxShadow="md"
-                    backdropFilter="blur(8px)"
-                    _hover={{
-                      bgColor: showVideo ? "rgba(0, 0, 0, 0.6)" : "rgba(255, 255, 255, 0.9)",
-                      transform: "scale(1.05)"
-                    }}
-                    _active={{
-                      transform: "scale(0.95)"
-                    }}
-                    transition="all 0.2s"
-                  >
-                    {showVideo ? "Return" : "AI Video"}
-                  </Button>
-                </Box>
-              </Box>
-
-              {/* Watercolor Divider */}
-              <WatercolorDivide />
-
-              {/* Featured Work Section */}
-              <MotionBox
-                id="featured-work"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                w="full"
-                className="world-class-card"
-                style={useFloatingEffect(0, 2)} // First section, gentle movement
-              >
-                <Box 
-                  w="full" 
-                  p={{ base: 5, md: 6 }}
-                  borderRadius="6px"
-                  className="glass-effect"
-                >
-                  <VStack spacing={6}>
-                    <HStack 
-                      w="full" 
-                      justify="space-between" 
-                      align="center"
-                      flexWrap="wrap"
-                      gap={4}
-                    >
-                      <Heading 
-                        as="h2" 
-                        size={{ base: "md", md: "lg" }}
-                        className="architectural-heading"
-                        flex="1"
-                        minW="fit-content"
-                      >
-                        Featured AI applications
-                      </Heading>
-                      
-                      <Select
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest')}
-                        width="auto"
-                        minW="140px"
-                        size="sm"
-                        bg="rgba(232, 220, 192, 0.08)"
-                        border="1px solid rgba(212, 197, 169, 0.3)"
-                        borderRadius="6px"
-                        color="var(--warm-gray)"
-                        fontSize="sm"
-                        title="Sort projects by completion date"
-                        _hover={{
-                          borderColor: "rgba(212, 197, 169, 0.5)",
-                          bg: "rgba(232, 220, 192, 0.12)"
-                        }}
-                        _focus={{
-                          borderColor: "rgba(212, 197, 169, 0.7)",
-                          boxShadow: "0 0 0 1px rgba(212, 197, 169, 0.3)"
-                        }}
-                      >
-                        <option value="newest">Newest First</option>
-                        <option value="oldest">Oldest First</option>
-                      </Select>
-                    </HStack>
-                    
-                    {projectsLoading ? (
-                      <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }} w="full">
-                        {[...Array(3)].map((_, index) => (
-                          <Box 
-                            key={index}
-                            p={4} 
-                            borderRadius="6px" 
-                            bg="rgba(232, 220, 192, 0.08)"
-                            boxShadow="sm"
-                            border="1px solid rgba(212, 197, 169, 0.2)"
-                          >
-                            <VStack align="stretch" spacing={3}>
-                              <Skeleton height="20px" width="100px" />
-                              <Skeleton height="24px" width="100%" />
-                              <Skeleton height="20px" width="200px" />
-                            </VStack>
-                          </Box>
-                        ))}
-                      </SimpleGrid>
-                    ) : sortedProjects.length > 0 ? (
-                      <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }} w="full">
-                        {sortedProjects.map((project, index) => (
-                          <Box key={project.id || index}>
-                            <ProjectCard {...project} />
-                          </Box>
-                        ))}
-                      </SimpleGrid>
-                    ) : (
-                      <Box 
-                        p={4} 
-                        borderRadius="6px" 
-                        bg="rgba(232, 220, 192, 0.08)"
-                        width="full"
-                        textAlign="center"
-                        border="1px solid rgba(212, 197, 169, 0.2)"
-                      >
-                        <Text className="architectural-text">No projects found. Check back soon!</Text>
-                      </Box>
-                    )}
-                  </VStack>
-                </Box>
-              </MotionBox>
-
-              {/* Watercolor Divider */}
-              <WatercolorDivide />
-
-              {/* Blog Posts Section */}
-              <MotionBox
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                w="full"
-                mt={{ base: 8, md: 12 }}
-                className="world-class-card"
-                style={useFloatingEffect(Math.PI / 3, 1.8)} // Second section, different phase
-              >
-                <BlogPosts />
-              </MotionBox>
-
-              {/* Watercolor Divider */}
-              <WatercolorDivide />
-
-              {/* Latest Videos Section */}
-              <MotionBox
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                w="full"
-                className="world-class-card"
-                style={useFloatingEffect(Math.PI / 2, 1.5)} // Third section, another different phase
-              >
-                <YouTubeVideos />
-              </MotionBox>
-
-              {/* Watercolor Divider */}
-              <WatercolorDivide />
-
-              <Box 
-                display="flex" 
-                flexDirection={{ base: 'column', sm: 'row' }}
-                gap={{ base: 2, sm: 3, md: 4 }} 
-                mt={{ base: 8, sm: 10, md: 12 }}
-                width={{ base: 'full', sm: 'auto' }}
-              >
                 <Button
-                  as={Link}
-                  href="/about"
-                  variant="solid"
-                  size={{ base: "md", md: "lg" }}
-                  width={{ base: 'full', sm: 'auto' }}
-                  onClick={handleAboutMeClick}
-                >
-                  More About Me
-                </Button>
-                <Button
-                  as={Link}
-                  href="/projects"
+                  size="lg"
                   variant="outline"
-                  size={{ base: "md", md: "lg" }}
-                  width={{ base: 'full', sm: 'auto' }}
-                  onClick={handleProjectsClick}
+                  borderRadius="full"
+                  px={8}
+                  transition="all 0.3s"
+                  _hover={{
+                    transform: "translateY(-2px)",
+                    shadow: "md"
+                  }}
+                  onClick={() => {
+                    const element = document.getElementById('featured-work');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
                 >
-                  View Projects
+                  See my work
+                </Button>
+              </VStack>
+              
+              <Box 
+                flexShrink={0}
+                w={{ base: "200px", md: "300px" }}
+                position="relative"
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Box
+                    position="relative"
+                    borderRadius="xl"
+                    overflow="hidden" 
+                    shadow="lg"
+                    w="full"
+                    pb="110%"
+                  >
+                    <AnimatePresence mode="wait">
+                      {showVideo ? (
+                        <motion.div
+                          key="video"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            height: "100%"
+                          }}
+                        >
+                          <video
+                            ref={videoRef}
+                            src="/ai_conf_video.mp4"
+                            onEnded={handleVideoEnded}
+                            autoPlay
+                            muted
+                            playsInline
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              objectPosition: "center"
+                            }}
+                          />
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="image"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            height: "100%"
+                          }}
+                        >
+                          <Image
+                            src="/headshot.png"
+                            alt="Berto Mill"
+                            fill
+                            style={{
+                              objectFit: "cover",
+                              objectPosition: "center"
+                            }}
+                          />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </Box>
+                </motion.div>
+                <Button
+                  size="sm"
+                  variant="solid"
+                  borderRadius="full"
+                  position="absolute"
+                  bottom="5"
+                  right="5"
+                  zIndex="1"
+                  shadow="md"
+                  bg={showVideo ? "blackAlpha.600" : "whiteAlpha.900"}
+                  color={showVideo ? "white" : "black"}
+                  _hover={{
+                    bg: showVideo ? "blackAlpha.700" : "whiteAlpha.800",
+                    transform: "scale(1.05)"
+                  }}
+                  _active={{
+                    transform: "scale(0.95)"
+                  }}
+                  transition="all 0.2s"
+                  onClick={toggleMedia}
+                  leftIcon={showVideo ? undefined : <Play size={14} />}
+                >
+                  {showVideo ? "Return" : "AI Video"}
                 </Button>
               </Box>
-            </Box>
+            </HStack>
+          </Box>
 
-          </VStack>
-        </Container>
-      </Box>
-    </>
+          {/* Watercolor Divider */}
+          <WatercolorDivide />
+
+          {/* Featured Work Section */}
+          <MotionBox
+            id="featured-work"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            w="full"
+            style={useFloatingEffect(0, 2)}
+          >
+            <Card bg={featuredCardBg} borderColor={featuredBorderColor} borderWidth="1px">
+              <CardHeader pb={2}>
+                <HStack 
+                  w="full" 
+                  justify="space-between" 
+                  align="center"
+                  flexWrap="wrap"
+                  gap={4}
+                >
+                  <Heading 
+                    size={{ base: "md", md: "lg" }}
+                    flex="1"
+                    minW="fit-content"
+                  >
+                    Featured AI applications
+                  </Heading>
+                  
+                  <Select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest')}
+                    width="auto"
+                    minW="140px"
+                    size="sm"
+                  >
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                  </Select>
+                </HStack>
+              </CardHeader>
+              
+              <CardBody>
+                {projectsLoading ? (
+                  <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }}>
+                    {[...Array(3)].map((_, index) => (
+                      <Card 
+                        key={index}
+                        bg={skeletonCardBg}
+                      >
+                        <CardBody p={4}>
+                          <VStack align="stretch" spacing={4}>
+                            <AspectRatio ratio={16/9}>
+                              <Skeleton borderRadius="md" />
+                            </AspectRatio>
+                            <VStack align="stretch" spacing={3}>
+                              <Skeleton height="20px" width="75%" />
+                              <Skeleton height="16px" width="100%" />
+                              <Skeleton height="16px" width="100%" />
+                              <HStack spacing={2}>
+                                <Skeleton height="16px" width="60px" />
+                                <Skeleton height="16px" width="60px" />
+                              </HStack>
+                            </VStack>
+                          </VStack>
+                        </CardBody>
+                      </Card>
+                    ))}
+                  </SimpleGrid>
+                ) : sortedProjects.length > 0 ? (
+                  <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }}>
+                    {sortedProjects.map((project, index) => (
+                      <ProjectCard key={project.id || index} {...project} />
+                    ))}
+                  </SimpleGrid>
+                ) : (
+                  <Box 
+                    bg="gray.50"
+                    _dark={{ bg: "gray.700" }}
+                    rounded="lg" 
+                    p={8} 
+                    textAlign="center"
+                  >
+                    <Text color="gray.600" _dark={{ color: "gray.400" }}>
+                      No projects found. Check back soon!
+                    </Text>
+                  </Box>
+                )}
+              </CardBody>
+            </Card>
+          </MotionBox>
+
+          {/* Watercolor Divider */}
+          <WatercolorDivide />
+
+          {/* Blog Posts Section */}
+          <MotionBox
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            w="full"
+            style={useFloatingEffect(Math.PI / 3, 1.8)}
+          >
+            <BlogPosts />
+          </MotionBox>
+
+          {/* Watercolor Divider */}
+          <WatercolorDivide />
+
+          {/* Latest Videos Section */}
+          <MotionBox
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            w="full"
+            style={useFloatingEffect(Math.PI / 2, 1.5)}
+          >
+            <YouTubeVideos />
+          </MotionBox>
+
+          {/* Watercolor Divider */}
+          <WatercolorDivide />
+
+          {/* Call to Action Buttons */}
+          <HStack 
+            spacing={{ base: 2, sm: 3, md: 4 }} 
+            flexDirection={{ base: 'column', sm: 'row' }}
+            w={{ base: 'full', sm: 'auto' }}
+          >
+            <Button
+              as={Link}
+              href="/about"
+              variant="solid"
+              size={{ base: "md", md: "lg" }}
+              width={{ base: 'full', sm: 'auto' }}
+              onClick={handleAboutMeClick}
+            >
+              More About Me
+            </Button>
+            <Button
+              as={Link}
+              href="/projects"
+              variant="outline"
+              size={{ base: "md", md: "lg" }}
+              width={{ base: 'full', sm: 'auto' }}
+              onClick={handleProjectsClick}
+            >
+              View Projects
+            </Button>
+          </HStack>
+        </VStack>
+      </Container>
+    </Box>
   )
 }
