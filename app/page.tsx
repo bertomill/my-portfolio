@@ -1,12 +1,12 @@
 'use client'
 
 import * as React from "react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
+import { motion, useScroll, useTransform } from "framer-motion"
 import { format } from "date-fns"
-import { ExternalLink, Play, ArrowRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 
 import {
   Box,
@@ -94,157 +94,7 @@ function WatercolorDivide() {
   )
 }
 
-// Project Card component
-function ProjectCard(project: Project) {
-  const { title, description, tags, projectUrl, date, imageSrc } = project
-  const cardBg = useColorModeValue('white', 'gray.800')
-  const borderColor = useColorModeValue('gray.200', 'gray.700')
-  
-  const handleProjectClick = () => {
-    analytics.projectClick(title, projectUrl)
-    analytics.externalLinkClick(projectUrl, `Project: ${title}`)
-  }
 
-  const handleProjectView = () => {
-    analytics.projectView(title)
-  }
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      style={{ width: "100%" }}
-    >
-      <Card 
-        height="100%" 
-        bg={cardBg}
-        borderColor={borderColor}
-        borderWidth="1px"
-        _hover={{ 
-          shadow: "md",
-          transform: "translateY(-2px)"
-        }}
-        transition="all 0.3s"
-        onMouseEnter={handleProjectView}
-      >
-        <CardBody p={4}>
-          {/* Project Image (if available) */}
-          {imageSrc && (
-            <Box mb={4}>
-              {projectUrl && projectUrl !== "#" ? (
-                <Link 
-                  href={projectUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => {
-                    handleProjectClick()
-                  }}
-                  style={{ display: "block", width: "100%" }}
-                >
-                  <AspectRatio ratio={16/9}>
-                    <Box 
-                      borderRadius="md" 
-                      overflow="hidden"
-                      bg="gray.100"
-                      transition="all 0.3s"
-                      _hover={{ opacity: 0.9 }}
-                    >
-                      <Image 
-                        src={imageSrc} 
-                        alt={`${title} screenshot`}
-                        fill
-                        style={{ objectFit: "cover" }}
-                      />
-                    </Box>
-                  </AspectRatio>
-                </Link>
-              ) : (
-                <AspectRatio ratio={16/9}>
-                  <Box 
-                    borderRadius="md" 
-                    overflow="hidden"
-                    bg="gray.100"
-                    opacity={0.8}
-                  >
-                    <Image 
-                      src={imageSrc} 
-                      alt={`${title} screenshot`}
-                      fill
-                      style={{ objectFit: "cover" }}
-                    />
-                  </Box>
-                </AspectRatio>
-              )}
-            </Box>
-          )}
-          
-          <VStack align="start" spacing={3} width="100%">
-            <Heading size="md" fontWeight="medium">
-              {title}
-            </Heading>
-            <Text 
-              fontSize="sm" 
-              noOfLines={3} 
-              color="gray.600"
-              _dark={{ color: "gray.400" }}
-            >
-              {description}
-            </Text>
-            
-            <HStack spacing={2} flexWrap="wrap">
-              {tags.map((tag: string, index: number) => (
-                <Tag
-                  key={index}
-                  size="sm"
-                  colorScheme="gray"
-                  variant="subtle"
-                  fontSize="xs"
-                  fontWeight="normal"
-                >
-                  {tag}
-                </Tag>
-              ))}
-            </HStack>
-            
-            <HStack justify="space-between" width="100%" pt={2}>
-              {projectUrl && projectUrl !== "#" ? (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  as={Link}
-                  href={projectUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => {
-                    handleProjectClick()
-                  }}
-                  color="gray.600"
-                  _hover={{ color: "blue.600" }}
-                  fontSize="sm"
-                  fontWeight="normal"
-                  p={0}
-                  h="auto"
-                  rightIcon={<ExternalLink size={14} />}
-                >
-                  View Project
-                </Button>
-              ) : (
-                <Text fontSize="sm" color="gray.500">
-                  Coming Soon
-                </Text>
-              )}
-              
-              <Text fontSize="xs" color="gray.500">
-                {date}
-              </Text>
-            </HStack>
-          </VStack>
-        </CardBody>
-      </Card>
-    </motion.div>
-  )
-}
 
 // Blog Post Card component
 function BlogPostCard({ post }: { post: BlogPost }) {
@@ -539,6 +389,129 @@ function YouTubeVideoCard({ video }: { video: YouTubeVideo }) {
   )
 }
 
+// Simple Project Card component
+function ProjectCard({ project }: { project: Project }) {
+  const cardBg = useColorModeValue('white', 'gray.800')
+  const borderColor = useColorModeValue('gray.200', 'gray.700')
+  const titleColor = useColorModeValue('gray.900', 'white')
+  const descriptionColor = useColorModeValue('gray.600', 'gray.400')
+
+  const handleProjectClick = () => {
+    analytics.projectClick(project.title, project.projectUrl)
+    analytics.externalLinkClick(project.projectUrl, `Project: ${project.title}`)
+  }
+
+  const handleProjectView = () => {
+    analytics.projectView(project.title)
+  }
+
+  return (
+    <Card
+      bg={cardBg}
+      borderColor={borderColor}
+      borderWidth="1px"
+      height="100%"
+      _hover={{ 
+        shadow: "lg",
+        transform: "translateY(-4px)"
+      }}
+      transition="all 0.3s"
+      onMouseEnter={handleProjectView}
+    >
+      {/* Project Image */}
+      {project.imageSrc && (
+        <AspectRatio ratio={16/9}>
+          <Box bg="gray.100" borderTopRadius="md">
+            <Image 
+              src={project.imageSrc}
+              alt={`${project.title} screenshot`}
+              fill
+              style={{ objectFit: "cover" }}
+            />
+          </Box>
+        </AspectRatio>
+      )}
+      
+      <CardBody p={4}>
+        <VStack align="start" spacing={3}>
+          <Heading
+            as="h3"
+            fontSize="lg"
+            fontWeight="semibold"
+            color={titleColor}
+            noOfLines={2}
+          >
+            {project.title}
+          </Heading>
+          
+          <Text 
+            fontSize="sm" 
+            color={descriptionColor}
+            noOfLines={3}
+            lineHeight="tall"
+          >
+            {project.description}
+          </Text>
+
+          {/* Tags */}
+          <HStack spacing={2} flexWrap="wrap">
+            {project.tags.slice(0, 3).map((tag, index) => (
+              <Tag
+                key={index}
+                size="sm"
+                variant="outline"
+                fontSize="xs"
+              >
+                {tag}
+              </Tag>
+            ))}
+            {project.tags.length > 3 && (
+              <Tag size="sm" variant="outline" fontSize="xs">
+                +{project.tags.length - 3}
+              </Tag>
+            )}
+          </HStack>
+
+          {/* Date */}
+          <HStack spacing={2}>
+            <Text fontSize="xs" color={descriptionColor} fontFamily="mono">
+              {project.date}
+            </Text>
+          </HStack>
+        </VStack>
+      </CardBody>
+      
+      <CardFooter pt={0}>
+        {project.projectUrl && project.projectUrl !== "#" ? (
+          <Button
+            variant="outline"
+            size="sm"
+            width="full"
+            as={Link}
+            href={project.projectUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleProjectClick}
+            rightIcon={<ArrowRight size={14} />}
+          >
+            View Project
+          </Button>
+        ) : (
+          <Button
+            variant="ghost"
+            size="sm"
+            width="full"
+            disabled
+            cursor="not-allowed"
+          >
+            Coming Soon
+          </Button>
+        )}
+      </CardFooter>
+    </Card>
+  )
+}
+
 // YouTube Videos section component
 function YouTubeVideos() {
   const [videos, setVideos] = useState<YouTubeVideo[]>([])
@@ -633,11 +606,9 @@ function YouTubeVideos() {
 }
 
 export default function Home() {
-  const [showVideo, setShowVideo] = useState(false)
   const [projects, setProjects] = useState<Project[]>([])
   const [projectsLoading, setProjectsLoading] = useState(true)
   const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest')
-  const videoRef = useRef<HTMLVideoElement>(null)
 
   // Color mode values for the main component
   const featuredCardBg = useColorModeValue('white', 'gray.800')
@@ -713,24 +684,7 @@ export default function Home() {
     analytics.pageLoadTime(loadTime)
   }, [])
 
-  // Toggle between image and video
-  const toggleMedia = () => {
-    setShowVideo(prev => {
-      const newState = !prev
-      // Play video when switching to video mode
-      if (newState && videoRef.current) {
-        videoRef.current.currentTime = 0
-        videoRef.current.play().catch(e => console.error("Video play failed:", e))
-        analytics.videoClick('Hero AI Conference Video')
-      }
-      return newState
-    })
-  }
 
-  // Handler for when video ends
-  const handleVideoEnded = () => {
-    setShowVideo(false)
-  }
 
   const handleAboutMeClick = () => {
     analytics.navClick('About Page')
@@ -741,7 +695,7 @@ export default function Home() {
   }
 
   return (
-    <Box w="full" display="flex" justifyContent="center" position="relative" zIndex={1}>
+    <Box className="min-h-screen">
       <Container 
         maxW="container.xl" 
         pt={{ base: 20, sm: 24, md: 28, lg: 32 }}
@@ -844,93 +798,17 @@ export default function Home() {
                     w="full"
                     pb="110%"
                   >
-                    <AnimatePresence mode="wait">
-                      {showVideo ? (
-                        <motion.div
-                          key="video"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            width: "100%",
-                            height: "100%"
-                          }}
-                        >
-                          <video
-                            ref={videoRef}
-                            src="/ai_conf_video.mp4"
-                            onEnded={handleVideoEnded}
-                            autoPlay
-                            muted
-                            playsInline
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                              width: "100%",
-                              height: "100%",
-                              objectFit: "cover",
-                              objectPosition: "center"
-                            }}
-                          />
-                        </motion.div>
-                      ) : (
-                        <motion.div
-                          key="image"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            width: "100%",
-                            height: "100%"
-                          }}
-                        >
-                          <Image
-                            src="/headshot.png"
-                            alt="Berto Mill"
-                            fill
-                            style={{
-                              objectFit: "cover",
-                              objectPosition: "center"
-                            }}
-                          />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                    <Image
+                      src="/headshot.png"
+                      alt="Berto Mill"
+                      fill
+                      style={{
+                        objectFit: "cover",
+                        objectPosition: "center"
+                      }}
+                    />
                   </Box>
                 </motion.div>
-                <Button
-                  size="sm"
-                  variant="solid"
-                  borderRadius="full"
-                  position="absolute"
-                  bottom="5"
-                  right="5"
-                  zIndex="1"
-                  shadow="md"
-                  bg={showVideo ? "blackAlpha.600" : "whiteAlpha.900"}
-                  color={showVideo ? "white" : "black"}
-                  _hover={{
-                    bg: showVideo ? "blackAlpha.700" : "whiteAlpha.800",
-                    transform: "scale(1.05)"
-                  }}
-                  _active={{
-                    transform: "scale(0.95)"
-                  }}
-                  transition="all 0.2s"
-                  onClick={toggleMedia}
-                  leftIcon={showVideo ? undefined : <Play size={14} />}
-                >
-                  {showVideo ? "Return" : "AI Video"}
-                </Button>
               </Box>
             </HStack>
           </Box>
@@ -1007,7 +885,10 @@ export default function Home() {
                 ) : sortedProjects.length > 0 ? (
                   <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }}>
                     {sortedProjects.map((project, index) => (
-                      <ProjectCard key={project.id || index} {...project} />
+                      <ProjectCard 
+                        key={project.id || index} 
+                        project={project}
+                      />
                     ))}
                   </SimpleGrid>
                 ) : (

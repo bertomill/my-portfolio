@@ -8,13 +8,40 @@ import {
   Box,
   SimpleGrid,
   Tag,
+  Button,
+  AspectRatio,
 } from '@chakra-ui/react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useRef } from 'react'
+import Image from 'next/image'
+import { Play } from 'lucide-react'
 import TimelineItem from '@/components/TimelineItem'
+import { analytics } from '@/lib/analytics'
 
 const MotionBox = motion(Box)
 
 export default function About() {
+  const [showVideo, setShowVideo] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  // Toggle between image and video
+  const toggleMedia = () => {
+    setShowVideo(prev => {
+      const newState = !prev
+      // Play video when switching to video mode
+      if (newState && videoRef.current) {
+        videoRef.current.currentTime = 0
+        videoRef.current.play().catch(e => console.error("Video play failed:", e))
+        analytics.videoClick('About Page AI Conference Video')
+      }
+      return newState
+    })
+  }
+
+  // Handler for when video ends
+  const handleVideoEnded = () => {
+    setShowVideo(false)
+  }
 
   const techStack = {
     'Frontend': ['TypeScript', 'Next.js'],
@@ -51,19 +78,136 @@ export default function About() {
           borderRadius="6px"
           className="glass-effect"
         >
-          <VStack spacing={4} align="stretch">
-            <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
-              Experienced AI application developer who is passionate about building impactful products in fast-paced, innovative environments. My experience includes building applications for large enterprises such as CIBC and SickKids Hospital, as well as contributing to the growth of various startups.
-            </Text>
-            <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
-              With a background in digital management, I specialize in leveraging design thinking and user journey mapping to craft impactful strategies and products. I stay at the forefront of emerging technologies, ensuring my solutions are innovative, intuitive, and customer-focused.
-            </Text>
-            <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
-              Beyond work, I enjoy building businesses and creating enduring brands that resonate with people. Movement has always been a key part of my life, whether it&apos;s running, lifting weights, or playing sports with friends.
-            </Text>
-            <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
-              I&apos;m passionate about designing products people love, and I&apos;m driven by opportunities to create meaningful, lasting impact through my work.
-            </Text>
+          <VStack spacing={6} align="stretch">
+            {/* Content with video/image */}
+            <Box
+              display="flex"
+              flexDirection={{ base: "column", md: "row" }}
+              gap={6}
+              alignItems={{ base: "center", md: "flex-start" }}
+            >
+              {/* Text content */}
+              <VStack spacing={4} align="stretch" flex="1">
+                <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
+                  Experienced AI application developer who is passionate about building impactful products in fast-paced, innovative environments. My experience includes building applications for large enterprises such as CIBC and SickKids Hospital, as well as contributing to the growth of various startups.
+                </Text>
+                <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
+                  With a background in digital management, I specialize in leveraging design thinking and user journey mapping to craft impactful strategies and products. I stay at the forefront of emerging technologies, ensuring my solutions are innovative, intuitive, and customer-focused.
+                </Text>
+                <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
+                  Beyond work, I enjoy building businesses and creating enduring brands that resonate with people. Movement has always been a key part of my life, whether it&apos;s running, lifting weights, or playing sports with friends.
+                </Text>
+                <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
+                  I&apos;m passionate about designing products people love, and I&apos;m driven by opportunities to create meaningful, lasting impact through my work.
+                </Text>
+              </VStack>
+
+              {/* Video/Image toggle */}
+              <Box 
+                position="relative"
+                maxW={{ base: "300px", md: "250px" }}
+                w="full"
+                flexShrink={0}
+              >
+                <AspectRatio ratio={16/9}>
+                  <Box
+                    position="relative"
+                    borderRadius="xl"
+                    overflow="hidden"
+                    shadow="lg"
+                    w="full"
+                    h="full"
+                  >
+                    <AnimatePresence mode="wait">
+                      {showVideo ? (
+                        <motion.div
+                          key="video"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            height: "100%"
+                          }}
+                        >
+                          <video
+                            ref={videoRef}
+                            src="/ai_conf_video.mp4"
+                            onEnded={handleVideoEnded}
+                            autoPlay
+                            muted
+                            playsInline
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              objectPosition: "center"
+                            }}
+                          />
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="image"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            height: "100%"
+                          }}
+                        >
+                          <Image
+                            src="/headshot.png"
+                            alt="Berto Mill"
+                            fill
+                            style={{
+                              objectFit: "cover",
+                              objectPosition: "center"
+                            }}
+                          />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </Box>
+                </AspectRatio>
+                
+                <Button
+                  size="sm"
+                  variant="solid"
+                  borderRadius="full"
+                  position="absolute"
+                  bottom="3"
+                  right="3"
+                  zIndex="1"
+                  shadow="md"
+                  bg={showVideo ? "blackAlpha.600" : "whiteAlpha.900"}
+                  color={showVideo ? "white" : "black"}
+                  _hover={{
+                    bg: showVideo ? "blackAlpha.700" : "whiteAlpha.800",
+                    transform: "scale(1.05)"
+                  }}
+                  _active={{
+                    transform: "scale(0.95)"
+                  }}
+                  transition="all 0.2s"
+                  onClick={toggleMedia}
+                  leftIcon={showVideo ? undefined : <Play size={14} />}
+                >
+                  {showVideo ? "Return" : "AI Video"}
+                </Button>
+              </Box>
+            </Box>
           </VStack>
         </MotionBox>
 

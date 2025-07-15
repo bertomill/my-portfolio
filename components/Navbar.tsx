@@ -16,9 +16,12 @@ import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import SocialLinks from './SocialLinks'
+import { useColorMode } from '@chakra-ui/react'
+import { MoonIcon, SunIcon } from '@chakra-ui/icons'
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure()
+  const { colorMode, toggleColorMode } = useColorMode()
   const pathname = usePathname()
 
   const navItems = [
@@ -100,12 +103,19 @@ export default function Navbar() {
             transition="all 0.3s ease"
           />
 
-          {/* Social Links - Desktop Only */}
+          {/* Theme Toggle and Social Links - Desktop Only */}
           <HStack 
             spacing={4} 
             display={{ base: 'none', md: 'flex' }}
             ml="auto"
           >
+            <IconButton
+              aria-label="Toggle theme"
+              icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+              onClick={toggleColorMode}
+              variant="ghost"
+              size="md"
+            />
             <SocialLinks />
           </HStack>
         </Flex>
@@ -145,6 +155,17 @@ export default function Navbar() {
             ))}
             
             <Divider my={2} opacity={0.2} />
+            
+            {/* Theme Toggle - Mobile */}
+            <Box pt={2} pb={1} display="flex" justifyContent="center">
+              <IconButton
+                aria-label="Toggle theme"
+                icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+                onClick={toggleColorMode}
+                variant="ghost"
+                size="md"
+              />
+            </Box>
             
             {/* Social Links - Mobile */}
             <Box pt={2} pb={1}>

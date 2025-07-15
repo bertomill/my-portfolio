@@ -4,6 +4,7 @@ import { Providers } from "@/components/providers";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Analytics from "@/components/Analytics";
+import ChatWidget from "@/components/ui/chat-widget";
 import { Suspense } from "react";
 import "./globals.css";
 
@@ -35,6 +36,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <ChatWidget />
           <Suspense fallback={null}>
             <Analytics />
           </Suspense>

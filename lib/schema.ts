@@ -10,6 +10,7 @@ export const projects = pgTable('projects', {
   projectUrl: text('project_url').notNull(),
   date: text('date').notNull(), // We'll store as text since you're using "May 2025" format
   imageSrc: text('image_src'), // Optional project screenshot
+  youtubeUrl: text('youtube_url'), // Optional YouTube walkthrough URL
   featured: boolean('featured').default(false), // To determine if it shows on home page
   sortOrder: serial('sort_order'), // For ordering projects
   createdAt: timestamp('created_at').defaultNow(),
