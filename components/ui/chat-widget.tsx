@@ -97,7 +97,9 @@ export default function ChatWidget() {
             h="2"
             bg="white"
             borderRadius="full"
-            animation="pulse 2s infinite"
+            css={{
+              animation: "pulse 2s infinite"
+            }}
           />
         </Box>
       </IconButton>
@@ -254,23 +256,29 @@ export default function ChatWidget() {
                         h="2"
                         bg="gray.400"
                         borderRadius="full"
-                        animation="bounce 1s infinite"
+                        css={{
+                          animation: "bounce 1s infinite"
+                        }}
                       />
                       <Box
                         w="2"
                         h="2"
                         bg="gray.400"
                         borderRadius="full"
-                        animation="bounce 1s infinite"
-                        animationDelay="0.1s"
+                        css={{
+                          animation: "bounce 1s infinite",
+                          animationDelay: "0.1s"
+                        }}
                       />
                       <Box
                         w="2"
                         h="2"
                         bg="gray.400"
                         borderRadius="full"
-                        animation="bounce 1s infinite"
-                        animationDelay="0.2s"
+                        css={{
+                          animation: "bounce 1s infinite",
+                          animationDelay: "0.2s"
+                        }}
                       />
                     </HStack>
                   </Box>
