@@ -56,7 +56,7 @@ const FlipCard: React.FC = () => {
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.1}
         onDragEnd={handleDragEnd}
-        onClick={handleFlip}
+        onTap={handleFlip}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
