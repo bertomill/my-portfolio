@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { Providers } from "@/components/providers";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Berto Mill - Application Developer",
@@ -29,7 +30,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <meta name="color-scheme" content="light" />
       </head>
-      <body className={`${inter.className} min-h-full flex flex-col bg-white text-black`} suppressHydrationWarning>
+      <body className={`${inter.className} ${jetbrainsMono.className} min-h-full flex flex-col bg-white text-black`} suppressHydrationWarning>
         <Providers>
           <Navbar />
           <main className="flex-1 bg-white">

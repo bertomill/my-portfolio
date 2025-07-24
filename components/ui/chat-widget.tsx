@@ -1,203 +1,326 @@
 'use client'
 
 import { useState } from 'react'
-import { MessageCircle, Send, X, Bot, User } from 'lucide-react'
-
-interface Message {
-  id: string
-  role: 'user' | 'assistant'
-  content: string
-  timestamp: Date
-}
+import { MessageCircle, Send, X, Bot, User, Minimize2 } from 'lucide-react'
+import {
+  Box,
+  Button,
+  Text,
+  VStack,
+  HStack,
+  Input,
+  IconButton,
+  Avatar,
+  useColorModeValue,
+  Flex,
+  Badge,
+} from '@chakra-ui/react'
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false)
-  const [messages, setMessages] = useState<Message[]>([
+  const [message, setMessage] = useState('')
+  const [isMinimized, setIsMinimized] = useState(false)
+
+  // Color mode values
+  const chatBg = useColorModeValue('white', 'gray.800')
+  const borderColor = useColorModeValue('gray.200', 'gray.600')
+  const messagesBg = useColorModeValue('gray.50', 'gray.700')
+
+  // Sample messages for the demo
+  const sampleMessages = [
     {
       id: '1',
-      role: 'assistant',
-      content: "Hi! I'm here to help you learn more about my projects and experience. What would you like to know?",
+      role: 'assistant' as const,
+      content: "Hi! I'm here to help you learn more about Berto's projects and AI expertise. What would you like to know?",
+      timestamp: new Date()
+    },
+    {
+      id: '2',
+      role: 'user' as const,
+      content: "Tell me about your AI consulting services",
+      timestamp: new Date()
+    },
+    {
+      id: '3',
+      role: 'assistant' as const,
+      content: "I specialize in making AI simple and practical for businesses. I help organizations implement AI solutions that actually solve real problems and improve operations.",
       timestamp: new Date()
     }
-  ])
-  const [inputMessage, setInputMessage] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  ]
 
-  const sendMessage = async (e: React.FormEvent) => {
+  const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!inputMessage.trim() || isLoading) return
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: inputMessage,
-      timestamp: new Date()
-    }
-
-    setMessages(prev => [...prev, userMessage])
-    setInputMessage('')
-    setIsLoading(true)
-
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: inputMessage })
-      })
-
-      const data = await response.json()
-      
-      if (response.ok) {
-        const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: data.response,
-          timestamp: new Date()
-        }
-        setMessages(prev => [...prev, assistantMessage])
-      } else {
-        throw new Error(data.error || 'Failed to get response')
-      }
-    } catch (error) {
-      console.error('Chat error:', error)
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: "Sorry, I'm having trouble responding right now. Please try again later.",
-        timestamp: new Date()
-      }
-      setMessages(prev => [...prev, errorMessage])
-    } finally {
-      setIsLoading(false)
-    }
+    // This is just for demo - no actual functionality yet
+    console.log('Message would be sent:', message)
+    setMessage('')
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
-      {/* Chat Toggle Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`
-          rounded-full h-12 w-12 shadow-lg transition-all duration-300 glass-effect
-          flex items-center justify-center text-white
-          ${isOpen ? "opacity-0 pointer-events-none" : "opacity-100"}
-        `}
-        style={{ 
-          background: 'linear-gradient(135deg, var(--warm-gray) 0%, var(--deep-beige) 100%)',
+    <Box position="fixed" bottom="6" right="6" zIndex="50">
+      {/* Chat Button */}
+      <IconButton
+        aria-label="Open chat"
+        icon={<MessageCircle size={28} />}
+        isRound
+        size="lg"
+        w="16"
+        h="16"
+        color="white"
+        bgGradient="linear(135deg, #667eea 0%, #764ba2 100%)"
+        _hover={{
+          transform: 'scale(1.05)',
+          boxShadow: '0 12px 40px rgba(102, 126, 234, 0.4)'
         }}
+        transition="all 0.3s ease"
+        boxShadow="0 8px 32px rgba(102, 126, 234, 0.3)"
+        onClick={() => setIsOpen(!isOpen)}
+        opacity={isOpen ? 0 : 1}
+        transform={isOpen ? 'scale(0.9)' : 'scale(1)'}
+        pointerEvents={isOpen ? 'none' : 'auto'}
+        position="relative"
       >
-        <MessageCircle className="h-6 w-6" />
-      </button>
+        {/* Notification dot */}
+        <Box
+          position="absolute"
+          top="-1"
+          right="-1"
+          w="4"
+          h="4"
+          bg="red.500"
+          borderRadius="full"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Box
+            w="2"
+            h="2"
+            bg="white"
+            borderRadius="full"
+            animation="pulse 2s infinite"
+          />
+        </Box>
+      </IconButton>
 
       {/* Chat Window */}
-      <div
-        className={`
-          w-80 h-96 shadow-xl transition-all duration-300 origin-bottom-right
-          glass-effect rounded-lg overflow-hidden
-          ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}
-        `}
+      <Box
+        w="96"
+        h={isMinimized ? "16" : "500px"}
+        bg={chatBg}
+        borderRadius="2xl"
+        boxShadow="0 25px 50px rgba(0, 0, 0, 0.15)"
+        border="1px"
+        borderColor={borderColor}
+        overflow="hidden"
+        transition="all 0.3s ease"
+        opacity={isOpen ? 1 : 0}
+        transform={isOpen ? 'scale(1)' : 'scale(0.95)'}
+        pointerEvents={isOpen ? 'auto' : 'none'}
+        transformOrigin="bottom right"
+        position="absolute"
+        bottom="20"
+        right="0"
       >
-        <div className="flex flex-row items-center justify-between p-4 border-b border-gray-200">
-          <h3 className="text-sm font-medium" style={{ color: 'var(--charcoal)' }}>Ask me anything</h3>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="p-1 hover:bg-gray-100 rounded transition-colors"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-        
-        <div className="p-0 flex flex-col h-full">
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex items-start space-x-2 ${
-                  message.role === 'user' ? "justify-end" : "justify-start"
-                }`}
-              >
-                {message.role === 'assistant' && (
-                  <div 
-                    className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-white"
-                    style={{ background: 'var(--warm-gray)' }}
-                  >
-                    <Bot className="h-3 w-3" />
-                  </div>
-                )}
-                
-                <div
-                  className={`max-w-[70%] p-3 rounded-lg text-sm ${
-                    message.role === 'user'
-                      ? "text-white"
-                      : "text-gray-800"
-                  }`}
-                  style={{
-                    background: message.role === 'user' 
-                      ? 'var(--deep-beige)'
-                      : 'var(--warm-beige)'
-                  }}
-                >
-                  {message.content}
-                </div>
-                
-                {message.role === 'user' && (
-                  <div 
-                    className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center"
-                    style={{ background: 'var(--soft-tan)', color: 'var(--charcoal)' }}
-                  >
-                    <User className="h-3 w-3" />
-                  </div>
-                )}
-              </div>
-            ))}
-            
-            {isLoading && (
-              <div className="flex items-start space-x-2">
-                <div 
-                  className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-white"
-                  style={{ background: 'var(--warm-gray)' }}
-                >
-                  <Bot className="h-3 w-3" />
-                </div>
-                <div 
-                  className="p-3 rounded-lg text-sm"
-                  style={{ background: 'var(--warm-beige)' }}
-                >
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-current rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Input */}
-          <form onSubmit={sendMessage} className="p-4 border-t border-gray-200">
-            <div className="flex space-x-2">
-              <input
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                placeholder="Ask about projects, skills, experience..."
-                className="flex-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                disabled={isLoading}
+        {/* Header */}
+        <Box
+          bgGradient="linear(135deg, #667eea 0%, #764ba2 100%)"
+          p="4"
+          borderTopRadius="2xl"
+        >
+          <Flex justify="space-between" align="center">
+            <HStack spacing="3">
+              <Avatar
+                size="sm"
+                bg="whiteAlpha.200"
+                icon={<Bot size={20} />}
+                color="white"
               />
-              <button 
-                type="submit" 
-                disabled={isLoading || !inputMessage.trim()}
-                className="px-3 py-2 rounded-md text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ 
-                  background: 'linear-gradient(135deg, var(--warm-gray) 0%, var(--deep-beige) 100%)',
-                }}
-              >
-                <Send className="h-4 w-4" />
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+              <VStack align="start" spacing="0">
+                <Text fontSize="sm" fontWeight="semibold" color="white">
+                  AI Assistant
+                </Text>
+                <HStack spacing="1">
+                  <Box w="2" h="2" bg="green.400" borderRadius="full" />
+                  <Text fontSize="xs" color="whiteAlpha.800">
+                    Online
+                  </Text>
+                </HStack>
+              </VStack>
+            </HStack>
+            
+            <HStack spacing="1">
+              <IconButton
+                aria-label="Minimize chat"
+                icon={<Minimize2 size={16} />}
+                size="sm"
+                variant="ghost"
+                color="white"
+                _hover={{ bg: 'whiteAlpha.200' }}
+                onClick={() => setIsMinimized(!isMinimized)}
+              />
+              <IconButton
+                aria-label="Close chat"
+                icon={<X size={16} />}
+                size="sm"
+                variant="ghost"
+                color="white"
+                _hover={{ bg: 'whiteAlpha.200' }}
+                onClick={() => setIsOpen(false)}
+              />
+            </HStack>
+          </Flex>
+        </Box>
+        
+        {!isMinimized && (
+          <>
+            {/* Messages */}
+            <Box
+              flex="1"
+              overflowY="auto"
+              p="4"
+              bg={messagesBg}
+              maxH="340px"
+            >
+              <VStack spacing="4" align="stretch">
+                {sampleMessages.map((msg) => (
+                  <Flex
+                    key={msg.id}
+                    justify={msg.role === 'user' ? 'flex-end' : 'flex-start'}
+                    align="flex-start"
+                  >
+                    {msg.role === 'assistant' && (
+                      <Avatar
+                        size="sm"
+                        bg="blue.500"
+                        icon={<Bot size={16} />}
+                        color="white"
+                        mr="3"
+                        flexShrink="0"
+                      />
+                    )}
+                    
+                    <Box
+                      maxW="75%"
+                      p="3"
+                      borderRadius="2xl"
+                      fontSize="sm"
+                      lineHeight="relaxed"
+                      bg={msg.role === 'user' ? 'blue.500' : 'white'}
+                      color={msg.role === 'user' ? 'white' : 'gray.800'}
+                      borderBottomLeftRadius={msg.role === 'assistant' ? 'md' : '2xl'}
+                      borderBottomRightRadius={msg.role === 'user' ? 'md' : '2xl'}
+                      boxShadow="sm"
+                      border={msg.role === 'assistant' ? '1px' : 'none'}
+                      borderColor="gray.100"
+                    >
+                      {msg.content}
+                    </Box>
+                    
+                    {msg.role === 'user' && (
+                      <Avatar
+                        size="sm"
+                        bg="gray.300"
+                        icon={<User size={16} />}
+                        color="gray.600"
+                        ml="3"
+                        flexShrink="0"
+                      />
+                    )}
+                  </Flex>
+                ))}
+                
+                {/* Typing indicator */}
+                <Flex align="flex-start">
+                  <Avatar
+                    size="sm"
+                    bg="blue.500"
+                    icon={<Bot size={16} />}
+                    color="white"
+                    mr="3"
+                    flexShrink="0"
+                  />
+                  <Box
+                    bg="white"
+                    p="3"
+                    borderRadius="2xl"
+                    borderBottomLeftRadius="md"
+                    boxShadow="sm"
+                    border="1px"
+                    borderColor="gray.100"
+                  >
+                    <HStack spacing="1">
+                      <Box
+                        w="2"
+                        h="2"
+                        bg="gray.400"
+                        borderRadius="full"
+                        animation="bounce 1s infinite"
+                      />
+                      <Box
+                        w="2"
+                        h="2"
+                        bg="gray.400"
+                        borderRadius="full"
+                        animation="bounce 1s infinite"
+                        animationDelay="0.1s"
+                      />
+                      <Box
+                        w="2"
+                        h="2"
+                        bg="gray.400"
+                        borderRadius="full"
+                        animation="bounce 1s infinite"
+                        animationDelay="0.2s"
+                      />
+                    </HStack>
+                  </Box>
+                </Flex>
+              </VStack>
+            </Box>
+
+            {/* Input */}
+            <Box p="4" borderTop="1px" borderColor={borderColor} bg={chatBg}>
+              <form onSubmit={handleSendMessage}>
+                <HStack spacing="2">
+                  <Input
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Ask me about AI, projects, or anything..."
+                    bg="gray.50"
+                    border="1px"
+                    borderColor="gray.200"
+                    borderRadius="xl"
+                    _focus={{
+                      outline: 'none',
+                      ring: 2,
+                      ringColor: 'blue.500',
+                      borderColor: 'transparent'
+                    }}
+                    fontSize="sm"
+                  />
+                  <IconButton
+                    type="submit"
+                    aria-label="Send message"
+                    icon={<Send size={16} />}
+                    bgGradient="linear(to-r, blue.500, purple.600)"
+                    color="white"
+                    _hover={{
+                      bgGradient: 'linear(to-r, blue.600, purple.700)',
+                      boxShadow: 'md'
+                    }}
+                    borderRadius="xl"
+                    isDisabled={!message.trim()}
+                  />
+                </HStack>
+              </form>
+              
+              <Text fontSize="xs" color="gray.500" textAlign="center" mt="2">
+                Powered by AI • Press Enter to send
+              </Text>
+            </Box>
+          </>
+        )}
+      </Box>
+    </Box>
   )
 }

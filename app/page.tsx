@@ -30,12 +30,12 @@ import {
   CardFooter,
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
+import FlipCard from '@/components/FlipCard'
 
 import type { BlogPost } from "@/lib/getBlogPosts"
 import type { Project } from "@/lib/schema"
 import { analytics } from "@/lib/analytics"
 
-const MotionDiv = motion.div
 const MotionBox = motion(Box)
 
 // Custom hook for floating paper effect
@@ -711,52 +711,23 @@ export default function Home() {
         >
           {/* Hero Section */}
           <Box w="full">
-            <HStack
-              align="center"
-              justify="center"
-              w="full"
-              spacing={{ base: 4, md: 8 }}
-              flexDirection={{ base: "column", md: "row" }}
-            >
-              <VStack 
-                flex="1" 
-                align={{ base: "center", md: "flex-start" }}
-                textAlign={{ base: "center", md: "left" }}
-                spacing={6}
-              >
-                <MotionDiv
-                  style={useFloatingEffect(Math.PI / 4, 1.2)}
-                >
-                  <Box
-                    position="relative"
-                    maxW={{ base: "140px", sm: "175px", md: "200px", lg: "225px" }}
-                    overflow="hidden"
-                  >
-                    <Image
-                      src="/Berto-Mill-Marker.png"
-                      alt="Berto Mill"
-                      width={225}
-                      height={100}
-                      style={{
-                        objectFit: "cover",
-                        filter: "contrast(1.1) saturate(0.9)",
-                        mixBlendMode: "multiply",
-                        opacity: 0.85,
-                        transform: "scale(1.4)",
-                        transformOrigin: "center center"
-                      }}
-                    />
-                  </Box>
-                </MotionDiv>
+            <VStack spacing={8} w="full" align="center">
+              {/* Interactive Flip Card */}
+              <FlipCard />
 
+              <VStack 
+                align="center"
+                textAlign="center"
+                spacing={6}
+                maxW="2xl"
+              >
                 <Text 
                   fontSize={{ base: "md", sm: "lg", md: "xl" }}
                   lineHeight="tall"
                   color="gray.600"
                   _dark={{ color: "gray.400" }}
                 >
-                  I am a technology consultant and ML application developer based in Toronto, passionate about crafting intuitive user experiences to
-                  help people and businesses solve problems.
+                  I'm an AI consultant and engineer based in Toronto - and I'm passionate about making AI simple and practical for all to improve their businesses, community and lives.
                 </Text>
                 
                 <Button
@@ -779,38 +750,7 @@ export default function Home() {
                   See my work
                 </Button>
               </VStack>
-              
-              <Box 
-                flexShrink={0}
-                w={{ base: "200px", md: "300px" }}
-                position="relative"
-              >
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <Box
-                    position="relative"
-                    borderRadius="xl"
-                    overflow="hidden" 
-                    shadow="lg"
-                    w="full"
-                    pb="110%"
-                  >
-                    <Image
-                      src="/headshot.png"
-                      alt="Berto Mill"
-                      fill
-                      style={{
-                        objectFit: "cover",
-                        objectPosition: "center"
-                      }}
-                    />
-                  </Box>
-                </motion.div>
-              </Box>
-            </HStack>
+            </VStack>
           </Box>
 
           {/* Watercolor Divider */}
