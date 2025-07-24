@@ -119,10 +119,9 @@ const FlipCard: React.FC = () => {
             w="full"
             h="full"
             bg="white"
-            _dark={{ bg: "gray.800" }}
+            _dark={{ bg: "gray.800", borderColor: "gray.600" }}
             borderRadius="16px"
             border="1px solid #e2e8f0"
-            _dark={{ borderColor: "gray.600" }}
             boxShadow="0 10px 30px rgba(0, 0, 0, 0.15)"
             overflow="hidden"
             position="relative"
