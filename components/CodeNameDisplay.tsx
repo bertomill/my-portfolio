@@ -201,11 +201,11 @@ const CodeNameDisplay: React.FC = () => {
           <Box my={4} position="relative">
             <Box
               ref={glitchNameRef}
-              fontSize={{ base: '1.5rem', md: '2rem' }}
+              fontSize={{ base: '1.2rem', sm: '1.4rem', md: '2rem' }}
               fontWeight="700"
               color="white"
               textTransform="uppercase"
-              letterSpacing="0.1em"
+              letterSpacing={{ base: "0.05em", md: "0.1em" }}
               position="relative"
               display="inline-block"
               fontFamily="var(--font-jetbrains)"

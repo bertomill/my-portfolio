@@ -215,7 +215,7 @@ export default function ProjectModal({
                 <Input
                   value={formData.imageSrc}
                   onChange={(e) => setFormData(prev => ({ ...prev, imageSrc: e.target.value }))}
-                  placeholder="/project-screenshot.png"
+                  placeholder="https://i.ibb.co/abc123/project-screenshot.png"
                 />
               </FormControl>
 

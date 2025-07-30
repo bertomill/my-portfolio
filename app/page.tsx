@@ -711,7 +711,7 @@ export default function Home() {
         >
           {/* Hero Section */}
           <Box w="full">
-            <VStack spacing={8} w="full" align="center">
+            <VStack spacing={8} w="full" align="center" px={{ base: 4, md: 8 }}>
               {/* Interactive Flip Card */}
               <FlipCard />
 
@@ -727,7 +727,7 @@ export default function Home() {
                   color="gray.600"
                   _dark={{ color: "gray.400" }}
                 >
-                  I'm an AI consultant and engineer based in Toronto - and I'm passionate about making AI simple and practical for all to improve their businesses, community and lives.
+                  I&apos;m an AI consultant and engineer based in Toronto - and I&apos;m passionate about making AI simple and practical for all to improve their businesses, community and lives.
                 </Text>
                 
                 <Button

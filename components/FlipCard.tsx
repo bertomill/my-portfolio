@@ -29,8 +29,8 @@ const FlipCard: React.FC = () => {
   return (
     <Box
       position="relative"
-      w={{ base: "200px", md: "300px" }}
-      h={{ base: "220px", md: "330px" }}
+      w={{ base: "280px", sm: "320px", md: "300px" }}
+      h={{ base: "300px", sm: "340px", md: "330px" }}
       mx="auto"
       style={{ perspective: '1000px' }} // 3D perspective for flip effect
     >
@@ -83,8 +83,8 @@ const FlipCard: React.FC = () => {
             alignItems="center"
             justifyContent="center"
           >
-            {/* Scale down the CodeNameDisplay to fit nicely in the card */}
-            <Box transform="scale(0.9)">
+            {/* Scale the CodeNameDisplay to fit nicely in the card at different screen sizes */}
+            <Box transform={{ base: "scale(0.8)", sm: "scale(0.85)", md: "scale(0.9)" }}>
               <CodeNameDisplay />
             </Box>
             
