@@ -16,6 +16,7 @@ import { useState, useRef } from 'react'
 import Image from 'next/image'
 import { Play } from 'lucide-react'
 import TimelineItem from '@/components/TimelineItem'
+import { TracingBeam } from '@/components/ui/tracing-beam'
 import { analytics } from '@/lib/analytics'
 
 const MotionBox = motion(Box)
@@ -53,7 +54,8 @@ export default function About() {
   }
 
   return (
-    <Container maxW="container.md" px={{ base: 4, md: 8 }}>
+    <Container maxW="container.lg" px={{ base: 4, md: 8 }}>
+      <TracingBeam>
         <VStack 
           spacing={8} 
           alignItems="stretch" 
@@ -330,7 +332,8 @@ export default function About() {
             Outside of technology, I enjoy building businesses and creating enduring brands that resonate with people. Movement has always been a key part of my life, whether it&apos;s running, lifting weights, or playing sports with friends.
           </Text>
         </MotionBox>
-      </VStack>
+        </VStack>
+      </TracingBeam>
     </Container>
   )
 } 

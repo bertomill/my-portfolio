@@ -25,6 +25,7 @@ import { motion } from 'framer-motion'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { useState } from 'react'
 import { analytics, trackEvent } from '@/lib/analytics'
+import { TracingBeam } from '@/components/ui/tracing-beam'
 
 const MotionBox = motion(Box)
 const MotionHeading = motion(Heading)
@@ -87,11 +88,12 @@ export default function Speaking() {
         filter="blur(60px)"
       />
 
-      <Container maxW="container.md" px={{ base: 4, md: 8 }}>
-        <VStack 
-          spacing={{ base: 10, md: 16 }} 
-          alignItems="stretch"
-        >
+      <Container maxW="container.lg" px={{ base: 4, md: 8 }}>
+        <TracingBeam>
+          <VStack 
+            spacing={{ base: 10, md: 16 }} 
+            alignItems="stretch"
+          >
           <MotionHeading 
             as="h1" 
             size={{ base: "xl", md: "2xl" }}
@@ -440,7 +442,8 @@ export default function Speaking() {
               </ModalBody>
             </ModalContent>
           </Modal>
-        </VStack>
+          </VStack>
+        </TracingBeam>
       </Container>
     </Box>
   )

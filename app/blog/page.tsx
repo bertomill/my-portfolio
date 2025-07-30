@@ -16,6 +16,7 @@ import { motion } from 'framer-motion'
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import type { BlogPost } from '@/lib/getBlogPosts'
+import { TracingBeam } from '@/components/ui/tracing-beam'
 
 const MotionBox = motion(Box)
 const MotionLink = motion(Link)
@@ -55,13 +56,14 @@ export default function Blog() {
   }
 
   return (
-    <Container maxW="container.md" px={{ base: 4, md: 8 }}>
-      <VStack 
-        spacing={8} 
-        alignItems="stretch" 
-        pt={{ base: 16, md: 40 }} 
-        pb={{ base: 16, md: 20 }}
-      >
+    <Container maxW="container.lg" px={{ base: 4, md: 8 }}>
+      <TracingBeam>
+        <VStack 
+          spacing={8} 
+          alignItems="stretch" 
+          pt={{ base: 16, md: 40 }} 
+          pb={{ base: 16, md: 20 }}
+        >
         <Heading 
           as="h1" 
           size={{ base: "xl", md: "2xl" }}
@@ -177,7 +179,8 @@ export default function Blog() {
             ))
           )}
         </VStack>
-      </VStack>
+        </VStack>
+      </TracingBeam>
     </Container>
   )
 } 

@@ -31,6 +31,7 @@ import {
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import FlipCard from '@/components/FlipCard'
+import { TracingBeam } from '@/components/ui/tracing-beam'
 
 import type { BlogPost } from "@/lib/getBlogPosts"
 import type { Project } from "@/lib/schema"
@@ -702,13 +703,14 @@ export default function Home() {
         px={{ base: 4, sm: 6, md: 8 }}
         centerContent
       >
-        <VStack 
-          spacing={{ base: 6, sm: 8, md: 10, lg: 12 }} 
-          alignItems="center" 
-          textAlign="center"
-          w="full"
-          maxW="container.lg"
-        >
+        <TracingBeam>
+          <VStack 
+            spacing={{ base: 6, sm: 8, md: 10, lg: 12 }} 
+            alignItems="center" 
+            textAlign="center"
+            w="full"
+            maxW="container.lg"
+          >
           {/* Hero Section */}
           <Box w="full">
             <VStack spacing={8} w="full" align="center" px={{ base: 4, md: 8 }}>
@@ -906,7 +908,8 @@ export default function Home() {
               View Projects
             </Button>
           </HStack>
-        </VStack>
+          </VStack>
+        </TracingBeam>
       </Container>
     </Box>
   )

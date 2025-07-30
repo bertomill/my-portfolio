@@ -16,6 +16,7 @@ import { motion } from 'framer-motion'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { useEffect, useState } from 'react'
 import { Project } from '@/lib/schema'
+import { TracingBeam } from '@/components/ui/tracing-beam'
 
 const MotionBox = motion(Box)
 
@@ -117,7 +118,8 @@ export default function Projects() {
   }, [])
 
   return (
-    <Container maxW="container.md" px={{ base: 4, md: 8 }}>
+    <Container maxW="container.lg" px={{ base: 4, md: 8 }}>
+      <TracingBeam>
         <VStack 
           spacing={8} 
           alignItems="stretch" 
@@ -176,7 +178,8 @@ export default function Projects() {
             <Text className="architectural-text">No projects found. Check back soon!</Text>
           </Box>
         )}
-      </VStack>
+        </VStack>
+      </TracingBeam>
     </Container>
   )
 } 
