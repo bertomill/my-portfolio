@@ -8,21 +8,27 @@ const notion = new Client({
 const DATABASE_ID = process.env.NOTION_BOOKS_DATABASE_ID || '2439b77f390680d79454ce4c66b6062e'
 
 export async function GET() {
+  console.log('📚 Books API called')
+  console.log('🔑 NOTION_TOKEN exists:', !!process.env.NOTION_TOKEN)
+  console.log('🗃️ DATABASE_ID:', DATABASE_ID)
+  
   try {
+    console.log('🔍 Querying Notion database...')
     const response = await notion.databases.query({
       database_id: DATABASE_ID,
-      sorts: [
-        {
-          property: 'Status',
-          direction: 'ascending',
-        },
-      ],
     })
 
-    const books = response.results.map((page: any) => {
-      const properties = page.properties
+    console.log('✅ Notion response received')
+    console.log('📊 Total results:', response.results.length)
+    console.log('🔍 Raw response:', JSON.stringify(response, null, 2))
 
-      return {
+    const books = response.results.map((page: any, index: number) => {
+      console.log(`📖 Processing book ${index + 1}:`)
+      console.log('📄 Page properties:', JSON.stringify(page.properties, null, 2))
+      
+      const properties = page.properties
+      
+      const book = {
         id: page.id,
         title: properties.Title?.title?.[0]?.plain_text || 'Untitled',
         author: 'Unknown Author', // No author field in your DB
@@ -35,13 +41,23 @@ export async function GET() {
         recommendation: properties['This book is good for someone who']?.rich_text?.[0]?.plain_text || '',
         createdTime: properties['Created time']?.created_time || null,
       }
+      
+      console.log('📚 Processed book:', book)
+      return book
     })
 
+    console.log('✅ Final books array:', books)
+    console.log('📊 Returning', books.length, 'books')
+    
     return NextResponse.json(books)
   } catch (error) {
-    console.error('Error fetching books from Notion:', error)
+    console.error('❌ Error fetching books from Notion:', error)
+    console.error('❌ Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : 'No stack trace',
+    })
     return NextResponse.json(
-      { error: 'Failed to fetch books' },
+      { error: 'Failed to fetch books', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }

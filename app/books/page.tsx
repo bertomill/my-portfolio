@@ -210,13 +210,29 @@ export default function Books() {
   useEffect(() => {
     async function fetchBooks() {
       try {
+        console.log('📚 Frontend: Fetching books from /api/books')
         const response = await fetch('/api/books')
+        console.log('📡 Frontend: Response status:', response.status)
+        console.log('📡 Frontend: Response ok:', response.ok)
+        
         const data = await response.json()
-        setBooks(data)
+        console.log('📊 Frontend: Received data:', data)
+        console.log('📊 Frontend: Data type:', typeof data)
+        console.log('📊 Frontend: Is array:', Array.isArray(data))
+        
+        if (Array.isArray(data)) {
+          setBooks(data)
+          console.log('✅ Frontend: Books set successfully, count:', data.length)
+        } else {
+          console.error('❌ Frontend: Data is not an array:', data)
+          setBooks([])
+        }
       } catch (error) {
-        console.error('Error fetching books:', error)
+        console.error('❌ Frontend: Error fetching books:', error)
+        setBooks([])
       } finally {
         setIsLoading(false)
+        console.log('🏁 Frontend: Loading finished')
       }
     }
     fetchBooks()

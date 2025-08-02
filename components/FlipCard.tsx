@@ -15,6 +15,8 @@ const FlipCard: React.FC = () => {
   const [position, setPosition] = useState({ x: -200, y: -180 });
   // State to track if user is currently dragging to move (vs dragging to flip)
   const [isDragging, setIsDragging] = useState(false);
+  // State to track if card has ever been dragged (detached from page flow)
+  const [hasBeenDragged, setHasBeenDragged] = useState(false);
   // State to track viewport dimensions for constraining movement
   const [constraints, setConstraints] = useState({ left: 0, right: 0, top: 0, bottom: 0 });
   
@@ -46,34 +48,59 @@ const FlipCard: React.FC = () => {
   };
 
   // Handle drag gestures - distinguish between flipping and moving
-  const handleDragEnd = (event: any, info: PanInfo) => {
+  const handleDragEnd = (_: any, info: PanInfo) => {
     setIsDragging(false);
     
-    // If drag distance is small and primarily horizontal, treat as flip gesture
+    // Calculate total drag distance to determine if this was a meaningful drag
+    const totalDistance = Math.sqrt(info.offset.x ** 2 + info.offset.y ** 2);
     const flipThreshold = 50;
     const moveThreshold = 20;
-    const totalDistance = Math.sqrt(info.offset.x ** 2 + info.offset.y ** 2);
     
+    // If drag distance is small and primarily horizontal, treat as flip gesture
     if (totalDistance < moveThreshold && Math.abs(info.offset.x) > flipThreshold) {
       handleFlip();
     }
+    
+    // Note: hasBeenDragged is set in handleDragStart when first drag begins
   };
 
   // Handle drag start to set dragging state
   const handleDragStart = () => {
     setIsDragging(true);
+    
+    // If this is the first drag, capture current position and transition to fixed positioning
+    if (!hasBeenDragged && isDesktop) {
+      const element = document.querySelector('[data-flip-card]') as HTMLElement;
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        const newPosition = {
+          x: rect.left + rect.width / 2 - window.innerWidth / 2,
+          y: rect.top + rect.height / 2 - window.innerHeight / 2
+        };
+        setPosition(newPosition);
+        setHasBeenDragged(true);
+      }
+    }
   };
 
+  // Determine positioning based on desktop status and drag state
+  const shouldBeFixed = isDesktop && hasBeenDragged;
+  
   return (
     <Box
-      position={isDesktop ? "fixed" : "relative"}
+      data-flip-card
+      position={shouldBeFixed ? "fixed" : "relative"}
       w={{ base: "360px", sm: "380px", md: "420px" }}
       h={{ base: "300px", sm: "340px", md: "350px" }}
-      left={isDesktop ? "50%" : "auto"}
-      top={isDesktop ? "50%" : "auto"}
-      transform={isDesktop ? `translate(calc(-50% + ${position.x}px), calc(-50% + ${position.y}px))` : "none"}
-      mx={!isDesktop ? "auto" : "unset"}
-      style={{ perspective: '1000px', zIndex: isDesktop ? 1000 : 1 }} // 3D perspective for flip effect
+      left={shouldBeFixed ? "50%" : "auto"}
+      top={shouldBeFixed ? "50%" : "auto"}
+      transform={shouldBeFixed ? `translate(calc(-50% + ${position.x}px), calc(-50% + ${position.y}px))` : "none"}
+      mx={!shouldBeFixed ? "auto" : "unset"}
+      style={{ 
+        perspective: '1000px', 
+        zIndex: shouldBeFixed ? 1000 : 1,
+        transition: shouldBeFixed ? 'none' : 'all 0.3s ease'
+      }} // 3D perspective for flip effect
     >
       {/* Flip card container with 3D transform */}
       <motion.div
@@ -96,14 +123,16 @@ const FlipCard: React.FC = () => {
         drag={isDesktop}
         dragMomentum={false}
         dragElastic={0}
-        dragConstraints={isDesktop ? constraints : undefined}
+        dragConstraints={shouldBeFixed ? constraints : undefined}
         onDragStart={isDesktop ? handleDragStart : undefined}
-        onDrag={isDesktop ? (event, info) => {
-          // Update position in real-time during drag for organic movement
-          setPosition({
-            x: info.point.x - window.innerWidth / 2,
-            y: info.point.y - window.innerHeight / 2
-          });
+        onDrag={isDesktop ? (_, info) => {
+          // Only update position if card has been dragged before (is detached)
+          if (hasBeenDragged) {
+            setPosition({
+              x: info.point.x - window.innerWidth / 2,
+              y: info.point.y - window.innerHeight / 2
+            });
+          }
         } : undefined}
         onDragEnd={isDesktop ? handleDragEnd : undefined}
         onTap={!isDragging ? handleFlip : undefined}
@@ -234,35 +263,7 @@ const FlipCard: React.FC = () => {
         </Box>
       </motion.div>
       
-      {/* Side indicator dots */}
-      <Box
-        position="absolute"
-        bottom="-30px"
-        left="50%"
-        transform="translateX(-50%)"
-        display="flex"
-        gap="8px"
-        alignItems="center"
-      >
-        <Box
-          w="8px"
-          h="8px"
-          borderRadius="50%"
-          bg={!isFlipped ? "#4ecdc4" : "gray.300"}
-          transition="all 0.3s"
-          cursor="pointer"
-          onClick={() => setIsFlipped(false)}
-        />
-        <Box
-          w="8px"
-          h="8px"
-          borderRadius="50%"
-          bg={isFlipped ? "#4ecdc4" : "gray.300"}
-          transition="all 0.3s"
-          cursor="pointer"
-          onClick={() => setIsFlipped(true)}
-        />
-      </Box>
+
     </Box>
   );
 };
