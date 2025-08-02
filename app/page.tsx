@@ -70,8 +70,8 @@ function WatercolorDivide() {
   return (
     <Box
       width="100%"
-      height={{ base: "60px", md: "80px" }}
-      my={{ base: 8, md: 12 }}
+      height={{ base: "40px", md: "50px" }}
+      my={{ base: 4, md: 6 }}
       display="flex"
       justifyContent="center"
       alignItems="center"
@@ -699,27 +699,38 @@ export default function Home() {
     <Box className="min-h-screen">
       <Container 
         maxW="container.xl" 
-        pt={{ base: 20, sm: 24, md: 28, lg: 32 }}
+        pt={{ base: 8, sm: 12, md: 40, lg: 44 }}
         px={{ base: 4, sm: 6, md: 8 }}
         centerContent
       >
         <TracingBeam>
           <VStack 
-            spacing={{ base: 6, sm: 8, md: 10, lg: 12 }} 
+            spacing={{ base: 4, sm: 6, md: 8, lg: 10 }} 
             alignItems="center" 
             textAlign="center"
             w="full"
             maxW="container.lg"
+            mt={{ base: 8, sm: 12, md: 16 }}
           >
           {/* Hero Section */}
           <Box w="full">
-            <VStack spacing={8} w="full" align="center" px={{ base: 4, md: 8 }}>
-              {/* Interactive Flip Card */}
-              <FlipCard />
+            {/* Side-by-side layout for desktop, stacked for mobile */}
+            <SimpleGrid 
+              columns={{ base: 1, lg: 2 }} 
+              spacing={{ base: 8, lg: 12 }} 
+              w="full" 
+              alignItems="center"
+              px={{ base: 4, md: 8 }}
+            >
+              {/* Left side - Interactive Flip Card */}
+              <Box display="flex" justifyContent={{ base: "center", lg: "flex-end" }}>
+                <FlipCard />
+              </Box>
 
+              {/* Right side - Text content */}
               <VStack 
-                align="center"
-                textAlign="center"
+                align={{ base: "center", lg: "flex-start" }}
+                textAlign={{ base: "center", lg: "left" }}
                 spacing={6}
                 maxW="2xl"
               >
@@ -752,7 +763,7 @@ export default function Home() {
                   See my work
                 </Button>
               </VStack>
-            </VStack>
+            </SimpleGrid>
           </Box>
 
           {/* Watercolor Divider */}
@@ -886,6 +897,7 @@ export default function Home() {
             spacing={{ base: 2, sm: 3, md: 4 }} 
             flexDirection={{ base: 'column', sm: 'row' }}
             w={{ base: 'full', sm: 'auto' }}
+            pb={{ base: 4, md: 6 }}
           >
             <Button
               as={Link}

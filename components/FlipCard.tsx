@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Box, Text } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
+import { Box, Text, useBreakpointValue } from '@chakra-ui/react';
 import { motion, PanInfo } from 'framer-motion';
 import Image from 'next/image';
 import CodeNameDisplay from './CodeNameDisplay';
@@ -11,28 +11,69 @@ import CodeNameDisplay from './CodeNameDisplay';
 const FlipCard: React.FC = () => {
   // State to track which side of the card is currently showing
   const [isFlipped, setIsFlipped] = useState(false);
+  // State to track card position for free dragging - start on left side for side-by-side layout
+  const [position, setPosition] = useState({ x: -200, y: -180 });
+  // State to track if user is currently dragging to move (vs dragging to flip)
+  const [isDragging, setIsDragging] = useState(false);
+  // State to track viewport dimensions for constraining movement
+  const [constraints, setConstraints] = useState({ left: 0, right: 0, top: 0, bottom: 0 });
+  
+  // Use responsive positioning - fixed only on desktop
+  const isDesktop = useBreakpointValue({ base: false, lg: true });
+
+  // Update constraints when viewport changes
+  useEffect(() => {
+    const updateConstraints = () => {
+      const cardWidth = window.innerWidth < 640 ? 360 : window.innerWidth < 768 ? 380 : 420;
+      const cardHeight = window.innerWidth < 640 ? 300 : window.innerWidth < 768 ? 340 : 350;
+      
+      setConstraints({
+        left: -(window.innerWidth / 2 - cardWidth / 2),
+        right: window.innerWidth / 2 - cardWidth / 2,
+        top: -(window.innerHeight / 2 - cardHeight / 2),
+        bottom: window.innerHeight / 2 - cardHeight / 2
+      });
+    };
+
+    updateConstraints();
+    window.addEventListener('resize', updateConstraints);
+    return () => window.removeEventListener('resize', updateConstraints);
+  }, []);
 
   // Handle the flip action - this toggles between front and back
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
   };
 
-  // Handle drag gestures to flip the card
+  // Handle drag gestures - distinguish between flipping and moving
   const handleDragEnd = (event: any, info: PanInfo) => {
-    // If user drags more than 50 pixels horizontally, flip the card
-    const threshold = 50;
-    if (Math.abs(info.offset.x) > threshold) {
+    setIsDragging(false);
+    
+    // If drag distance is small and primarily horizontal, treat as flip gesture
+    const flipThreshold = 50;
+    const moveThreshold = 20;
+    const totalDistance = Math.sqrt(info.offset.x ** 2 + info.offset.y ** 2);
+    
+    if (totalDistance < moveThreshold && Math.abs(info.offset.x) > flipThreshold) {
       handleFlip();
     }
   };
 
+  // Handle drag start to set dragging state
+  const handleDragStart = () => {
+    setIsDragging(true);
+  };
+
   return (
     <Box
-      position="relative"
-      w={{ base: "280px", sm: "320px", md: "300px" }}
-      h={{ base: "300px", sm: "340px", md: "330px" }}
-      mx="auto"
-      style={{ perspective: '1000px' }} // 3D perspective for flip effect
+      position={isDesktop ? "fixed" : "relative"}
+      w={{ base: "360px", sm: "380px", md: "420px" }}
+      h={{ base: "300px", sm: "340px", md: "350px" }}
+      left={isDesktop ? "50%" : "auto"}
+      top={isDesktop ? "50%" : "auto"}
+      transform={isDesktop ? `translate(calc(-50% + ${position.x}px), calc(-50% + ${position.y}px))` : "none"}
+      mx={!isDesktop ? "auto" : "unset"}
+      style={{ perspective: '1000px', zIndex: isDesktop ? 1000 : 1 }} // 3D perspective for flip effect
     >
       {/* Flip card container with 3D transform */}
       <motion.div
@@ -52,13 +93,23 @@ const FlipCard: React.FC = () => {
           stiffness: 100,
           damping: 15
         }}
-        drag="x"
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.1}
-        onDragEnd={handleDragEnd}
-        onTap={handleFlip}
+        drag={isDesktop}
+        dragMomentum={false}
+        dragElastic={0}
+        dragConstraints={isDesktop ? constraints : undefined}
+        onDragStart={isDesktop ? handleDragStart : undefined}
+        onDrag={isDesktop ? (event, info) => {
+          // Update position in real-time during drag for organic movement
+          setPosition({
+            x: info.point.x - window.innerWidth / 2,
+            y: info.point.y - window.innerHeight / 2
+          });
+        } : undefined}
+        onDragEnd={isDesktop ? handleDragEnd : undefined}
+        onTap={!isDragging ? handleFlip : undefined}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        whileDrag={{ scale: 1.05, rotate: 2, cursor: 'grabbing' }}
       >
         {/* Front side - Code Name Display */}
         <Box
@@ -73,10 +124,7 @@ const FlipCard: React.FC = () => {
           <Box
             w="full"
             h="full"
-            bg="linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)"
-            borderRadius="16px"
-            border="1px solid #333"
-            boxShadow="0 10px 30px rgba(0, 0, 0, 0.3)"
+            bg="transparent"
             overflow="hidden"
             position="relative"
             display="flex"
@@ -84,7 +132,7 @@ const FlipCard: React.FC = () => {
             justifyContent="center"
           >
             {/* Scale the CodeNameDisplay to fit nicely in the card at different screen sizes */}
-            <Box transform={{ base: "scale(0.8)", sm: "scale(0.85)", md: "scale(0.9)" }}>
+            <Box transform={{ base: "scale(0.9)", sm: "scale(0.95)", md: "scale(1.0)" }}>
               <CodeNameDisplay />
             </Box>
             

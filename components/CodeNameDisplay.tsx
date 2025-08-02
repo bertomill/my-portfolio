@@ -107,7 +107,7 @@ const CodeNameDisplay: React.FC = () => {
   };
 
   return (
-    <Box position="relative" p={2} maxW={{ base: "200px", md: "300px" }} mx="auto">
+    <Box position="relative" p={2} maxW={{ base: "320px", md: "400px" }} mx="auto">
       {/* Matrix background effect container */}
       <Box
         ref={matrixBgRef}

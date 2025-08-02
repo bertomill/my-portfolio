@@ -91,16 +91,16 @@ export default function About() {
               {/* Text content */}
               <VStack spacing={4} align="stretch" flex="1">
                 <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
-                  Experienced AI application developer who is passionate about building impactful products in fast-paced, innovative environments. My experience includes building applications for large enterprises such as CIBC and SickKids Hospital, as well as contributing to the growth of various startups.
+                  I come from a background of innovation design and implementation, when I first discovered ChatGPT in 2022, as many others, I became extremely curious in what AI could do for software development. From then on, my work has been a mixture of AI-software development, and consulting clients on how to integrate AI to solve practical problems for their businesses. My experience includes serving large financial and healthcare enterprises, as well as fast growing startups.
                 </Text>
                 <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
-                  With a background in digital management, I specialize in leveraging design thinking and user journey mapping to craft impactful strategies and products. I stay at the forefront of emerging technologies, ensuring my solutions are innovative, intuitive, and customer-focused.
+                  My mission is to enable businesses to leverage the latest advancements in AI to streamline their businesses processes and provide outstanding value to their customers.
                 </Text>
                 <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
-                  Beyond work, I enjoy building businesses and creating enduring brands that resonate with people. Movement has always been a key part of my life, whether it&apos;s running, lifting weights, or playing sports with friends.
+                  Beyond working with AI, I am passionate about developing communities to help people learn and grow together. I am the founder of MakerLounge - a community of makers and entrepreneurs who are passionate about building and innovating.
                 </Text>
                 <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
-                  I&apos;m passionate about designing products people love, and I&apos;m driven by opportunities to create meaningful, lasting impact through my work.
+                  I am also passionate about fitness and wellness. Growing up I played all kinds of sports and am currently training for Hyrox competitions around the world. I firmly believe that investing in a robust physical and mental health is the foundation for serving others.
                 </Text>
               </VStack>
 
@@ -325,12 +325,6 @@ export default function About() {
           className="glass-effect"
           borderRadius="6px"
         >
-          <Heading as="h2" size={{ base: "lg", md: "xl" }} mb={4} className="architectural-heading">
-            Beyond Work
-          </Heading>
-          <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
-            Outside of technology, I enjoy building businesses and creating enduring brands that resonate with people. Movement has always been a key part of my life, whether it&apos;s running, lifting weights, or playing sports with friends.
-          </Text>
         </MotionBox>
         </VStack>
       </TracingBeam>

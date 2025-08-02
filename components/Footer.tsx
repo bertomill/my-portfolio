@@ -15,9 +15,9 @@ export default function Footer() {
   const textColor = useColorModeValue('gray.400', 'gray.400')
   
   return (
-    <Box as="footer" py={8} mt={16}>
+    <Box as="footer" py={6} mt={8}>
       <Container maxW="container.xl">
-        <VStack spacing={6}>
+        <VStack spacing={4}>
           <SocialLinks />
           
           <Divider width="60%" opacity={0.2} />

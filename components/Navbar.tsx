@@ -30,6 +30,8 @@ export default function Navbar() {
     { name: 'Projects', href: '/projects' },
     { name: 'Speaking', href: '/speaking' },
     { name: 'Blog', href: '/blog' },
+    { name: 'Prompts', href: '/prompts' },
+    { name: 'Books', href: '/books' },
   ]
 
   return (
