@@ -97,7 +97,7 @@ export default function About() {
                   My mission is to enable businesses to leverage the latest advancements in AI to streamline their businesses processes and provide outstanding value to their customers.
                 </Text>
                 <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
-                  Beyond working with AI, I am passionate about developing communities to help people learn and grow together. I am the founder of MakerLounge - a community of makers and entrepreneurs who are passionate about building and innovating.
+                  Beyond working with AI, I am very passionate about healthy eating as a means to a better life, and have developed whiskin.vercel.app, which provides healthy meal ideas and practical tools to plan healthier eating into your day. I am also passionate about developing communities to help people learn and grow together. I am the founder of MakerLounge - a community of makers and entrepreneurs who are passionate about building and innovating.
                 </Text>
                 <Text fontSize={{ base: "md", md: "lg" }} className="architectural-text" fontWeight="300">
                   I am also passionate about fitness and wellness. Growing up I played all kinds of sports and am currently training for Hyrox competitions around the world. I firmly believe that investing in a robust physical and mental health is the foundation for serving others.
