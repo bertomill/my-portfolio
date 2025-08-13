@@ -28,6 +28,7 @@ export default function Navbar() {
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
     { name: 'Projects', href: '/projects' },
+    { name: 'Art', href: '/art' },
     { name: 'Speaking', href: '/speaking' },
     { name: 'Blog', href: '/blog' },
     { name: 'Prompts', href: '/prompts' },
@@ -42,7 +43,10 @@ export default function Navbar() {
       zIndex="sticky"
       className="nav-glass"
       borderBottom="1px solid"
-      borderColor="rgba(212, 197, 169, 0.15)"
+      borderColor="rgba(157, 167, 174, 0.35)"
+      bg="rgba(147, 145, 152, 0.55)"
+      backdropFilter="auto"
+      backdropBlur="10px"
     >
       <Container maxW="container.xl" py={4}>
         <Flex align="center" justify="space-between">
@@ -57,14 +61,14 @@ export default function Navbar() {
               <Link key={item.href} href={item.href}>
                 <Text
                   fontWeight={pathname === item.href ? "400" : "300"}
-                  color={pathname === item.href ? "var(--deep-beige)" : "var(--charcoal)"}
+                  color={pathname === item.href ? "#1b5e20" : "var(--charcoal)"}
                   position="relative"
                   transition="all 0.3s ease"
                   fontSize="sm"
                   letterSpacing="0.5px"
                   textTransform="uppercase"
                   _hover={{
-                    color: "var(--deep-beige)",
+                    color: "#2e7d32",
                     transform: "translateY(-1px)"
                   }}
                   _after={{
@@ -74,7 +78,7 @@ export default function Navbar() {
                     height: '1px',
                     bottom: '-4px',
                     left: '0',
-                    background: 'linear-gradient(135deg, var(--warm-gray) 0%, var(--deep-beige) 100%)',
+                    background: 'linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%)',
                     transition: 'width 0.3s ease',
                   }}
                   sx={{
@@ -138,15 +142,15 @@ export default function Navbar() {
               <Link key={item.href} href={item.href} onClick={onToggle}>
                 <Text
                   fontWeight={pathname === item.href ? "400" : "300"}
-                  color={pathname === item.href ? "var(--deep-beige)" : "var(--charcoal)"}
+                  color={pathname === item.href ? "#1b5e20" : "var(--charcoal)"}
                   transition="all 0.3s ease"
                   fontSize="sm"
                   letterSpacing="0.5px"
                   textTransform="uppercase"
                   _hover={{
-                    color: "var(--deep-beige)",
+                    color: "#2e7d32",
                     transform: "translateX(4px)",
-                    bg: "rgba(160, 139, 115, 0.1)"
+                    bg: "rgba(30, 94, 32, 0.12)"
                   }}
                   p={2}
                   borderRadius="4px"

@@ -17,5 +17,19 @@ export const projects = pgTable('projects', {
   updatedAt: timestamp('updated_at').defaultNow(),
 })
 
+export const artPieces = pgTable('art_pieces', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  description: text('description'),
+  src: text('src').notNull(), // File path or URL to the art piece
+  href: text('href'), // Optional external link
+  featured: boolean('featured').default(false),
+  sortOrder: serial('sort_order'), // For ordering art pieces
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+})
+
 export type Project = typeof projects.$inferSelect
-export type NewProject = typeof projects.$inferInsert 
+export type NewProject = typeof projects.$inferInsert
+export type ArtPiece = typeof artPieces.$inferSelect
+export type NewArtPiece = typeof artPieces.$inferInsert 

@@ -30,10 +30,10 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <meta name="color-scheme" content="light" />
       </head>
-      <body className={`${inter.className} ${jetbrainsMono.className} min-h-full flex flex-col bg-white text-black`} suppressHydrationWarning>
+      <body className={`${inter.className} ${jetbrainsMono.className} min-h-full flex flex-col text-black`} suppressHydrationWarning>
         <Providers>
           <Navbar />
-          <main className="flex-1 bg-white">
+          <main className="flex-1">
             {children}
           </main>
           <Footer />

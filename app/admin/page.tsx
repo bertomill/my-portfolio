@@ -26,18 +26,23 @@ import { EditIcon, DeleteIcon, AddIcon } from '@chakra-ui/icons'
 import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { Project } from '@/lib/schema'
+import { Project, ArtPiece } from '@/lib/schema'
 import ProjectModal from '@/components/ProjectModal'
+import ArtModal from '@/components/ArtModal'
 
 export default function AdminDashboard() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const toast = useToast()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen: isProjectModalOpen, onOpen: onProjectModalOpen, onClose: onProjectModalClose } = useDisclosure()
+  const { isOpen: isArtModalOpen, onOpen: onArtModalOpen, onClose: onArtModalClose } = useDisclosure()
   
   const [projects, setProjects] = useState<Project[]>([])
+  const [artPieces, setArtPieces] = useState<ArtPiece[]>([])
   const [loading, setLoading] = useState(true)
+  const [artLoading, setArtLoading] = useState(true)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [selectedArtPiece, setSelectedArtPiece] = useState<ArtPiece | null>(null)
 
   useEffect(() => {
     if (status === 'loading') return
@@ -48,6 +53,7 @@ export default function AdminDashboard() {
     }
 
     fetchProjects()
+    fetchArtPieces()
   }, [session, status, router])
 
   const fetchProjects = async () => {
@@ -72,14 +78,46 @@ export default function AdminDashboard() {
     }
   }
 
+  const fetchArtPieces = async () => {
+    try {
+      setArtLoading(true)
+      const response = await fetch('/api/art')
+      if (response.ok) {
+        const data = await response.json()
+        setArtPieces(data)
+      }
+    } catch (error) {
+      console.error('Error fetching art pieces:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch art pieces',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    } finally {
+      setArtLoading(false)
+    }
+  }
+
   const handleEdit = (project: Project) => {
     setSelectedProject(project)
-    onOpen()
+    onProjectModalOpen()
   }
 
   const handleAdd = () => {
     setSelectedProject(null)
-    onOpen()
+    onProjectModalOpen()
+  }
+
+  const handleEditArt = (artPiece: ArtPiece) => {
+    setSelectedArtPiece(artPiece)
+    onArtModalOpen()
+  }
+
+  const handleAddArt = () => {
+    setSelectedArtPiece(null)
+    onArtModalOpen()
   }
 
   const handleDelete = async (id: number) => {
@@ -114,9 +152,46 @@ export default function AdminDashboard() {
     }
   }
 
+  const handleDeleteArt = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this art piece?')) return
+
+    try {
+      const response = await fetch(`/api/art/${id}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        toast({
+          title: 'Success',
+          description: 'Art piece deleted successfully',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
+        fetchArtPieces() // Refresh the list
+      } else {
+        throw new Error('Failed to delete art piece')
+      }
+    } catch (error) {
+      console.error('Error deleting art piece:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to delete art piece',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
   const handleProjectSaved = () => {
     fetchProjects() // Refresh the list
-    onClose()
+    onProjectModalClose()
+  }
+
+  const handleArtSaved = () => {
+    fetchArtPieces() // Refresh the list
+    onArtModalClose()
   }
 
   if (status === 'loading') {
@@ -230,13 +305,102 @@ export default function AdminDashboard() {
             </Box>
           )}
         </Box>
+
+        <Box bg="white" p={6} borderRadius="xl" borderWidth="1px" borderColor="gray.200">
+          <HStack justify="space-between" mb={4}>
+            <Heading as="h2" size="md">
+              Art Pieces
+            </Heading>
+            <Button leftIcon={<AddIcon />} colorScheme="green" onClick={handleAddArt}>
+              Add Art Piece
+            </Button>
+          </HStack>
+
+          {artLoading ? (
+            <VStack spacing={4}>
+              {[...Array(3)].map((_, index) => (
+                <Skeleton key={index} height="60px" width="100%" />
+              ))}
+            </VStack>
+          ) : artPieces.length === 0 ? (
+            <Alert status="info">
+              <AlertIcon />
+              No art pieces found. Add your first art piece!
+            </Alert>
+          ) : (
+            <Box overflowX="auto">
+              <Table variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th>Title</Th>
+                    <Th>Description</Th>
+                    <Th>Source</Th>
+                    <Th>Featured</Th>
+                    <Th>Actions</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {artPieces.map((artPiece) => (
+                    <Tr key={artPiece.id}>
+                      <Td>
+                        <Text fontWeight="medium">{artPiece.title}</Text>
+                      </Td>
+                      <Td>
+                        <Text noOfLines={2} maxW="300px">
+                          {artPiece.description || 'No description'}
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text fontSize="sm" noOfLines={1} maxW="200px">
+                          {artPiece.src}
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Badge colorScheme={artPiece.featured ? 'green' : 'gray'}>
+                          {artPiece.featured ? 'Yes' : 'No'}
+                        </Badge>
+                      </Td>
+                      <Td>
+                        <HStack spacing={2}>
+                          <IconButton
+                            aria-label="Edit art piece"
+                            icon={<EditIcon />}
+                            size="sm"
+                            colorScheme="blue"
+                            variant="ghost"
+                            onClick={() => handleEditArt(artPiece)}
+                          />
+                          <IconButton
+                            aria-label="Delete art piece"
+                            icon={<DeleteIcon />}
+                            size="sm"
+                            colorScheme="red"
+                            variant="ghost"
+                            onClick={() => handleDeleteArt(artPiece.id)}
+                          />
+                        </HStack>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
+          )}
+        </Box>
       </VStack>
 
       <ProjectModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isProjectModalOpen}
+        onClose={onProjectModalClose}
         project={selectedProject}
         onSave={handleProjectSaved}
+      />
+      
+      <ArtModal
+        isOpen={isArtModalOpen}
+        onClose={onArtModalClose}
+        artPiece={selectedArtPiece}
+        onSave={handleArtSaved}
       />
     </Container>
   )

@@ -99,8 +99,8 @@ function WatercolorDivide() {
 
 // Blog Post Card component
 function BlogPostCard({ post }: { post: BlogPost }) {
-  const cardBg = useColorModeValue('white', 'gray.800')
-  const borderColor = useColorModeValue('gray.200', 'gray.700')
+  // Card visuals are handled via the global `glass-effect` class so they
+  // blend with the site's glassmorphism style across pages
   const dateColor = useColorModeValue('gray.600', 'gray.400')
   const titleColor = useColorModeValue('gray.900', 'white')
 
@@ -123,9 +123,7 @@ function BlogPostCard({ post }: { post: BlogPost }) {
     <LinkBox 
       as={Card}
       height="100%"
-      bg={cardBg}
-      borderColor={borderColor}
-      borderWidth="1px"
+      className="glass-effect"
       _hover={{ 
         shadow: "md",
         transform: "translateY(-2px)"
@@ -200,8 +198,7 @@ function BlogPostCard({ post }: { post: BlogPost }) {
 function BlogPosts() {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const cardBg = useColorModeValue('white', 'gray.800')
-  const borderColor = useColorModeValue('gray.200', 'gray.700')
+  // Section container uses glass styling via className
 
   useEffect(() => {
     async function fetchPosts() {
@@ -224,7 +221,7 @@ function BlogPosts() {
   }
 
   return (
-    <Card bg={cardBg} borderColor={borderColor} borderWidth="1px">
+    <Card className="glass-effect">
       <CardHeader pb={2}>
         <Heading size={{ base: "md", md: "lg" }}>
           Blog Posts
@@ -235,7 +232,7 @@ function BlogPosts() {
         {isLoading ? (
           <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }}>
             {[...Array(3)].map((_, index) => (
-              <Card key={index} bg={cardBg} borderColor={borderColor}>
+              <Card key={index} className="glass-effect">
                 <AspectRatio ratio={16/9}>
                   <Skeleton borderTopRadius="md" />
                 </AspectRatio>
@@ -301,8 +298,6 @@ interface YouTubeVideo {
 }
 
 function YouTubeVideoCard({ video }: { video: YouTubeVideo }) {
-  const cardBg = useColorModeValue('white', 'gray.800')
-  const borderColor = useColorModeValue('gray.200', 'gray.700')
   const dateColor = useColorModeValue('gray.600', 'gray.400')
   const titleColor = useColorModeValue('gray.900', 'white')
 
@@ -333,9 +328,7 @@ function YouTubeVideoCard({ video }: { video: YouTubeVideo }) {
     <LinkBox 
       as={Card}
       height="100%"
-      bg={cardBg}
-      borderColor={borderColor}
-      borderWidth="1px"
+      className="glass-effect"
       _hover={{ 
         shadow: "md",
         transform: "translateY(-2px)"
@@ -392,8 +385,6 @@ function YouTubeVideoCard({ video }: { video: YouTubeVideo }) {
 
 // Simple Project Card component
 function ProjectCard({ project }: { project: Project }) {
-  const cardBg = useColorModeValue('white', 'gray.800')
-  const borderColor = useColorModeValue('gray.200', 'gray.700')
   const titleColor = useColorModeValue('gray.900', 'white')
   const descriptionColor = useColorModeValue('gray.600', 'gray.400')
 
@@ -408,9 +399,7 @@ function ProjectCard({ project }: { project: Project }) {
 
   return (
     <Card
-      bg={cardBg}
-      borderColor={borderColor}
-      borderWidth="1px"
+      className="glass-effect"
       height="100%"
       _hover={{ 
         shadow: "lg",
@@ -517,8 +506,6 @@ function ProjectCard({ project }: { project: Project }) {
 function YouTubeVideos() {
   const [videos, setVideos] = useState<YouTubeVideo[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const cardBg = useColorModeValue('white', 'gray.800')
-  const borderColor = useColorModeValue('gray.200', 'gray.700')
 
   useEffect(() => {
     async function fetchVideos() {
@@ -542,7 +529,7 @@ function YouTubeVideos() {
   }
 
   return (
-    <Card bg={cardBg} borderColor={borderColor} borderWidth="1px">
+    <Card className="glass-effect">
       <CardHeader pb={2}>
         <Heading size={{ base: "md", md: "lg" }}>
           Latest Videos
@@ -553,7 +540,7 @@ function YouTubeVideos() {
         {isLoading ? (
           <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 6 }}>
             {[...Array(3)].map((_, index) => (
-              <Card key={index} bg={cardBg} borderColor={borderColor}>
+              <Card key={index} className="glass-effect">
                 <AspectRatio ratio={16/9}>
                   <Skeleton borderTopRadius="md" />
                 </AspectRatio>
@@ -612,8 +599,7 @@ export default function Home() {
   const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest')
 
   // Color mode values for the main component
-  const featuredCardBg = useColorModeValue('white', 'gray.800')
-  const featuredBorderColor = useColorModeValue('gray.200', 'gray.700')
+  // Featured section container uses glass styling via className
   const skeletonCardBg = useColorModeValue('gray.50', 'gray.700')
 
   // Function to parse date strings into comparable Date objects
@@ -696,10 +682,13 @@ export default function Home() {
   }
 
   return (
-    <Box className="min-h-screen">
+    <Box 
+      className="min-h-screen"
+      bgGradient="linear(to-b, #9da7ae, #939198)"
+    >
       <Container 
         maxW="container.xl" 
-        pt={{ base: 8, sm: 12, md: 40, lg: 44 }}
+        pt={{ base: 6, sm: 8, md: 12, lg: 14 }}
         px={{ base: 4, sm: 6, md: 8 }}
         centerContent
       >
@@ -710,7 +699,7 @@ export default function Home() {
             textAlign="center"
             w="full"
             maxW="container.lg"
-            mt={{ base: 8, sm: 12, md: 16 }}
+            mt={{ base: 2, sm: 4, md: 6 }}
           >
           {/* Hero Section */}
           <Box w="full">
@@ -731,7 +720,7 @@ export default function Home() {
               <VStack 
                 align={{ base: "center", lg: "flex-start" }}
                 textAlign={{ base: "center", lg: "left" }}
-                spacing={6}
+                spacing={5}
                 maxW="2xl"
               >
                 <Text 
@@ -778,7 +767,7 @@ export default function Home() {
             w="full"
             style={useFloatingEffect(0, 2)}
           >
-            <Card bg={featuredCardBg} borderColor={featuredBorderColor} borderWidth="1px">
+            <Card className="glass-effect">
               <CardHeader pb={2}>
                 <HStack 
                   w="full" 

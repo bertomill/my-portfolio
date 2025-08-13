@@ -34,3 +34,14 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## UI Updates
+
+- Home page background updated to a subtle linear gradient using `#9da7ae` and `#939198`. Implemented on the root container in `app/page.tsx` via Chakra's `bgGradient` prop.
+- Hero spacing adjusted to bring the flip-card and intro text higher on screen; see container `pt` values in `app/page.tsx`.
+- Navbar and card borders re-tinted to the same bluish-purple hue to maintain consistent palette.
+- Added Art gallery page at `app/art/page.tsx` rendering images from `public/art` in a responsive grid. Navbar now includes an `Art` link.
+- Footer adapts on `/art` to the same bluish‑purple gradient and divider color to keep visual consistency.
+- Increased top padding on the Art page to provide spacing below the fixed navbar.
+- Global background updated to the bluish‑purple gradient across all pages via `app/globals.css`. Removed `bg-white` from layout wrappers in `app/layout.tsx`.
+ - Home page cards updated to match site style: replaced ad-hoc `bg`/`borderColor` props with the global `glass-effect` class on cards in `app/page.tsx` (featured projects container, blog section, video section, and individual item cards).

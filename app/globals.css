@@ -73,9 +73,9 @@ body::before {
   100% { transform: translateX(100%); }
 }
 
-/* Architectural minimalist background */
+/* Global background - bluish purple gradient */
 body {
-  background: linear-gradient(-45deg, var(--cream), var(--warm-beige), var(--pure-white), var(--soft-tan));
+  background: linear-gradient(-45deg, #9da7ae, #939198);
   background-size: 400% 400%;
   animation: gradientShift 25s ease infinite;
   position: relative;
@@ -385,7 +385,7 @@ html {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
   }
 }
 
