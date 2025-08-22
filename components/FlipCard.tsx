@@ -243,7 +243,7 @@ const FlipCard: React.FC = () => {
                 _dark={{ color: "gray.300" }}
                 textAlign="center"
               >
-                Berto Mill
+                Robert Mill
               </Text>
             </Box>
             

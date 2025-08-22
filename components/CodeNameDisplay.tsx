@@ -187,7 +187,7 @@ const CodeNameDisplay: React.FC = () => {
             <Box><span style={{ color: '#6a9955' }}>// Initializing developer profile...</span></Box>
             <Box><span style={{ color: '#569cd6' }}>class</span> <span style={{ color: '#dcdcaa' }}>Developer</span> {`{`}</Box>
             <Box>&nbsp;&nbsp;<span style={{ color: '#dcdcaa' }}>constructor</span>() {`{`}</Box>
-            <Box>&nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#569cd6' }}>this</span>.<span style={{ color: '#d4d4d4' }}>name</span> = <span style={{ color: '#ce9178' }}>'Berto Mill'</span>;</Box>
+            <Box>&nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#569cd6' }}>this</span>.<span style={{ color: '#d4d4d4' }}>name</span> = <span style={{ color: '#ce9178' }}>'Robert Mill'</span>;</Box>
             <Box>&nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#569cd6' }}>this</span>.<span style={{ color: '#d4d4d4' }}>expertise</span> = <span style={{ color: '#ce9178' }}>'AI consulting & engineering'</span>;</Box>
             <Box>&nbsp;&nbsp;&nbsp;&nbsp;<span style={{ color: '#569cd6' }}>this</span>.<span style={{ color: '#d4d4d4' }}>status</span> = <span style={{ color: '#ce9178' }}>'transforming businesses with AI'</span>;</Box>
             <Box>&nbsp;&nbsp;{`}`}</Box>
@@ -216,7 +216,7 @@ const CodeNameDisplay: React.FC = () => {
                 animation: 'textGlow 4s ease-in-out infinite alternate',
                 // Glitch effects using pseudo-elements
                 '&::before, &::after': {
-                  content: '"BERTO MILL"',
+                  content: '"Robert MILL"',
                   position: 'absolute',
                   top: 0,
                   left: 0,
@@ -260,7 +260,7 @@ const CodeNameDisplay: React.FC = () => {
                 },
               }}
             >
-              BERTO MILL
+              Robert MILL
             </Box>
             
             {/* Subtitle that appears with a delay */}

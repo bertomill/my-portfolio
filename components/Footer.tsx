@@ -34,7 +34,7 @@ export default function Footer() {
           <Divider width="60%" opacity={0.4} borderColor={isArtPage ? dividerColor : undefined} />
           
           <Text fontSize="sm" color={textColor} textAlign="center">
-            © {year} Berto Mill. All rights reserved.
+            © {year} Robert Mill. All rights reserved.
           </Text>
         </VStack>
       </Container>

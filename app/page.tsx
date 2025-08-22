@@ -688,7 +688,7 @@ export default function Home() {
     >
       <Container 
         maxW="container.xl" 
-        pt={{ base: 6, sm: 8, md: 12, lg: 14 }}
+        pt={{ base: 20, sm: 24, md: 28, lg: 32 }}
         px={{ base: 4, sm: 6, md: 8 }}
         centerContent
       >

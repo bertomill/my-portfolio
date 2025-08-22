@@ -45,3 +45,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - Increased top padding on the Art page to provide spacing below the fixed navbar.
 - Global background updated to the bluish‑purple gradient across all pages via `app/globals.css`. Removed `bg-white` from layout wrappers in `app/layout.tsx`.
  - Home page cards updated to match site style: replaced ad-hoc `bg`/`borderColor` props with the global `glass-effect` class on cards in `app/page.tsx` (featured projects container, blog section, video section, and individual item cards).
+- Fixed navbar overlap issue on homepage by increasing top padding from `pt={{ base: 6, sm: 8, md: 12, lg: 14 }}` to `pt={{ base: 20, sm: 24, md: 28, lg: 32 }}` in `app/page.tsx` to ensure proper spacing below the navbar.
