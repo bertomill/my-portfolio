@@ -21,17 +21,12 @@ import { useEffect, useState } from 'react'
 const MotionBox = motion(Box)
 
 interface Book {
-  id: string
+  id: number
   title: string
-  author: string
-  status: string
-  rating: number | null
-  category: string
   description: string
-  dateRead: string | null
-  notes: string
-  recommendation: string
-  createdTime: string | null
+  what_i_learned: string
+  date_read: string | null
+  link?: string
 }
 
 function BookCard({ book }: { book: Book }) {
@@ -40,56 +35,11 @@ function BookCard({ book }: { book: Book }) {
   const titleColor = useColorModeValue('gray.900', 'white')
   const authorColor = useColorModeValue('gray.600', 'gray.400')
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'completed': 
-      case 'read': 
-        return 'green'
-      case 'reading': 
-      case 'currently reading':
-        return 'blue'
-      case 'want to read':
-      case 'to read':
-      case 'wishlist':
-        return 'orange'
-      default: return 'gray'
-    }
-  }
-
-  const getStatusText = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'completed': 
-      case 'read': 
-        return 'Completed'
-      case 'reading': 
-      case 'currently reading':
-        return 'Currently Reading'
-      case 'want to read':
-      case 'to read':
-      case 'wishlist':
-        return 'Want to Read'
-      default: return status
-    }
-  }
-
-  const renderStars = (rating: number | null) => {
-    if (!rating) return null
-    return (
-      <HStack spacing={1}>
-        {[...Array(5)].map((_, i) => (
-          <Text key={i} color={i < rating ? 'yellow.400' : 'gray.300'}>
-            ★
-          </Text>
-        ))}
-      </HStack>
-    )
-  }
-
   const formatDate = (dateString: string | null) => {
     if (!dateString) return null
     try {
       const date = new Date(dateString)
-      return date.getFullYear().toString()
+      return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
     } catch {
       return dateString
     }
@@ -109,94 +59,51 @@ function BookCard({ book }: { book: Book }) {
     >
       <CardBody p={4}>
         <VStack align="start" spacing={3} height="100%">
-          {/* Book Info */}
-          <VStack align="start" spacing={2} flex="1" width="100%">
-            <Heading
-              as="h3"
-              fontSize="lg"
-              fontWeight="semibold"
-              color={titleColor}
-              noOfLines={2}
-              width="100%"
-            >
-              {book.title}
-            </Heading>
-
-            {/* Why I read this book */}
-            {book.description && (
-              <Box>
-                <Text 
-                  fontSize="sm" 
-                  fontWeight="semibold"
-                  color={titleColor}
-                  mb={1}
-                >
-                  Why I read this book:
-                </Text>
-                <Text 
-                  fontSize="sm" 
-                  color={authorColor}
-                  noOfLines={3}
-                  lineHeight="tall"
-                >
-                  {book.description}
-                </Text>
-              </Box>
-            )}
-
-            {/* Good for someone who */}
-            {book.recommendation && (
-              <Box>
-                <Text 
-                  fontSize="sm" 
-                  fontWeight="semibold"
-                  color={titleColor}
-                  mb={1}
-                >
-                  Good for someone who:
-                </Text>
-                <Text 
-                  fontSize="sm" 
-                  color={authorColor}
-                  noOfLines={3}
-                  lineHeight="tall"
-                >
-                  {book.recommendation}
-                </Text>
-              </Box>
-            )}
-
-            {/* Comments */}
-            {book.notes && (
-              <Box>
-                <Text 
-                  fontSize="sm" 
-                  fontWeight="semibold"
-                  color={titleColor}
-                  mb={1}
-                >
-                  Comments:
-                </Text>
-                <Text 
-                  fontSize="sm" 
-                  color={authorColor}
-                  noOfLines={3}
-                  lineHeight="tall"
-                >
-                  {book.notes}
-                </Text>
-              </Box>
-            )}
-
-            {/* Created time */}
-            <VStack spacing={2} width="100%" mt="auto">
-              {book.createdTime && (
-                <Text fontSize="xs" color={authorColor} fontFamily="mono">
-                  Added {formatDate(book.createdTime)}
-                </Text>
-              )}
-            </VStack>
-          </VStack>
+          <Heading
+            as="h3"
+            fontSize="lg"
+            fontWeight="semibold"
+            color={titleColor}
+            noOfLines={2}
+            width="100%"
+          >
+            {book.title}
+          </Heading>
+          {book.description && (
+            <Box>
+              <Text fontSize="sm" fontWeight="semibold" color={titleColor} mb={1}>
+                Description:
+              </Text>
+              <Text fontSize="sm" color={authorColor} noOfLines={3} lineHeight="tall">
+                {book.description}
+              </Text>
+            </Box>
+          )}
+          {book.what_i_learned && (
+            <Box>
+              <Text fontSize="sm" fontWeight="semibold" color={titleColor} mb={1}>
+                What I Learned:
+              </Text>
+              <Text fontSize="sm" color={authorColor} noOfLines={3} lineHeight="tall">
+                {book.what_i_learned}
+              </Text>
+            </Box>
+          )}
+          {book.link && (
+            <Box>
+              <Text fontSize="sm" fontWeight="semibold" color={titleColor} mb={1}>
+                Link:
+              </Text>
+              <Text fontSize="sm" color="blue.500">
+                <a href={book.link} target="_blank" rel="noopener noreferrer">{book.link}</a>
+              </Text>
+            </Box>
+          )}
+          {book.date_read && (
+            <Text fontSize="xs" color={authorColor} fontFamily="mono">
+              Read {formatDate(book.date_read)}
+            </Text>
+          )}
         </VStack>
       </CardBody>
     </Card>

@@ -26,9 +26,10 @@ import { EditIcon, DeleteIcon, AddIcon } from '@chakra-ui/icons'
 import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { Project, ArtPiece } from '@/lib/schema'
+import { Project, ArtPiece, Book } from '@/lib/schema'
 import ProjectModal from '@/components/ProjectModal'
 import ArtModal from '@/components/ArtModal'
+import BookModal from '@/components/BookModal'
 
 export default function AdminDashboard() {
   const { data: session, status } = useSession()
@@ -36,13 +37,17 @@ export default function AdminDashboard() {
   const toast = useToast()
   const { isOpen: isProjectModalOpen, onOpen: onProjectModalOpen, onClose: onProjectModalClose } = useDisclosure()
   const { isOpen: isArtModalOpen, onOpen: onArtModalOpen, onClose: onArtModalClose } = useDisclosure()
+  const { isOpen: isBookModalOpen, onOpen: onBookModalOpen, onClose: onBookModalClose } = useDisclosure()
   
   const [projects, setProjects] = useState<Project[]>([])
   const [artPieces, setArtPieces] = useState<ArtPiece[]>([])
+  const [books, setBooks] = useState<Book[]>([])
   const [loading, setLoading] = useState(true)
   const [artLoading, setArtLoading] = useState(true)
+  const [booksLoading, setBooksLoading] = useState(true)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [selectedArtPiece, setSelectedArtPiece] = useState<ArtPiece | null>(null)
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null)
 
   useEffect(() => {
     if (status === 'loading') return
@@ -54,6 +59,7 @@ export default function AdminDashboard() {
 
     fetchProjects()
     fetchArtPieces()
+    fetchBooks()
   }, [session, status, router])
 
   const fetchProjects = async () => {
@@ -100,6 +106,27 @@ export default function AdminDashboard() {
     }
   }
 
+  const fetchBooks = async () => {
+    try {
+      setBooksLoading(true)
+      const response = await fetch('/api/books')
+      if (response.ok) {
+        const data = await response.json()
+        setBooks(data)
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch books',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    } finally {
+      setBooksLoading(false)
+    }
+  }
+
   const handleEdit = (project: Project) => {
     setSelectedProject(project)
     onProjectModalOpen()
@@ -118,6 +145,16 @@ export default function AdminDashboard() {
   const handleAddArt = () => {
     setSelectedArtPiece(null)
     onArtModalOpen()
+  }
+
+  const handleEditBook = (book: Book) => {
+    setSelectedBook(book)
+    onBookModalOpen()
+  }
+
+  const handleAddBook = () => {
+    setSelectedBook(null)
+    onBookModalOpen()
   }
 
   const handleDelete = async (id: number) => {
@@ -184,6 +221,38 @@ export default function AdminDashboard() {
     }
   }
 
+  const handleDeleteBook = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this book?')) return
+
+    try {
+      const response = await fetch(`/api/books/${id}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        toast({
+          title: 'Success',
+          description: 'Book deleted successfully',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
+        fetchBooks() // Refresh the list
+      } else {
+        throw new Error('Failed to delete book')
+      }
+    } catch (error) {
+      console.error('Error deleting book:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to delete book',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
   const handleProjectSaved = () => {
     fetchProjects() // Refresh the list
     onProjectModalClose()
@@ -192,6 +261,11 @@ export default function AdminDashboard() {
   const handleArtSaved = () => {
     fetchArtPieces() // Refresh the list
     onArtModalClose()
+  }
+
+  const handleBookSaved = () => {
+    fetchBooks() // Refresh the list
+    onBookModalClose()
   }
 
   if (status === 'loading') {
@@ -211,7 +285,7 @@ export default function AdminDashboard() {
 
   return (
     <Container maxW="container.xl" py={8}>
-      <VStack spacing={6} align="stretch">
+      <VStack spacing={6} align="stretch" mt={10}>
         <HStack justify="space-between">
           <Heading as="h1" size="lg">
             Admin Dashboard
@@ -387,6 +461,79 @@ export default function AdminDashboard() {
             </Box>
           )}
         </Box>
+
+        <Box bg="white" p={6} borderRadius="xl" borderWidth="1px" borderColor="gray.200">
+          <HStack justify="space-between" mb={4}>
+            <Heading as="h2" size="md">
+              Books
+            </Heading>
+            <Button leftIcon={<AddIcon />} colorScheme="purple" onClick={() => { setSelectedBook(null); onBookModalOpen(); }}>
+              Add Book
+            </Button>
+          </HStack>
+
+          {booksLoading ? (
+            <VStack spacing={4}>
+              {[...Array(3)].map((_, index) => (
+                <Skeleton key={index} height="60px" width="100%" />
+              ))}
+            </VStack>
+          ) : books.length === 0 ? (
+            <Alert status="info">
+              <AlertIcon />
+              No books found. Add your first book!
+            </Alert>
+          ) : (
+            <Box overflowX="auto">
+              <Table variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th>Title</Th>
+                    <Th>Description</Th>
+                    <Th>What I Learned</Th>
+                    <Th>Date Read</Th>
+                    <Th>Actions</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {books.map((book) => (
+                    <Tr key={book.id}>
+                      <Td>
+                        <Text fontWeight="medium">{book.title}</Text>
+                      </Td>
+                      <Td>
+                        <Text noOfLines={2} maxW="300px">
+                          {book.description}
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text noOfLines={2} maxW="300px">
+                          {book.what_i_learned}
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text fontSize="sm">{book.date_read}</Text>
+                      </Td>
+                      <Td>
+                        <HStack spacing={2}>
+                          <IconButton
+                            aria-label="Edit book"
+                            icon={<EditIcon />}
+                            size="sm"
+                            colorScheme="blue"
+                            variant="ghost"
+                            onClick={() => { setSelectedBook(book); onBookModalOpen(); }}
+                          />
+                          {/* Add delete logic if needed */}
+                        </HStack>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
+          )}
+        </Box>
       </VStack>
 
       <ProjectModal
@@ -402,6 +549,13 @@ export default function AdminDashboard() {
         artPiece={selectedArtPiece}
         onSave={handleArtSaved}
       />
+
+      <BookModal
+        isOpen={isBookModalOpen}
+        onClose={onBookModalClose}
+        book={selectedBook}
+        onSave={handleBookSaved}
+      />
     </Container>
   )
-} 
+}
