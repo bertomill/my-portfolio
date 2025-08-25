@@ -7,7 +7,7 @@ import {
   Text,
   VStack,
   HStack,
-  Input,
+  Textarea,
   IconButton,
   Avatar,
   useColorModeValue,
@@ -45,10 +45,12 @@ export default function ChatWidget() {
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Color mode values
-  const chatBg = useColorModeValue('white', 'gray.800')
-  const borderColor = useColorModeValue('gray.200', 'gray.600')
-  const messagesBg = useColorModeValue('gray.50', 'gray.700')
+  // Color mode values - matching architectural minimalist theme
+  const chatBg = useColorModeValue('rgba(255, 255, 255, 0.85)', 'rgba(45, 41, 38, 0.85)')
+  const borderColor = useColorModeValue('rgba(212, 197, 169, 0.3)', 'rgba(160, 139, 115, 0.3)')
+  const messagesBg = useColorModeValue('rgba(247, 243, 233, 0.4)', 'rgba(45, 41, 38, 0.6)')
+  const inputBg = useColorModeValue('rgba(255, 255, 255, 0.8)', 'rgba(45, 41, 38, 0.8)')
+  const inputBorder = useColorModeValue('rgba(212, 197, 169, 0.4)', 'rgba(160, 139, 115, 0.4)')
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -136,13 +138,13 @@ export default function ChatWidget() {
         w="16"
         h="16"
         color="white"
-        bgGradient="linear(135deg, #667eea 0%, #764ba2 100%)"
+        bgGradient="linear(135deg, #a08b73 0%, #2d2926 100%)"
         _hover={{
           transform: 'scale(1.05)',
-          boxShadow: '0 12px 40px rgba(102, 126, 234, 0.4)'
+          boxShadow: '0 12px 40px rgba(160, 139, 115, 0.4)'
         }}
         transition="all 0.3s ease"
-        boxShadow="0 8px 32px rgba(102, 126, 234, 0.3)"
+        boxShadow="0 8px 32px rgba(160, 139, 115, 0.3)"
         onClick={() => setIsOpen(!isOpen)}
         opacity={isOpen ? 0 : 1}
         transform={isOpen ? 'scale(0.9)' : 'scale(1)'}
@@ -179,8 +181,8 @@ export default function ChatWidget() {
         w="96"
         h={isMinimized ? "16" : "500px"}
         bg={chatBg}
-        borderRadius="2xl"
-        boxShadow="0 25px 50px rgba(0, 0, 0, 0.15)"
+        borderRadius="8px"
+        boxShadow="0 25px 50px rgba(45, 41, 38, 0.15)"
         border="1px"
         borderColor={borderColor}
         overflow="hidden"
@@ -192,12 +194,14 @@ export default function ChatWidget() {
         position="absolute"
         bottom="20"
         right="0"
+        backdropFilter="blur(25px)"
+        className="glass-effect"
       >
         {/* Header */}
         <Box
-          bgGradient="linear(135deg, #667eea 0%, #764ba2 100%)"
+          bgGradient="linear(135deg, #a08b73 0%, #2d2926 100%)"
           p="4"
-          borderTopRadius="2xl"
+          borderTopRadius="8px"
         >
           <Flex justify="space-between" align="center">
             <HStack spacing="3">
@@ -212,9 +216,9 @@ export default function ChatWidget() {
                   AI Assistant
                 </Text>
                 <HStack spacing="1">
-                  <Box w="2" h="2" bg="green.400" borderRadius="full" />
-                  <Text fontSize="xs" color="whiteAlpha.800">
-                    RAG-Powered
+                  <Box w="2" h="2" bg="rgba(232, 220, 192, 0.8)" borderRadius="full" />
+                  <Text fontSize="xs" color="whiteAlpha.900">
+                    Document Search
                   </Text>
                 </HStack>
               </VStack>
@@ -263,7 +267,7 @@ export default function ChatWidget() {
                     {msg.role === 'assistant' && (
                       <Avatar
                         size="sm"
-                        bg="blue.500"
+                        bg="rgba(160, 139, 115, 0.8)"
                         icon={<Bot size={16} />}
                         color="white"
                         mr="3"
@@ -274,16 +278,17 @@ export default function ChatWidget() {
                     <VStack align={msg.role === 'user' ? 'flex-end' : 'flex-start'} spacing="2" maxW="75%">
                       <Box
                         p="3"
-                        borderRadius="2xl"
+                        borderRadius="8px"
                         fontSize="sm"
                         lineHeight="relaxed"
-                        bg={msg.role === 'user' ? 'blue.500' : 'white'}
-                        color={msg.role === 'user' ? 'white' : 'gray.800'}
-                        borderBottomLeftRadius={msg.role === 'assistant' ? 'md' : '2xl'}
-                        borderBottomRightRadius={msg.role === 'user' ? 'md' : '2xl'}
-                        boxShadow="sm"
+                        bg={msg.role === 'user' ? 'rgba(160, 139, 115, 0.9)' : 'rgba(255, 255, 255, 0.9)'}
+                        color={msg.role === 'user' ? 'white' : 'rgba(45, 41, 38, 0.9)'}
+                        borderBottomLeftRadius={msg.role === 'assistant' ? '4px' : '8px'}
+                        borderBottomRightRadius={msg.role === 'user' ? '4px' : '8px'}
+                        boxShadow="0 4px 15px rgba(45, 41, 38, 0.05)"
                         border={msg.role === 'assistant' ? '1px' : 'none'}
-                        borderColor="gray.100"
+                        borderColor="rgba(212, 197, 169, 0.2)"
+                        backdropFilter="blur(10px)"
                       >
                         {msg.content}
                       </Box>
@@ -292,28 +297,34 @@ export default function ChatWidget() {
                       {msg.sources && msg.sources.length > 0 && (
                         <Box
                           w="full"
-                          bg="gray.50"
+                          bg="rgba(247, 243, 233, 0.8)"
                           border="1px"
-                          borderColor="gray.200"
-                          borderRadius="lg"
+                          borderColor="rgba(212, 197, 169, 0.3)"
+                          borderRadius="6px"
                           p="3"
                           fontSize="xs"
+                          backdropFilter="blur(10px)"
                         >
-                          <Text fontWeight="semibold" mb="2" color="gray.700">
+                          <Text fontWeight="semibold" mb="2" color="rgba(45, 41, 38, 0.8)">
                             Sources ({msg.sources.length})
                           </Text>
                           <VStack spacing="2" align="stretch">
                             {msg.sources.map((source, index) => (
                               <Box key={index}>
                                 <HStack justify="space-between">
-                                  <Text color="gray.600" fontWeight="medium">
+                                  <Text color="rgba(45, 41, 38, 0.7)" fontWeight="medium">
                                     📄 {source.source}
                                   </Text>
-                                  <Badge colorScheme="blue" size="sm">
-                                    {source.similarity}% match
+                                  <Badge 
+                                    bg="rgba(160, 139, 115, 0.2)" 
+                                    color="rgba(45, 41, 38, 0.8)"
+                                    size="sm"
+                                    borderRadius="4px"
+                                  >
+                                    {Math.round(source.similarity * 100)}% match
                                   </Badge>
                                 </HStack>
-                                <Text color="gray.500" noOfLines={2}>
+                                <Text color="rgba(45, 41, 38, 0.6)" noOfLines={2}>
                                   {source.content}
                                 </Text>
                               </Box>
@@ -326,9 +337,9 @@ export default function ChatWidget() {
                     {msg.role === 'user' && (
                       <Avatar
                         size="sm"
-                        bg="gray.300"
+                        bg="rgba(212, 197, 169, 0.6)"
                         icon={<User size={16} />}
-                        color="gray.600"
+                        color="rgba(45, 41, 38, 0.8)"
                         ml="3"
                         flexShrink="0"
                       />
@@ -341,26 +352,27 @@ export default function ChatWidget() {
                   <Flex align="flex-start">
                     <Avatar
                       size="sm"
-                      bg="blue.500"
+                      bg="rgba(160, 139, 115, 0.8)"
                       icon={<Bot size={16} />}
                       color="white"
                       mr="3"
                       flexShrink="0"
                     />
                     <Box
-                      bg="white"
+                      bg="rgba(255, 255, 255, 0.9)"
                       p="3"
-                      borderRadius="2xl"
-                      borderBottomLeftRadius="md"
-                      boxShadow="sm"
+                      borderRadius="8px"
+                      borderBottomLeftRadius="4px"
+                      boxShadow="0 4px 15px rgba(45, 41, 38, 0.05)"
                       border="1px"
-                      borderColor="gray.100"
+                      borderColor="rgba(212, 197, 169, 0.2)"
+                      backdropFilter="blur(10px)"
                     >
                       <HStack spacing="1">
                         <Box
                           w="2"
                           h="2"
-                          bg="gray.400"
+                          bg="rgba(160, 139, 115, 0.6)"
                           borderRadius="full"
                           css={{
                             animation: "bounce 1s infinite"
@@ -369,7 +381,7 @@ export default function ChatWidget() {
                         <Box
                           w="2"
                           h="2"
-                          bg="gray.400"
+                          bg="rgba(160, 139, 115, 0.6)"
                           borderRadius="full"
                           css={{
                             animation: "bounce 1s infinite",
@@ -379,7 +391,7 @@ export default function ChatWidget() {
                         <Box
                           w="2"
                           h="2"
-                          bg="gray.400"
+                          bg="rgba(160, 139, 115, 0.6)"
                           borderRadius="full"
                           css={{
                             animation: "bounce 1s infinite",
@@ -397,43 +409,58 @@ export default function ChatWidget() {
             {/* Input */}
             <Box p="4" borderTop="1px" borderColor={borderColor} bg={chatBg}>
               <form onSubmit={handleSendMessage}>
-                <HStack spacing="2">
-                  <Input
+                <HStack spacing="2" align="flex-end">
+                  <Textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Ask me about AI, projects, or anything..."
-                    bg="gray.50"
+                    bg={inputBg}
                     border="1px"
-                    borderColor="gray.200"
-                    borderRadius="xl"
+                    borderColor={inputBorder}
+                    borderRadius="8px"
                     _focus={{
                       outline: 'none',
-                      ring: 2,
-                      ringColor: 'blue.500',
-                      borderColor: 'transparent'
+                      borderColor: 'rgba(160, 139, 115, 0.6)',
+                      boxShadow: '0 0 0 2px rgba(160, 139, 115, 0.2)'
                     }}
                     fontSize="sm"
                     isDisabled={isLoading}
+                    resize="none"
+                    minH="40px"
+                    maxH="120px"
+                    rows={1}
+                    backdropFilter="blur(10px)"
+                    color="rgba(45, 41, 38, 0.9)"
+                    _placeholder={{
+                      color: 'rgba(45, 41, 38, 0.5)'
+                    }}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault()
+                        handleSendMessage(e)
+                      }
+                    }}
                   />
                   <IconButton
                     type="submit"
                     aria-label="Send message"
                     icon={<Send size={16} />}
-                    bgGradient="linear(to-r, blue.500, purple.600)"
+                    bgGradient="linear(135deg, #a08b73 0%, #2d2926 100%)"
                     color="white"
                     _hover={{
-                      bgGradient: 'linear(to-r, blue.600, purple.700)',
-                      boxShadow: 'md'
+                      bgGradient: 'linear(135deg, #2d2926 0%, #a08b73 100%)',
+                      boxShadow: '0 4px 15px rgba(160, 139, 115, 0.3)'
                     }}
-                    borderRadius="xl"
+                    borderRadius="8px"
                     isDisabled={!message.trim() || isLoading}
                     isLoading={isLoading}
+                    flexShrink={0}
                   />
                 </HStack>
               </form>
               
-              <Text fontSize="xs" color="gray.500" textAlign="center" mt="2">
-                RAG-Powered AI • Press Enter to send
+              <Text fontSize="xs" color="rgba(45, 41, 38, 0.6)" textAlign="center" mt="2">
+                Document Search AI • Press Enter to send • Shift+Enter for new line
               </Text>
             </Box>
           </>

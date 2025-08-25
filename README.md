@@ -49,3 +49,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - Fixed TypeScript compilation errors by adding missing `Book` type to schema and temporarily disabling RAG functionality in chat API to resolve database file reference issues.
 - Enhanced chat widget and API with conversation history support - the AI assistant now maintains context across messages for better conversational flow.
 - Fixed RAG (Retrieval-Augmented Generation) functionality to enable resume document search - AI assistant can now access and answer questions about specific resume content including football coaching experience.
+- Updated chat widget design to match architectural minimalist theme with warm beige/charcoal color palette from globals.css, replaced Input with Textarea for text wrapping, and added keyboard shortcuts (Enter to send, Shift+Enter for new line).
