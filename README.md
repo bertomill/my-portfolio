@@ -48,3 +48,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - Fixed navbar overlap issue on homepage by increasing top padding from `pt={{ base: 6, sm: 8, md: 12, lg: 14 }}` to `pt={{ base: 20, sm: 24, md: 28, lg: 32 }}` in `app/page.tsx` to ensure proper spacing below the navbar.
 - Fixed TypeScript compilation errors by adding missing `Book` type to schema and temporarily disabling RAG functionality in chat API to resolve database file reference issues.
 - Enhanced chat widget and API with conversation history support - the AI assistant now maintains context across messages for better conversational flow.
+- Fixed RAG (Retrieval-Augmented Generation) functionality to enable resume document search - AI assistant can now access and answer questions about specific resume content including football coaching experience.

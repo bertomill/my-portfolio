@@ -117,32 +117,49 @@ export async function storeDocumentChunks(chunks: DocumentChunkInput[]) {
  * Search for similar document chunks using vector similarity
  */
 export async function searchSimilarChunks(query: string, limit: number = 4): Promise<SearchResult[]> {
-  // Generate embedding for the query
-  const queryEmbedding = await generateEmbedding(query)
-  
-  // Perform vector similarity search using proper array formatting
-  const results = await db.execute(sql`
-    SELECT 
-      id,
-      content,
-      metadata,
-      source,
-      chunk_index,
-      1 - (embedding <=> ${JSON.stringify(queryEmbedding)}::vector) as similarity
-    FROM document_chunks
-    ORDER BY embedding <=> ${JSON.stringify(queryEmbedding)}::vector
-    LIMIT ${limit}
-  `)
-  
-  // db.execute() returns results directly as an array-like object
-  return Array.from(results).map((row: Record<string, unknown>) => ({
-    id: row.id as string,
-    content: row.content as string,
-    metadata: row.metadata as DocumentChunkMetadata,
-    source: row.source as string,
-    chunkIndex: row.chunk_index as number,
-    similarity: row.similarity as number,
-  }))
+  try {
+    // Generate embedding for the query
+    console.log('Generating embedding for query:', query.substring(0, 100))
+    const queryEmbedding = await generateEmbedding(query)
+    console.log('Generated embedding, length:', queryEmbedding.length)
+    
+    // Convert embedding to PostgreSQL array format
+    const embeddingArray = `[${queryEmbedding.join(',')}]`
+    
+    // Perform vector similarity search using proper array formatting
+    console.log('Executing vector search query...')
+    const results = await db.execute(sql`
+      SELECT 
+        id,
+        content,
+        metadata,
+        source,
+        chunk_index,
+        1 - (embedding <=> ${embeddingArray}::vector) as similarity
+      FROM document_chunks
+      ORDER BY embedding <=> ${embeddingArray}::vector
+      LIMIT ${limit}
+    `)
+    
+    console.log('Raw results from database:', results)
+    
+    // Convert results to proper format
+    const searchResults = Array.from(results).map((row: any) => ({
+      id: row.id as string,
+      content: row.content as string,
+      metadata: (row.metadata || {}) as DocumentChunkMetadata,
+      source: row.source as string,
+      chunkIndex: row.chunk_index as number,
+      similarity: parseFloat(row.similarity) || 0,
+    }))
+    
+    console.log(`Returning ${searchResults.length} search results`)
+    return searchResults
+    
+  } catch (error) {
+    console.error('Error in searchSimilarChunks:', error)
+    throw error
+  }
 }
 
 /**

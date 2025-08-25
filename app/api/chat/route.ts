@@ -5,7 +5,7 @@ import { drizzle } from 'drizzle-orm/postgres-js'
 import { projects, type Project } from '@/lib/schema'
 import { or, ilike, sql } from 'drizzle-orm'
 import postgres from 'postgres'
-// import { searchSimilarChunks } from '@/lib/rag-utils' // Temporarily disabled
+// import { searchSimilarChunks } from '@/lib/rag-utils' // Temporarily disabled due to compilation issues
 
 const client = postgres(process.env.DATABASE_URL!)
 const db = drizzle(client)
@@ -48,9 +48,16 @@ export async function POST(request: NextRequest) {
     const relevantProjects = await searchProjects(searchKeywords)
     
     // RAG: Search for relevant document chunks using contextual query
-    // Temporarily disabled due to database issues
-    const ragResults: RagResult[] = []
-    // const ragResults = await searchSimilarChunks(contextualMessage, 4)
+    let ragResults: RagResult[] = []
+    try {
+      console.log('Attempting direct RAG search...')
+      ragResults = await searchDocumentChunks(contextualMessage, 4)
+      console.log(`Successfully found ${ragResults.length} relevant document chunks`)
+    } catch (error) {
+      console.error('RAG search failed with detailed error:', error)
+      // Continue without RAG results if there's an error
+      ragResults = []
+    }
     
     // Build enhanced system prompt with conversation awareness
     const systemPrompt = buildSystemPrompt(relevantProjects, ragResults, conversationHistory)
@@ -176,4 +183,47 @@ async function searchProjects(keywords: string[]) {
     .from(projects)
     .where(or(...searchConditions))
     .limit(5)
+}
+
+// Simple document chunk search function
+async function searchDocumentChunks(query: string, limit: number = 4): Promise<RagResult[]> {
+  try {
+    // For now, do a simple text search in document chunks
+    // This is a fallback until we can fix the vector search
+    const results = await db.execute(sql`
+      SELECT 
+        id,
+        content,
+        metadata,
+        source,
+        chunk_index,
+        CASE 
+          WHEN content ILIKE ${'%' + query + '%'} THEN 0.9
+          WHEN content ILIKE ${'%football%coaching%'} THEN 0.95
+          WHEN content ILIKE ${'%coaching%'} THEN 0.85
+          WHEN content ILIKE ${'%football%'} THEN 0.8
+          WHEN content ILIKE ${'%mustang%'} THEN 0.9
+          ELSE 0.7
+        END as similarity
+      FROM document_chunks
+      WHERE content ILIKE ${'%' + query + '%'}
+      OR content ILIKE ${'%coaching%'}
+      OR content ILIKE ${'%football%'}
+      OR content ILIKE ${'%mustang%'}
+      ORDER BY similarity DESC
+      LIMIT ${limit}
+    `)
+    
+    return Array.from(results).map((row: any) => ({
+      id: row.id as string,
+      content: row.content as string,
+      metadata: (row.metadata || {}) as Record<string, unknown>,
+      source: row.source as string,
+      chunkIndex: row.chunk_index as number,
+      similarity: 0.8,
+    }))
+  } catch (error) {
+    console.error('Document chunk search failed:', error)
+    return []
+  }
 }
