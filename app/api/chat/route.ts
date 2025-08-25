@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { openai } from '@ai-sdk/openai'
 import { generateText } from 'ai'
 import { drizzle } from 'drizzle-orm/postgres-js'
-import { projects } from '@/lib/schema'
+import { projects, type Project } from '@/lib/schema'
 import { or, ilike, sql } from 'drizzle-orm'
 import postgres from 'postgres'
 // import { searchSimilarChunks } from '@/lib/rag-utils' // Temporarily disabled
@@ -10,95 +10,74 @@ import postgres from 'postgres'
 const client = postgres(process.env.DATABASE_URL!)
 const db = drizzle(client)
 
+// Interface for conversation messages
+interface Message {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+// Interface for RAG search results
+interface RagResult {
+  id: string
+  content: string
+  metadata: Record<string, unknown>
+  source: string
+  chunkIndex: number
+  similarity: number
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { message } = await request.json()
+    const { message, messages = [] } = await request.json()
     
     if (!message) {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 })
     }
 
-    // Extract keywords from the user's message for database search
-    const searchKeywords = extractKeywords(message)
+    // Build conversation history for context
+    const conversationHistory: Message[] = [
+      ...messages.slice(-10), // Keep last 10 messages for context (prevent token limit)
+      { role: 'user', content: message }
+    ]
+
+    // Extract keywords from the current message and recent context for database search
+    const contextualMessage = buildContextualQuery(conversationHistory)
+    const searchKeywords = extractKeywords(contextualMessage)
     
     // Query database for relevant projects
     const relevantProjects = await searchProjects(searchKeywords)
     
-    // RAG: Search for relevant document chunks - temporarily disabled
-    const ragResults: Array<{
-      id: string
-      content: string
-      metadata: Record<string, unknown>
-      source: string
-      chunkIndex: number
-      similarity: number
-    }> = []
-    // TODO: Re-enable RAG search once database issues are resolved
-    // try {
-    //   ragResults = await searchSimilarChunks(message, 4)
-    // } catch (error) {
-    //   console.error('RAG search failed:', error)
-    //   // Continue without RAG results
-    // }
+    // RAG: Search for relevant document chunks using contextual query
+    // Temporarily disabled due to database issues
+    const ragResults: RagResult[] = []
+    // const ragResults = await searchSimilarChunks(contextualMessage, 4)
     
-    // Prepare context from both projects and RAG documents
-    const projectContext = relevantProjects.map(p => `
-    - ${p.title}: ${p.description}
-    - Technologies: ${p.tags.join(', ')}
-    - Date: ${p.date}
-    - URL: ${p.projectUrl}
-    `).join('\n')
-    
-    const ragContext = ragResults.map(result => `
-    Source: ${result.source}
-    Content: ${result.content}
-    `).join('\n')
+    // Build enhanced system prompt with conversation awareness
+    const systemPrompt = buildSystemPrompt(relevantProjects, ragResults, conversationHistory)
 
-    // Generate AI response with enhanced context
+    // Generate AI response with full conversation context
     const { text } = await generateText({
       model: openai('gpt-4o-mini'),
       messages: [
         {
           role: 'system',
-          content: `You are an AI assistant for Robert Mill's personal portfolio website. Answer questions about Robert's projects, experience, and background in a friendly, conversational tone.
-
-You have access to two types of information:
-
-1. PROJECT DATABASE:
-${projectContext}
-
-2. PERSONAL DOCUMENTS (Resume, etc.):
-${ragContext}
-
-Instructions:
-- Use the most relevant information from both sources to answer questions
-- When referencing information from documents, you can mention the source (e.g., "According to Robert's resume...")
-- Keep responses concise but informative
-- If you reference specific achievements or experiences, try to be specific
-- If no relevant information is found in either source, provide a helpful general response about the portfolio
-
-Focus on being helpful and providing accurate information about Robert's background, skills, and projects.`
+          content: systemPrompt
         },
-        {
-          role: 'user',
-          content: message
-        }
+        ...conversationHistory
       ],
       temperature: 0.7,
+      maxTokens: 1000,
     })
-
-    // Prepare sources for frontend display
-    const sources = ragResults.map(result => ({
-      source: result.source,
-      content: result.content.substring(0, 200) + '...',
-      similarity: Math.round(result.similarity * 100),
-      chunkIndex: result.chunkIndex
-    }))
 
     return NextResponse.json({ 
       response: text,
-      sources: sources.length > 0 ? sources : undefined
+      sources: ragResults.map(result => ({
+        source: result.source,
+        content: result.content.substring(0, 200) + '...',
+        similarity: result.similarity
+      }))
     })
+
   } catch (error) {
     console.error('Chat API error:', error)
     return NextResponse.json(
@@ -108,21 +87,75 @@ Focus on being helpful and providing accurate information about Robert's backgro
   }
 }
 
-function extractKeywords(message: string): string[] {
-  // Simple keyword extraction - can be enhanced with NLP
-  const commonWords = ['i', 'you', 'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'about', 'what', 'how', 'when', 'where', 'why', 'tell', 'me', 'show', 'do', 'have', 'any', 'projects', 'project', 'work', 'experience']
+/**
+ * Build a contextual query that includes recent conversation context
+ */
+function buildContextualQuery(messages: Message[]): string {
+  // Get the last few messages to understand context
+  const recentMessages = messages.slice(-3)
   
+  // Combine recent conversation context with current query
+  const context = recentMessages
+    .map(msg => `${msg.role}: ${msg.content}`)
+    .join(' ')
+    
+  return context
+}
+
+/**
+ * Build system prompt with conversation awareness
+ */
+function buildSystemPrompt(projects: Project[], ragResults: RagResult[], conversationHistory: Message[]): string {
+  const hasContext = conversationHistory.length > 1
+  
+  return `You are an AI assistant for Robert Mill's personal portfolio website. You have access to his projects and documents to answer questions about his experience and background.
+
+${hasContext ? `
+CONVERSATION CONTEXT: You are continuing a conversation. Pay attention to previous questions and context. If the user asks follow-up questions like "which companies?" or "what about...", refer back to the conversation history to understand what they're asking about.
+
+Recent conversation:
+${conversationHistory.slice(-5).map(msg => `${msg.role.toUpperCase()}: ${msg.content}`).join('\n')}
+` : ''}
+
+AVAILABLE INFORMATION:
+
+Projects from database:
+${projects.map(p => `
+- ${p.title}: ${p.description}
+- Technologies: ${p.tags?.join(', ') || 'N/A'}
+- Date: ${p.date}
+- URL: ${p.projectUrl}
+`).join('\n')}
+
+Document excerpts (from resume/documents):
+${ragResults.map(r => `
+- Source: ${r.source}
+- Content: ${r.content}
+- Relevance: ${(r.similarity * 100).toFixed(1)}%
+`).join('\n')}
+
+INSTRUCTIONS:
+- Answer questions conversationally, referring to conversation history when relevant
+- Be specific about Robert's experience, mentioning actual company names, technologies, and projects
+- If asked follow-up questions, reference previous context appropriately
+- Keep responses concise but informative
+- If you don't have specific information, say so rather than making assumptions
+
+Remember: You're continuing a conversation, so context matters!`
+}
+
+function extractKeywords(message: string): string[] {
+  const commonWords = ['i', 'you', 'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'about', 'what', 'how', 'when', 'where', 'why', 'tell', 'me', 'show', 'do', 'have', 'any', 'projects', 'project', 'work', 'experience', 'which', 'that', 'this']
   return message
     .toLowerCase()
     .replace(/[^\w\s]/g, '')
     .split(/\s+/)
     .filter(word => word.length > 2 && !commonWords.includes(word))
-    .slice(0, 5) // Limit to 5 keywords
+    .slice(0, 8) // Increased to capture more context
 }
 
 async function searchProjects(keywords: string[]) {
   if (keywords.length === 0) {
-    // Return featured projects if no keywords
     return await db
       .select()
       .from(projects)

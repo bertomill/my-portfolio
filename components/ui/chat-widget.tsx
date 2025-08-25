@@ -1,10 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { MessageCircle, Send, X, Bot, User, Minimize2 } from 'lucide-react'
 import {
   Box,
-  Button,
   Text,
   VStack,
   HStack,
@@ -16,43 +15,114 @@ import {
   Badge,
 } from '@chakra-ui/react'
 
+interface ChatSource {
+  source: string
+  content: string
+  similarity: number
+  chunkIndex: number
+}
+
+interface ChatMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  sources?: ChatSource[]
+  timestamp: Date
+}
+
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false)
   const [message, setMessage] = useState('')
   const [isMinimized, setIsMinimized] = useState(false)
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: '1',
+      role: 'assistant',
+      content: "Hi! I'm here to help you learn more about Berto's projects and AI expertise. What would you like to know?",
+      timestamp: new Date()
+    }
+  ])
+  const [isLoading, setIsLoading] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   // Color mode values
   const chatBg = useColorModeValue('white', 'gray.800')
   const borderColor = useColorModeValue('gray.200', 'gray.600')
   const messagesBg = useColorModeValue('gray.50', 'gray.700')
 
-  // Sample messages for the demo
-  const sampleMessages = [
-    {
-      id: '1',
-      role: 'assistant' as const,
-      content: "Hi! I'm here to help you learn more about Berto's projects and AI expertise. What would you like to know?",
-      timestamp: new Date()
-    },
-    {
-      id: '2',
-      role: 'user' as const,
-      content: "Tell me about your AI consulting services",
-      timestamp: new Date()
-    },
-    {
-      id: '3',
-      role: 'assistant' as const,
-      content: "I specialize in making AI simple and practical for businesses. I help organizations implement AI solutions that actually solve real problems and improve operations.",
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+
+  const sendMessage = async (userMessage: string) => {
+    if (!userMessage.trim()) return
+
+    // Add user message
+    const userMsg: ChatMessage = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: userMessage,
       timestamp: new Date()
     }
-  ]
+    setMessages(prev => [...prev, userMsg])
+    setMessage('')
+    setIsLoading(true)
+
+    try {
+      // Build conversation history for API (exclude the current user message since we'll send it separately)
+      const conversationHistory = messages.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }))
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          message: userMessage,
+          messages: conversationHistory // Send conversation history to maintain context
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to send message')
+      }
+
+      const data = await response.json()
+
+      // Add assistant response
+      const assistantMsg: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: data.response,
+        sources: data.sources,
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, assistantMsg])
+    } catch (error) {
+      console.error('Error sending message:', error)
+      // Add error message
+      const errorMsg: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: "Sorry, I'm having trouble connecting right now. Please try again later.",
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, errorMsg])
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault()
-    // This is just for demo - no actual functionality yet
-    console.log('Message would be sent:', message)
-    setMessage('')
+    sendMessage(message)
   }
 
   return (
@@ -144,7 +214,7 @@ export default function ChatWidget() {
                 <HStack spacing="1">
                   <Box w="2" h="2" bg="green.400" borderRadius="full" />
                   <Text fontSize="xs" color="whiteAlpha.800">
-                    Online
+                    RAG-Powered
                   </Text>
                 </HStack>
               </VStack>
@@ -184,7 +254,7 @@ export default function ChatWidget() {
               maxH="340px"
             >
               <VStack spacing="4" align="stretch">
-                {sampleMessages.map((msg) => (
+                {messages.map((msg) => (
                   <Flex
                     key={msg.id}
                     justify={msg.role === 'user' ? 'flex-end' : 'flex-start'}
@@ -201,22 +271,57 @@ export default function ChatWidget() {
                       />
                     )}
                     
-                    <Box
-                      maxW="75%"
-                      p="3"
-                      borderRadius="2xl"
-                      fontSize="sm"
-                      lineHeight="relaxed"
-                      bg={msg.role === 'user' ? 'blue.500' : 'white'}
-                      color={msg.role === 'user' ? 'white' : 'gray.800'}
-                      borderBottomLeftRadius={msg.role === 'assistant' ? 'md' : '2xl'}
-                      borderBottomRightRadius={msg.role === 'user' ? 'md' : '2xl'}
-                      boxShadow="sm"
-                      border={msg.role === 'assistant' ? '1px' : 'none'}
-                      borderColor="gray.100"
-                    >
-                      {msg.content}
-                    </Box>
+                    <VStack align={msg.role === 'user' ? 'flex-end' : 'flex-start'} spacing="2" maxW="75%">
+                      <Box
+                        p="3"
+                        borderRadius="2xl"
+                        fontSize="sm"
+                        lineHeight="relaxed"
+                        bg={msg.role === 'user' ? 'blue.500' : 'white'}
+                        color={msg.role === 'user' ? 'white' : 'gray.800'}
+                        borderBottomLeftRadius={msg.role === 'assistant' ? 'md' : '2xl'}
+                        borderBottomRightRadius={msg.role === 'user' ? 'md' : '2xl'}
+                        boxShadow="sm"
+                        border={msg.role === 'assistant' ? '1px' : 'none'}
+                        borderColor="gray.100"
+                      >
+                        {msg.content}
+                      </Box>
+                      
+                      {/* Sources */}
+                      {msg.sources && msg.sources.length > 0 && (
+                        <Box
+                          w="full"
+                          bg="gray.50"
+                          border="1px"
+                          borderColor="gray.200"
+                          borderRadius="lg"
+                          p="3"
+                          fontSize="xs"
+                        >
+                          <Text fontWeight="semibold" mb="2" color="gray.700">
+                            Sources ({msg.sources.length})
+                          </Text>
+                          <VStack spacing="2" align="stretch">
+                            {msg.sources.map((source, index) => (
+                              <Box key={index}>
+                                <HStack justify="space-between">
+                                  <Text color="gray.600" fontWeight="medium">
+                                    📄 {source.source}
+                                  </Text>
+                                  <Badge colorScheme="blue" size="sm">
+                                    {source.similarity}% match
+                                  </Badge>
+                                </HStack>
+                                <Text color="gray.500" noOfLines={2}>
+                                  {source.content}
+                                </Text>
+                              </Box>
+                            ))}
+                          </VStack>
+                        </Box>
+                      )}
+                    </VStack>
                     
                     {msg.role === 'user' && (
                       <Avatar
@@ -231,58 +336,61 @@ export default function ChatWidget() {
                   </Flex>
                 ))}
                 
-                {/* Typing indicator */}
-                <Flex align="flex-start">
-                  <Avatar
-                    size="sm"
-                    bg="blue.500"
-                    icon={<Bot size={16} />}
-                    color="white"
-                    mr="3"
-                    flexShrink="0"
-                  />
-                  <Box
-                    bg="white"
-                    p="3"
-                    borderRadius="2xl"
-                    borderBottomLeftRadius="md"
-                    boxShadow="sm"
-                    border="1px"
-                    borderColor="gray.100"
-                  >
-                    <HStack spacing="1">
-                      <Box
-                        w="2"
-                        h="2"
-                        bg="gray.400"
-                        borderRadius="full"
-                        css={{
-                          animation: "bounce 1s infinite"
-                        }}
-                      />
-                      <Box
-                        w="2"
-                        h="2"
-                        bg="gray.400"
-                        borderRadius="full"
-                        css={{
-                          animation: "bounce 1s infinite",
-                          animationDelay: "0.1s"
-                        }}
-                      />
-                      <Box
-                        w="2"
-                        h="2"
-                        bg="gray.400"
-                        borderRadius="full"
-                        css={{
-                          animation: "bounce 1s infinite",
-                          animationDelay: "0.2s"
-                        }}
-                      />
-                    </HStack>
-                  </Box>
-                </Flex>
+                {/* Loading indicator */}
+                {isLoading && (
+                  <Flex align="flex-start">
+                    <Avatar
+                      size="sm"
+                      bg="blue.500"
+                      icon={<Bot size={16} />}
+                      color="white"
+                      mr="3"
+                      flexShrink="0"
+                    />
+                    <Box
+                      bg="white"
+                      p="3"
+                      borderRadius="2xl"
+                      borderBottomLeftRadius="md"
+                      boxShadow="sm"
+                      border="1px"
+                      borderColor="gray.100"
+                    >
+                      <HStack spacing="1">
+                        <Box
+                          w="2"
+                          h="2"
+                          bg="gray.400"
+                          borderRadius="full"
+                          css={{
+                            animation: "bounce 1s infinite"
+                          }}
+                        />
+                        <Box
+                          w="2"
+                          h="2"
+                          bg="gray.400"
+                          borderRadius="full"
+                          css={{
+                            animation: "bounce 1s infinite",
+                            animationDelay: "0.1s"
+                          }}
+                        />
+                        <Box
+                          w="2"
+                          h="2"
+                          bg="gray.400"
+                          borderRadius="full"
+                          css={{
+                            animation: "bounce 1s infinite",
+                            animationDelay: "0.2s"
+                          }}
+                        />
+                      </HStack>
+                    </Box>
+                  </Flex>
+                )}
+                <div ref={messagesEndRef} />
               </VStack>
             </Box>
 
@@ -305,6 +413,7 @@ export default function ChatWidget() {
                       borderColor: 'transparent'
                     }}
                     fontSize="sm"
+                    isDisabled={isLoading}
                   />
                   <IconButton
                     type="submit"
@@ -317,13 +426,14 @@ export default function ChatWidget() {
                       boxShadow: 'md'
                     }}
                     borderRadius="xl"
-                    isDisabled={!message.trim()}
+                    isDisabled={!message.trim() || isLoading}
+                    isLoading={isLoading}
                   />
                 </HStack>
               </form>
               
               <Text fontSize="xs" color="gray.500" textAlign="center" mt="2">
-                Powered by AI • Press Enter to send
+                RAG-Powered AI • Press Enter to send
               </Text>
             </Box>
           </>
