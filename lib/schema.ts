@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, serial, boolean } from 'drizzle-orm/pg-core'
+import { pgTable, text, timestamp, serial, boolean, vector, integer, jsonb } from 'drizzle-orm/pg-core'
 
 export const projects = pgTable('projects', {
   id: serial('id').primaryKey(),
@@ -29,7 +29,33 @@ export const artPieces = pgTable('art_pieces', {
   updatedAt: timestamp('updated_at').defaultNow(),
 })
 
+export const books = pgTable('books', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  description: text('description'),
+  what_i_learned: text('what_i_learned'),
+  date_read: text('date_read'),
+  link: text('link'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+})
+
+// RAG Document Chunks Table
+export const documentChunks = pgTable('document_chunks', {
+  id: text('id').primaryKey(),
+  content: text('content').notNull(),
+  metadata: jsonb('metadata'),
+  embedding: vector('embedding', { dimensions: 1536 }), // OpenAI embedding size
+  source: text('source').notNull(),
+  chunkIndex: integer('chunk_index').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+})
+
 export type Project = typeof projects.$inferSelect
 export type NewProject = typeof projects.$inferInsert
 export type ArtPiece = typeof artPieces.$inferSelect
-export type NewArtPiece = typeof artPieces.$inferInsert 
+export type NewArtPiece = typeof artPieces.$inferInsert
+export type Book = typeof books.$inferSelect
+export type NewBook = typeof books.$inferInsert
+export type DocumentChunk = typeof documentChunks.$inferSelect
+export type NewDocumentChunk = typeof documentChunks.$inferInsert

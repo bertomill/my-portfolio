@@ -5,6 +5,7 @@ import { drizzle } from 'drizzle-orm/postgres-js'
 import { projects } from '@/lib/schema'
 import { or, ilike, sql } from 'drizzle-orm'
 import postgres from 'postgres'
+// import { searchSimilarChunks } from '@/lib/rag-utils' // Temporarily disabled
 
 const client = postgres(process.env.DATABASE_URL!)
 const db = drizzle(client)
@@ -23,24 +24,60 @@ export async function POST(request: NextRequest) {
     // Query database for relevant projects
     const relevantProjects = await searchProjects(searchKeywords)
     
-    // Generate AI response with project context
+    // RAG: Search for relevant document chunks - temporarily disabled
+    const ragResults: Array<{
+      id: string
+      content: string
+      metadata: Record<string, unknown>
+      source: string
+      chunkIndex: number
+      similarity: number
+    }> = []
+    // TODO: Re-enable RAG search once database issues are resolved
+    // try {
+    //   ragResults = await searchSimilarChunks(message, 4)
+    // } catch (error) {
+    //   console.error('RAG search failed:', error)
+    //   // Continue without RAG results
+    // }
+    
+    // Prepare context from both projects and RAG documents
+    const projectContext = relevantProjects.map(p => `
+    - ${p.title}: ${p.description}
+    - Technologies: ${p.tags.join(', ')}
+    - Date: ${p.date}
+    - URL: ${p.projectUrl}
+    `).join('\n')
+    
+    const ragContext = ragResults.map(result => `
+    Source: ${result.source}
+    Content: ${result.content}
+    `).join('\n')
+
+    // Generate AI response with enhanced context
     const { text } = await generateText({
-      model: openai('gpt-3.5-turbo'),
+      model: openai('gpt-4o-mini'),
       messages: [
         {
           role: 'system',
-          content: `You are an AI assistant for a personal portfolio website. Answer questions about the person's projects and experience in a friendly, conversational tone. 
-          
-          Here are the relevant projects from the database:
-          ${relevantProjects.map(p => `
-          - ${p.title}: ${p.description}
-          - Technologies: ${p.tags.join(', ')}
-          - Date: ${p.date}
-          - URL: ${p.projectUrl}
-          `).join('\n')}
-          
-          If no relevant projects are found, provide a helpful response about the portfolio in general.
-          Keep responses concise but informative.`
+          content: `You are an AI assistant for Robert Mill's personal portfolio website. Answer questions about Robert's projects, experience, and background in a friendly, conversational tone.
+
+You have access to two types of information:
+
+1. PROJECT DATABASE:
+${projectContext}
+
+2. PERSONAL DOCUMENTS (Resume, etc.):
+${ragContext}
+
+Instructions:
+- Use the most relevant information from both sources to answer questions
+- When referencing information from documents, you can mention the source (e.g., "According to Robert's resume...")
+- Keep responses concise but informative
+- If you reference specific achievements or experiences, try to be specific
+- If no relevant information is found in either source, provide a helpful general response about the portfolio
+
+Focus on being helpful and providing accurate information about Robert's background, skills, and projects.`
         },
         {
           role: 'user',
@@ -50,7 +87,18 @@ export async function POST(request: NextRequest) {
       temperature: 0.7,
     })
 
-    return NextResponse.json({ response: text })
+    // Prepare sources for frontend display
+    const sources = ragResults.map(result => ({
+      source: result.source,
+      content: result.content.substring(0, 200) + '...',
+      similarity: Math.round(result.similarity * 100),
+      chunkIndex: result.chunkIndex
+    }))
+
+    return NextResponse.json({ 
+      response: text,
+      sources: sources.length > 0 ? sources : undefined
+    })
   } catch (error) {
     console.error('Chat API error:', error)
     return NextResponse.json(
