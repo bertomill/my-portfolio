@@ -14,6 +14,23 @@ import {
   Flex,
   Badge,
 } from '@chakra-ui/react'
+import ReactMarkdown from 'react-markdown'
+import rehypeHighlight from 'rehype-highlight'
+import 'highlight.js/styles/github.css'
+import { ReactNode } from 'react'
+
+// Types for markdown components
+interface MarkdownComponentProps {
+  children: ReactNode
+}
+
+interface CodeComponentProps extends MarkdownComponentProps {
+  className?: string
+}
+
+interface LinkComponentProps extends MarkdownComponentProps {
+  href?: string
+}
 
 interface ChatSource {
   source: string
@@ -28,6 +45,111 @@ interface ChatMessage {
   content: string
   sources?: ChatSource[]
   timestamp: Date
+}
+
+// Custom markdown components for styled rendering
+const MarkdownComponents: any = {
+  p: ({ children }: MarkdownComponentProps) => (
+    <Text mb="2" lineHeight="1.6">
+      {children}
+    </Text>
+  ),
+  strong: ({ children }: MarkdownComponentProps) => (
+    <Text as="strong" fontWeight="semibold" color="rgba(45, 41, 38, 0.9)">
+      {children}
+    </Text>
+  ),
+  em: ({ children }: MarkdownComponentProps) => (
+    <Text as="em" fontStyle="italic">
+      {children}
+    </Text>
+  ),
+  ul: ({ children }: MarkdownComponentProps) => (
+    <Box as="ul" pl="4" mb="2">
+      {children}
+    </Box>
+  ),
+  ol: ({ children }: MarkdownComponentProps) => (
+    <Box as="ol" pl="4" mb="2">
+      {children}
+    </Box>
+  ),
+  li: ({ children }: MarkdownComponentProps) => (
+    <Box as="li" mb="1" lineHeight="1.5">
+      {children}
+    </Box>
+  ),
+  code: ({ children, className }: CodeComponentProps) => {
+    const isInline = !className
+    return isInline ? (
+      <Text
+        as="code"
+        bg="rgba(160, 139, 115, 0.1)"
+        color="rgba(45, 41, 38, 0.9)"
+        px="1"
+        py="0.5"
+        borderRadius="4px"
+        fontSize="sm"
+        fontFamily="'JetBrains Mono', monospace"
+      >
+        {children}
+      </Text>
+    ) : (
+      <Box
+        as="pre"
+        bg="rgba(247, 243, 233, 0.8)"
+        border="1px solid rgba(212, 197, 169, 0.3)"
+        borderRadius="6px"
+        p="3"
+        mb="2"
+        overflow="auto"
+        fontSize="sm"
+        fontFamily="'JetBrains Mono', monospace"
+      >
+        <Text as="code" color="rgba(45, 41, 38, 0.9)">
+          {children}
+        </Text>
+      </Box>
+    )
+  },
+  blockquote: ({ children }: MarkdownComponentProps) => (
+    <Box
+      borderLeft="4px solid rgba(160, 139, 115, 0.4)"
+      pl="4"
+      py="2"
+      mb="2"
+      bg="rgba(247, 243, 233, 0.3)"
+      borderRadius="0 6px 6px 0"
+    >
+      {children}
+    </Box>
+  ),
+  h1: ({ children }: MarkdownComponentProps) => (
+    <Text fontSize="lg" fontWeight="semibold" mb="2" color="rgba(45, 41, 38, 0.9)">
+      {children}
+    </Text>
+  ),
+  h2: ({ children }: MarkdownComponentProps) => (
+    <Text fontSize="md" fontWeight="semibold" mb="2" color="rgba(45, 41, 38, 0.9)">
+      {children}
+    </Text>
+  ),
+  h3: ({ children }: MarkdownComponentProps) => (
+    <Text fontSize="sm" fontWeight="semibold" mb="1" color="rgba(45, 41, 38, 0.9)">
+      {children}
+    </Text>
+  ),
+  a: ({ children, href }: LinkComponentProps) => (
+    <Text
+      as="a"
+      href={href}
+      color="rgba(160, 139, 115, 0.9)"
+      textDecoration="underline"
+      _hover={{ color: 'rgba(45, 41, 38, 0.9)' }}
+    >
+      {children}
+    </Text>
+  ),
 }
 
 export default function ChatWidget() {
@@ -290,7 +412,16 @@ export default function ChatWidget() {
                         borderColor="rgba(212, 197, 169, 0.2)"
                         backdropFilter="blur(10px)"
                       >
-                        {msg.content}
+                        {msg.role === 'assistant' ? (
+                          <ReactMarkdown
+                            components={MarkdownComponents}
+                            rehypePlugins={[rehypeHighlight]}
+                          >
+                            {msg.content}
+                          </ReactMarkdown>
+                        ) : (
+                          msg.content
+                        )}
                       </Box>
                       
                       {/* Sources */}

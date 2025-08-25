@@ -50,3 +50,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - Enhanced chat widget and API with conversation history support - the AI assistant now maintains context across messages for better conversational flow.
 - Fixed RAG (Retrieval-Augmented Generation) functionality to enable resume document search - AI assistant can now access and answer questions about specific resume content including football coaching experience.
 - Updated chat widget design to match architectural minimalist theme with warm beige/charcoal color palette from globals.css, replaced Input with Textarea for text wrapping, and added keyboard shortcuts (Enter to send, Shift+Enter for new line).
+- Added markdown rendering to chat widget responses using react-markdown with custom styled components that match the architectural theme, including proper formatting for bold text, italics, lists, code blocks, and syntax highlighting.
